@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal OS — V0</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:#0f1115;
+  color:#f1f3f5;
+}
+.app{max-width:1250px;margin:0 auto;padding:24px 24px 60px}
+.topbar{
+  display:grid;
+  grid-template-columns:220px 1fr 1fr 1fr auto;
+  gap:12px;
+  align-items:stretch;
+  margin-bottom:14px;
+}
+.top-tab{
+  min-height:72px;
+  border:1px solid #292f38;
+  background:#171a20;
+  color:#aeb4bd;
+  border-radius:12px;
+  padding:14px 18px;
+  cursor:pointer;
+  text-align:left;
+}
+.top-tab:hover{border-color:#4b5360}
+.top-tab.active{
+  background:#1b55b5;
+  border-color:#3d83ff;
+  color:#fff;
+}
+.os-tab{background:#14171d}
+.top-title{font-size:17px;font-weight:700;margin-bottom:3px}
+.top-sub{font-size:11px;color:#858c96}
+.active .top-sub{color:#d9e6ff}
+.top-right{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  padding-left:8px;
+}
+.small-tab{
+  border:0;
+  background:#191c22;
+  color:#aeb4bd;
+  padding:10px 15px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+}
+.small-tab.active{background:#f1f3f5;color:#111}
+.layout{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:14px;
+}
+.sidebar{
+  background:#14171d;
+  border:1px solid #252b34;
+  border-radius:12px;
+  padding:16px 12px;
+  min-height:720px;
+}
+.sidebar-title{
+  color:#858c96;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.05em;
+  padding:0 8px 10px;
+}
+.item{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#b8bec7;
+  padding:10px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  text-align:left;
+  font-size:13px;
+  margin-bottom:3px;
+}
+.item:hover{background:#1d222a;color:#fff}
+.item.active{background:#2357b4;color:#fff}
+.divider{height:1px;background:#292f38;margin:12px 8px}
+.main{min-width:0}
+.workspace-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin:4px 4px 18px;
+}
+.workspace-title{font-size:27px;font-weight:700}
+.workspace-sub{font-size:13px;color:#858c96;margin-top:4px}
+.date-strip{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+  margin-bottom:22px;
+}
+.date{
+  background:#171a20;
+  border:1px solid #292f38;
+  border-radius:10px;
+  padding:10px 6px;
+  text-align:center;
+  cursor:pointer;
+}
+.date:hover{border-color:#555c68}
+.date.selected{background:#f1f3f5;color:#111}
+.date.past{
+  background:#321c22;
+  border-color:#5a3038;
+  color:#f0a3ad;
+}
+.date.past .day{color:#d47b88}
+.date.future{
+  background:#172b4d;
+  border-color:#294d82;
+  color:#9ec5ff;
+}
+.date.future .day{color:#78a8e8}
+.date.today-date{
+  background:#0f6b3a;
+  border-color:#36e38b;
+  color:#fff;
+  box-shadow:0 0 0 1px rgba(54,227,139,.18);
+}
+.date.today-date .day{color:#b9ffd8}
+.date .today-label{font-size:10px;margin-top:4px;color:#b9ffd8;font-weight:600}
+.date.selected{box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
+
+.date .day{font-size:11px;color:#8d949e;margin-bottom:5px}
+.date.selected .day{color:#555}
+.date .number{font-size:17px;font-weight:600}
+.card,.chart-card,.metric{
+  background:#171a20;
+  border:1px solid #292f38;
+  border-radius:13px;
+}
+.card{padding:24px;margin-bottom:18px}
+.card-title{font-size:16px;font-weight:600;margin-bottom:6px}
+.card-description{color:#858c96;font-size:13px;margin-bottom:22px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+label{display:block;color:#aeb4bd;font-size:13px;margin-bottom:8px}
+input,select{
+  width:100%;padding:13px 14px;border-radius:9px;
+  border:1px solid #303640;background:#101217;color:#f1f3f5;
+  font-size:15px;outline:none;
+}
+input:focus,select:focus{border-color:#687382}
+.save-row{margin-top:22px;display:flex;justify-content:flex-end}
+.save-btn{
+  border:0;background:#f1f3f5;color:#111;padding:12px 22px;
+  border-radius:9px;font-weight:600;cursor:pointer;
+}
+.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.status{background:#101217;border-radius:10px;padding:18px}
+.status-label{font-size:12px;color:#858c96;margin-bottom:7px}
+.status-value{font-size:21px;font-weight:600}
+.note{color:#646b75;font-size:12px;margin-top:15px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.metric{padding:19px}
+.metric-label{color:#858c96;font-size:11px;margin-bottom:9px}
+.metric-value{font-size:24px;font-weight:650}
+.metric-small{color:#858c96;font-size:12px;margin-top:4px}
+.chart-card{padding:22px;margin-bottom:18px}
+.chart-title{font-size:15px;font-weight:600;margin-bottom:18px}
+.chart{
+  height:220px;display:flex;align-items:flex-end;gap:12px;
+  padding:10px 5px 0;border-bottom:1px solid #30353e
+}
+.bar-container{
+  flex:1;height:100%;display:flex;flex-direction:column;
+  justify-content:flex-end;align-items:center;min-width:0
+}
+.bar{width:55%;min-height:3px;border-radius:5px 5px 0 0;background:#dfe3e8}
+.bar-value{font-size:11px;color:#aeb4bd;margin-bottom:5px}
+.bar-label{font-size:10px;color:#707782;margin-top:8px}
+.quality-bar{background:#aeb4bd}
+
+.system-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.system-card{
+  background:#101217;
+  border:1px solid #303640;
+  border-radius:11px;
+  padding:24px;
+}
+.system-card-title{font-size:20px;font-weight:650;margin-bottom:6px}
+.system-card-question{font-size:13px;color:#9aa2ad;margin-bottom:20px}
+.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.choice{
+  border:1px solid #454d59;
+  background:#20252d;
+  color:#e7eaee;
+  padding:12px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+}
+.choice:hover{border-color:#687382}
+.choice.active{
+  background:#0f6b3a;
+  border-color:#36e38b;
+  color:#fff;
+}
+.inner-divider{height:1px;background:#292f38;margin:22px 0}
+.field-label{font-size:12px;color:#aeb4bd;margin-bottom:9px}
+.placeholder{
+  background:#171a20;border:1px solid #292f38;border-radius:13px;
+  padding:40px;text-align:center;color:#858c96
+}
+.placeholder strong{display:block;color:#f1f3f5;font-size:18px;margin-bottom:8px}
+@media(max-width:1000px){
+  .topbar{grid-template-columns:190px 1fr 1fr 1fr}
+  .top-right{grid-column:1/-1;justify-content:flex-end}
+}
+@media(max-width:700px){
+  .app{padding:14px}
+  .topbar{grid-template-columns:1fr 1fr}
+  .os-tab{grid-column:1/-1}
+  .top-right{grid-column:1/-1}
+  .layout{grid-template-columns:1fr}
+  .sidebar{min-height:auto}
+  .form-grid,.status-grid,.metrics,.system-grid{grid-template-columns:1fr}
+  .date-strip{gap:4px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <button class="top-tab os-tab" onclick="selectOS()">
+      <div class="top-title">OS Health</div>
+    </button>
+
+    <button class="top-tab active" id="layer1Tab" onclick="selectLayer(1)">
+      <div class="top-title">Personal Engine</div>
+    </button>
+
+    <button class="top-tab" id="layer2Tab" onclick="selectLayer(2)">
+      <div class="top-title">Productivity Engine</div>
+    </button>
+
+    <button class="top-tab" id="layer3Tab" onclick="selectLayer(3)">
+      <div class="top-title">Domain Engine</div>
+    </button>
+
+    <div class="top-right">
+      <button class="small-tab active" id="entryTab" onclick="showPage('entry')">Entry</button>
+      <button class="small-tab" id="dashboardTab" onclick="showPage('dashboard')">Dashboard</button>
+      <button class="small-tab" id="analyticsTab" onclick="showPage('analytics')">Analytics</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-title" id="sidebarTitle">Overview</div>
+      <div id="sidebarItems"></div>
+    </aside>
+
+    <main class="main">
+      <div id="osPage" style="display:none"></div>
+
+      <div id="systemPage">
+        <div class="workspace-head">
+          <div>
+            <div class="workspace-title" id="workspaceTitle">Sleep System</div>
+            <div class="workspace-sub" id="workspaceSub">Track your sleep duration and quality.</div>
+          </div>
+          <div class="workspace-sub" id="currentDateLabel"></div>
+        </div>
+
+        <section id="todayPage">
+          <div class="date-strip" id="dateStrip"></div>
+
+          <div class="card">
+            <div class="card-title" id="selectedDateTitle">Today's Sleep</div>
+            <div class="card-description">Record the two variables that define this system.</div>
+
+            <div class="form-grid">
+              <div>
+                <label for="hours">Sleep duration (hours)</label>
+                <input type="number" id="hours" min="0" max="24" step="0.1" placeholder="e.g. 7.5">
+              </div>
+              <div>
+                <label for="quality">Sleep quality</label>
+                <select id="quality">
+                  <option value="">Select quality</option>
+                  <option value="1">Bad</option>
+                  <option value="2">Okay</option>
+                  <option value="3">Good</option>
+                  <option value="4">Better</option>
+                  <option value="5">Best</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="save-row">
+              <button class="save-btn" onclick="saveEntry()">Save Sleep</button>
+            </div>
+            <div class="note">Your data is stored locally in this browser. Nothing is sent to a server.</div>
+          </div>
+
+        </section>
+
+
+        <section id="workoutPage" style="display:none">
+          <div class="date-strip" id="workoutDateStrip"></div>
+
+          <div class="card">
+            <div class="card-description">Record whether you trained today and when you trained.</div>
+
+            <div class="system-grid">
+              <div class="system-card">
+                <div class="system-card-title">Gym</div>
+                <div class="system-card-question">Did you go to the gym?</div>
+
+                <div class="choice-row">
+                  <button type="button" class="choice" id="gymYes" onclick="setWorkoutChoice('gym','yes')">Yes</button>
+                  <button type="button" class="choice" id="gymNo" onclick="setWorkoutChoice('gym','no')">No</button>
+                </div>
+
+                <div class="inner-divider"></div>
+                <div class="field-label">When?</div>
+                <div class="choice-row">
+                  <button type="button" class="choice" id="gymMorning" onclick="setWorkoutChoice('gymTime','morning')">Morning</button>
+                  <button type="button" class="choice" id="gymNight" onclick="setWorkoutChoice('gymTime','night')">Night</button>
+                </div>
+              </div>
+
+              <div class="system-card">
+                <div class="system-card-title">Cardio</div>
+                <div class="system-card-question">Did you do cardio?</div>
+
+                <div class="choice-row">
+                  <button type="button" class="choice" id="cardioYes" onclick="setWorkoutChoice('cardio','yes')">Yes</button>
+                  <button type="button" class="choice" id="cardioNo" onclick="setWorkoutChoice('cardio','no')">No</button>
+                </div>
+
+                <div class="inner-divider"></div>
+                <div class="field-label">Time</div>
+                <div class="choice-grid">
+                  <button type="button" class="choice" id="cardio5" onclick="setWorkoutChoice('cardioTime',5)">5 min</button>
+                  <button type="button" class="choice" id="cardio10" onclick="setWorkoutChoice('cardioTime',10)">10 min</button>
+                  <button type="button" class="choice" id="cardio15" onclick="setWorkoutChoice('cardioTime',15)">15 min</button>
+                  <button type="button" class="choice" id="cardio20" onclick="setWorkoutChoice('cardioTime',20)">20 min</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="save-row">
+              <button class="save-btn" onclick="saveWorkout()">Save</button>
+            </div>
+            <div class="note">Workout data is stored locally in this browser.</div>
+          </div>
+        </section>
+
+        <section id="meditationPage" style="display:none">
+          <div class="date-strip" id="meditationDateStrip"></div>
+
+          <div class="card">
+            <div class="card-description">Record your morning and night meditation practice.</div>
+
+            <div class="system-grid">
+              <div class="system-card">
+                <div class="system-card-title">Morning</div>
+                <div class="system-card-question">Did you meditate in the morning?</div>
+
+                <div class="choice-row">
+                  <button type="button" class="choice" id="morningYes" onclick="setMeditationChoice('morning','yes')">Yes</button>
+                  <button type="button" class="choice" id="morningNo" onclick="setMeditationChoice('morning','no')">No</button>
+                </div>
+
+                <div class="inner-divider"></div>
+                <div class="field-label">Time</div>
+                <div class="choice-grid">
+                  <button type="button" class="choice" id="morning5" onclick="setMeditationChoice('morningTime',5)">5 min</button>
+                  <button type="button" class="choice" id="morning10" onclick="setMeditationChoice('morningTime',10)">10 min</button>
+                  <button type="button" class="choice" id="morning15" onclick="setMeditationChoice('morningTime',15)">15 min</button>
+                  <button type="button" class="choice" id="morning20" onclick="setMeditationChoice('morningTime',20)">20 min</button>
+                </div>
+              </div>
+
+              <div class="system-card">
+                <div class="system-card-title">Night</div>
+                <div class="system-card-question">Did you meditate at night?</div>
+
+                <div class="choice-row">
+                  <button type="button" class="choice" id="nightYes" onclick="setMeditationChoice('night','yes')">Yes</button>
+                  <button type="button" class="choice" id="nightNo" onclick="setMeditationChoice('night','no')">No</button>
+                </div>
+
+                <div class="inner-divider"></div>
+                <div class="field-label">Time</div>
+                <div class="choice-grid">
+                  <button type="button" class="choice" id="night5" onclick="setMeditationChoice('nightTime',5)">5 min</button>
+                  <button type="button" class="choice" id="night10" onclick="setMeditationChoice('nightTime',10)">10 min</button>
+                  <button type="button" class="choice" id="night15" onclick="setMeditationChoice('nightTime',15)">15 min</button>
+                  <button type="button" class="choice" id="night20" onclick="setMeditationChoice('nightTime',20)">20 min</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="save-row">
+              <button class="save-btn" onclick="saveMeditation()">Save</button>
+            </div>
+            <div class="note">Meditation data is stored locally in this browser.</div>
+          </div>
+        </section>
+
+        <section id="dashboardPage" style="display:none">
+          <div class="metrics">
+            <div class="metric">
+              <div class="metric-label">AVG SLEEP · 7 DAYS</div>
+              <div class="metric-value" id="avgHours">—</div>
+              <div class="metric-small">hours</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">AVG QUALITY · 7 DAYS</div>
+              <div class="metric-value" id="avgQuality">—</div>
+              <div class="metric-small">out of 5</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">DAYS LOGGED</div>
+              <div class="metric-value" id="daysLogged">0</div>
+              <div class="metric-small">of 7</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">LOGGING CONSISTENCY</div>
+              <div class="metric-value" id="consistency">0%</div>
+              <div class="metric-small">last 7 days</div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Sleep Duration</div>
+            <div class="chart" id="hoursChart"></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Sleep Quality</div>
+            <div class="chart" id="qualityChart"></div>
+          </div>
+        </section>
+
+
+        <section id="analyticsPage" style="display:none">
+          <div class="metrics">
+            <div class="metric">
+              <div class="metric-label">AVG SLEEP · 7 DAYS</div>
+              <div class="metric-value" id="analyticsAvgHours">—</div>
+              <div class="metric-small">hours</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">AVG QUALITY · 7 DAYS</div>
+              <div class="metric-value" id="analyticsAvgQuality">—</div>
+              <div class="metric-small">out of 5</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">DAYS LOGGED</div>
+              <div class="metric-value" id="analyticsDaysLogged">0</div>
+              <div class="metric-small">of 7</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">LOGGING CONSISTENCY</div>
+              <div class="metric-value" id="analyticsConsistency">0%</div>
+              <div class="metric-small">last 7 days</div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Sleep Duration Trend</div>
+            <div class="chart" id="analyticsHoursChart"></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Sleep Quality Trend</div>
+            <div class="chart" id="analyticsQualityChart"></div>
+          </div>
+        </section>
+
+        <div id="placeholderPage" class="placeholder" style="display:none">
+          <strong id="placeholderTitle">Layer 2</strong>
+          This system workspace is ready to be configured.
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = "sleep_system_v0";
+const qualityNames = {1:"Bad",2:"Okay",3:"Good",4:"Better",5:"Best"};
+
+const layerItems = {
+  1: ["Sleep","Workout","Meditation","Diet","Journaling","Nofap"],
+  2: ["Day","Week","Bi-week","Month","Quarter","Bi-Quarter","Year"],
+  3: ["Money & Business","Health & Fitness","Dating & Game","Learning & Upskilling","Communication","Good Life"]
+};
+
+let currentLayer = 1;
+let currentItem = 0;
+let selectedDate = getDateString(new Date());
+let currentPage = "entry";
+let osMode = false;
+
+function getDateString(date){
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+}
+function getData(){
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(!saved) return {};
+  try{return JSON.parse(saved)}catch{return {}}
+}
+function saveData(data){localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
+function formatDate(dateString){
+  return new Date(dateString+"T00:00:00").toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+}
+
+function selectLayer(layer){
+  osMode = false;
+  currentLayer = layer;
+  currentItem = 0;
+  document.getElementById("layer1Tab").classList.toggle("active",layer===1);
+  document.getElementById("layer2Tab").classList.toggle("active",layer===2);
+  document.getElementById("layer3Tab").classList.toggle("active",layer===3);
+  document.querySelector(".os-tab").classList.remove("active");
+  renderSidebar();
+  renderWorkspace();
+}
+
+function selectOS(){
+  osMode = true;
+  document.querySelectorAll(".top-tab").forEach(x=>x.classList.remove("active"));
+  document.querySelector(".os-tab").classList.add("active");
+  document.getElementById("sidebarTitle").textContent = "OVERVIEW";
+  document.getElementById("sidebarItems").innerHTML = "";
+  document.getElementById("systemPage").style.display = "none";
+  document.getElementById("osPage").style.display = "block";
+  document.getElementById("osPage").innerHTML = `
+    <div class="placeholder">
+      <strong>OS Health</strong>
+      Your overall Personal OS health dashboard will live here.
+    </div>`;
+}
+
+function renderSidebar(){
+  const container = document.getElementById("sidebarItems");
+  document.getElementById("sidebarTitle").textContent = "Overview";
+  container.innerHTML = "";
+
+  const overview = document.createElement("button");
+  overview.className = "item" + (currentItem === 0 ? " active" : "");
+  overview.textContent = "Overview";
+  overview.onclick = () => selectItem(0);
+  container.appendChild(overview);
+
+  const divider = document.createElement("div");
+  divider.className = "divider";
+  container.appendChild(divider);
+
+  layerItems[currentLayer].forEach((name,index)=>{
+    const button = document.createElement("button");
+    button.className = "item" + (index+1===currentItem ? " active" : "");
+    button.textContent = name;
+    button.onclick = ()=>selectItem(index+1);
+    container.appendChild(button);
+  });
+}
+
+function selectItem(item){
+  currentItem = item;
+  currentPage = "entry";
+  document.getElementById("entryTab").classList.add("active");
+  document.getElementById("dashboardTab").classList.remove("active");
+  document.getElementById("analyticsTab").classList.remove("active");
+  renderSidebar();
+  renderWorkspace();
+}
+
+function renderWorkspace(){
+  if(osMode) return;
+
+  document.getElementById("osPage").style.display = "none";
+  document.getElementById("systemPage").style.display = "block";
+
+  const isSleep = currentLayer===1 && currentItem===1;
+  const isOverview = currentItem===0;
+
+  if(isOverview){
+    document.getElementById("todayPage").style.display = "none";
+    document.getElementById("dashboardPage").style.display = "none";
+    document.getElementById("analyticsPage").style.display = "none";
+    document.getElementById("placeholderPage").style.display = "block";
+    document.getElementById("workspaceTitle").textContent = `Layer ${currentLayer} Overview`;
+    document.getElementById("workspaceSub").textContent = "Overview of the systems in this engine.";
+    document.getElementById("placeholderTitle").textContent = "Overview";
+    return;
+  }
+
+  const isWorkout = currentLayer===1 && currentItem===2;
+  const isMeditation = currentLayer===1 && currentItem===3;
+
+  document.getElementById("todayPage").style.display = "none";
+  document.getElementById("dashboardPage").style.display = "none";
+  document.getElementById("analyticsPage").style.display = "none";
+  document.getElementById("workoutPage").style.display = "none";
+  document.getElementById("meditationPage").style.display = "none";
+  document.getElementById("placeholderPage").style.display = "none";
+
+  if(isSleep){
+    document.getElementById("workspaceTitle").textContent = "Sleep System";
+    document.getElementById("workspaceSub").textContent = "Track your sleep duration and quality.";
+    document.getElementById("todayPage").style.display = currentPage==="entry" ? "block" : "none";
+    document.getElementById("dashboardPage").style.display = currentPage==="dashboard" ? "block" : "none";
+    document.getElementById("analyticsPage").style.display = currentPage==="analytics" ? "block" : "none";
+    renderDateStrip("dateStrip");
+    loadSelectedDate();
+    if(currentPage==="dashboard" || currentPage==="analytics") renderDashboard();
+  }else if(isWorkout){
+    document.getElementById("workspaceTitle").textContent = "Workout";
+    document.getElementById("workspaceSub").textContent = "Track your gym and cardio activity.";
+    if(currentPage==="entry"){
+      document.getElementById("workoutPage").style.display = "block";
+      renderDateStrip("workoutDateStrip");
+      loadWorkoutDate();
+    }else{
+      document.getElementById("placeholderPage").style.display = "block";
+      document.getElementById("placeholderTitle").textContent = currentPage==="dashboard" ? "Workout Dashboard" : "Workout Analytics";
+    }
+  }else if(isMeditation){
+    document.getElementById("workspaceTitle").textContent = "Meditation";
+    document.getElementById("workspaceSub").textContent = "Track your morning and night meditation.";
+    if(currentPage==="entry"){
+      document.getElementById("meditationPage").style.display = "block";
+      renderDateStrip("meditationDateStrip");
+      loadMeditationDate();
+    }else{
+      document.getElementById("placeholderPage").style.display = "block";
+      document.getElementById("placeholderTitle").textContent = currentPage==="dashboard" ? "Meditation Dashboard" : "Meditation Analytics";
+    }
+  }else{
+    document.getElementById("placeholderPage").style.display = "block";
+    document.getElementById("placeholderTitle").textContent = layerItems[currentLayer][currentItem-1];
+    document.getElementById("workspaceTitle").textContent = layerItems[currentLayer][currentItem-1];
+    document.getElementById("workspaceSub").textContent = "System workspace — not configured yet.";
+  }
+}
+
+
+const WORKOUT_STORAGE_KEY = "workout_system_v0";
+const MEDITATION_STORAGE_KEY = "meditation_system_v0";
+
+let workoutState = {gym:"",gymTime:"",cardio:"",cardioTime:""};
+let meditationState = {morning:"",morningTime:"",night:"",nightTime:""};
+
+function getSystemData(key){
+  const saved=localStorage.getItem(key);
+  if(!saved) return {};
+  try{return JSON.parse(saved)}catch{return {}}
+}
+function saveSystemData(key,data){
+  localStorage.setItem(key,JSON.stringify(data));
+}
+
+function loadWorkoutDate(){
+  const data=getSystemData(WORKOUT_STORAGE_KEY);
+  workoutState=data[selectedDate] || {gym:"",gymTime:"",cardio:"",cardioTime:""};
+  updateWorkoutButtons();
+}
+function loadMeditationDate(){
+  const data=getSystemData(MEDITATION_STORAGE_KEY);
+  meditationState=data[selectedDate] || {morning:"",morningTime:"",night:"",nightTime:""};
+  updateMeditationButtons();
+}
+function setActive(id,active){
+  const el=document.getElementById(id);
+  if(el) el.classList.toggle("active",!!active);
+}
+function setWorkoutChoice(field,value){
+  workoutState[field]=value;
+  updateWorkoutButtons();
+}
+function setMeditationChoice(field,value){
+  meditationState[field]=value;
+  updateMeditationButtons();
+}
+function updateWorkoutButtons(){
+  setActive("gymYes",workoutState.gym==="yes");
+  setActive("gymNo",workoutState.gym==="no");
+  setActive("gymMorning",workoutState.gymTime==="morning");
+  setActive("gymNight",workoutState.gymTime==="night");
+  setActive("cardioYes",workoutState.cardio==="yes");
+  setActive("cardioNo",workoutState.cardio==="no");
+  [5,10,15,20].forEach(v=>setActive("cardio"+v,workoutState.cardioTime===v));
+}
+function updateMeditationButtons(){
+  setActive("morningYes",meditationState.morning==="yes");
+  setActive("morningNo",meditationState.morning==="no");
+  [5,10,15,20].forEach(v=>setActive("morning"+v,meditationState.morningTime===v));
+  setActive("nightYes",meditationState.night==="yes");
+  setActive("nightNo",meditationState.night==="no");
+  [5,10,15,20].forEach(v=>setActive("night"+v,meditationState.nightTime===v));
+}
+function saveWorkout(){
+  if(!workoutState.gym || !workoutState.cardio){
+    alert("Please select Yes or No for both Gym and Cardio.");
+    return;
+  }
+  if(workoutState.gym==="yes" && !workoutState.gymTime){
+    alert("Please select Morning or Night for Gym.");
+    return;
+  }
+  if(workoutState.cardio==="yes" && !workoutState.cardioTime){
+    alert("Please select a Cardio time.");
+    return;
+  }
+  const data=getSystemData(WORKOUT_STORAGE_KEY);
+  data[selectedDate]=workoutState;
+  saveSystemData(WORKOUT_STORAGE_KEY,data);
+  alert("Workout data saved.");
+}
+function saveMeditation(){
+  if(!meditationState.morning || !meditationState.night){
+    alert("Please select Yes or No for both Morning and Night.");
+    return;
+  }
+  if(meditationState.morning==="yes" && !meditationState.morningTime){
+    alert("Please select a Morning meditation time.");
+    return;
+  }
+  if(meditationState.night==="yes" && !meditationState.nightTime){
+    alert("Please select a Night meditation time.");
+    return;
+  }
+  const data=getSystemData(MEDITATION_STORAGE_KEY);
+  data[selectedDate]=meditationState;
+  saveSystemData(MEDITATION_STORAGE_KEY,data);
+  alert("Meditation data saved.");
+}
+
+function showPage(page){
+  if(osMode) return;
+  currentPage = page;
+  document.getElementById("entryTab").classList.toggle("active",page==="entry");
+  document.getElementById("dashboardTab").classList.toggle("active",page==="dashboard");
+  document.getElementById("analyticsTab").classList.toggle("active",page==="analytics");
+  renderWorkspace();
+}
+
+function renderDateStrip(targetId="dateStrip"){
+  const container=document.getElementById(targetId);
+  if(!container) return;
+  container.innerHTML="";
+  const today=new Date();
+  const todayString=getDateString(today);
+
+  // Three past days, today, and three future days.
+  for(let offset=-3;offset<=3;offset++){
+    const date=new Date(today);
+    date.setDate(today.getDate()+offset);
+    const dateString=getDateString(date);
+
+    let stateClass = offset < 0 ? " past" : (offset > 0 ? " future" : " today-date");
+    const selectedClass = dateString===selectedDate ? " selected" : "";
+
+    const button=document.createElement("div");
+    button.className="date"+stateClass+selectedClass;
+    button.innerHTML=`
+      <div class="day">${date.toLocaleDateString(undefined,{weekday:"short"})}</div>
+      <div class="number">${date.getDate()}</div>
+      ${offset===0 ? '<div class="today-label">Today</div>' : ''}`;
+    button.onclick=()=>{
+      selectedDate=dateString;
+      renderDateStrip(targetId);
+      loadSelectedDate();
+      loadWorkoutDate();
+      loadMeditationDate();
+    };
+    container.appendChild(button);
+  }
+
+  document.getElementById("currentDateLabel").textContent=formatDate(selectedDate);
+}
+
+function loadSelectedDate(){
+  const data=getData();
+  const entry=data[selectedDate];
+
+  document.getElementById("selectedDateTitle").textContent =
+    selectedDate===getDateString(new Date()) ? "Today's Sleep" : formatDate(selectedDate);
+
+  if(entry){
+    document.getElementById("hours").value=entry.hours;
+    document.getElementById("quality").value=entry.quality;
+    document.getElementById("statusHours").textContent=`${entry.hours} hrs`;
+    document.getElementById("statusQuality").textContent=qualityNames[entry.quality];
+  }else{
+    document.getElementById("hours").value="";
+    document.getElementById("quality").value="";
+    document.getElementById("statusHours").textContent="—";
+    document.getElementById("statusQuality").textContent="—";
+  }
+}
+
+function saveEntry(){
+  const hoursInput=document.getElementById("hours").value;
+  const qualityInput=document.getElementById("quality").value;
+
+  if(!hoursInput || !qualityInput){
+    alert("Please enter both sleep duration and sleep quality.");
+    return;
+  }
+
+  const hours=parseFloat(hoursInput);
+  if(hours<0 || hours>24){
+    alert("Please enter a valid sleep duration.");
+    return;
+  }
+
+  const data=getData();
+  data[selectedDate]={hours,quality:parseInt(qualityInput)};
+  saveData(data);
+  loadSelectedDate();
+  alert("Sleep data saved.");
+}
+
+function getLastSevenDays(){
+  const dates=[],today=new Date();
+  for(let i=6;i>=0;i--){
+    const date=new Date(today);
+    date.setDate(today.getDate()-i);
+    dates.push(getDateString(date));
+  }
+  return dates;
+}
+
+function renderDashboard(){
+  const data=getData();
+  const dates=getLastSevenDays();
+  const entries=dates.map(date=>data[date]).filter(Boolean);
+
+  if(entries.length){
+    const avgHours=entries.reduce((s,e)=>s+e.hours,0)/entries.length;
+    const avgQuality=entries.reduce((s,e)=>s+e.quality,0)/entries.length;
+    document.getElementById("avgHours").textContent=avgHours.toFixed(1);
+    document.getElementById("avgQuality").textContent=avgQuality.toFixed(1);
+    document.getElementById("daysLogged").textContent=entries.length;
+    document.getElementById("consistency").textContent=Math.round(entries.length/7*100)+"%";
+  }else{
+    document.getElementById("avgHours").textContent="—";
+    document.getElementById("avgQuality").textContent="—";
+    document.getElementById("daysLogged").textContent="0";
+    document.getElementById("consistency").textContent="0%";
+  }
+
+  renderChart("hoursChart",data,dates,"hours");
+  renderChart("qualityChart",data,dates,"quality");
+
+  document.getElementById("analyticsAvgHours").textContent =
+    document.getElementById("avgHours").textContent;
+  document.getElementById("analyticsAvgQuality").textContent =
+    document.getElementById("avgQuality").textContent;
+  document.getElementById("analyticsDaysLogged").textContent =
+    document.getElementById("daysLogged").textContent;
+  document.getElementById("analyticsConsistency").textContent =
+    document.getElementById("consistency").textContent;
+
+  renderChart("analyticsHoursChart",data,dates,"hours");
+  renderChart("analyticsQualityChart",data,dates,"quality");
+}
+
+function renderChart(id,data,dates,type){
+  const chart=document.getElementById(id);
+  chart.innerHTML="";
+
+  const max=type==="hours"
+    ? Math.max(10,...dates.map(d=>data[d]?data[d].hours:0))
+    : 5;
+
+  dates.forEach(date=>{
+    const entry=data[date];
+    const container=document.createElement("div");
+    container.className="bar-container";
+
+    if(entry){
+      const value=document.createElement("div");
+      value.className="bar-value";
+      value.textContent=type==="hours" ? entry.hours+"h" : qualityNames[entry.quality];
+
+      const bar=document.createElement("div");
+      bar.className="bar"+(type==="quality"?" quality-bar":"");
+      const v=type==="hours"?entry.hours:entry.quality;
+      bar.style.height=`${(v/max)*100}%`;
+
+      container.appendChild(value);
+      container.appendChild(bar);
+    }else{
+      const empty=document.createElement("div");
+      empty.style.height="3px";
+      empty.style.width="55%";
+      empty.style.background="#30353e";
+      empty.style.borderRadius="5px 5px 0 0";
+      container.appendChild(empty);
+    }
+
+    const label=document.createElement("div");
+    label.className="bar-label";
+    label.textContent=new Date(date+"T00:00:00").toLocaleDateString(undefined,{weekday:"short"});
+    container.appendChild(label);
+    chart.appendChild(container);
+  });
+}
+
+renderSidebar();
+renderWorkspace();
+</script>
+</body>
+</html>
