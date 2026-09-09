@@ -647,7 +647,7 @@ async function initializeApp(){
 
 async function getEntries(systemName, startDate=null, endDate=null){
   if(!currentUser) return {};
-  let query=supabaseClient.from("system_entries").select("entry_date,data").eq("user_id",currentUser.id).eq("system_name",systemName);
+  let query=supabaseClient.from("system_entries").select("entry_date,data").eq("user_id",currentUser.id).eq("system",systemName);
   if(startDate) query=query.gte("entry_date",startDate);
   if(endDate) query=query.lte("entry_date",endDate);
   const {data,error}=await query.order("entry_date",{ascending:true});
@@ -655,14 +655,22 @@ async function getEntries(systemName, startDate=null, endDate=null){
   return Object.fromEntries((data||[]).map(row=>[row.entry_date,row.data]));
 }
 
+function engineForSystem(systemName){
+  if(layerItems[1].includes(systemName)) return "Personal Engine";
+  if(layerItems[2].includes(systemName)) return "Productivity Engine";
+  if(layerItems[3].includes(systemName)) return "Domain Engine";
+  return "Personal Engine";
+}
+
 async function saveSystemEntry(systemName, date, payload){
   if(!currentUser){alert("Please log in first.");return false;}
   const {error}=await supabaseClient.from("system_entries").upsert({
     user_id:currentUser.id,
-    system_name:systemName,
+    engine:engineForSystem(systemName),
+    system:systemName,
     entry_date:date,
     data:payload
-  },{onConflict:"user_id,system_name,entry_date"});
+  },{onConflict:"user_id,system,entry_date"});
   if(error){console.error(error);alert("Could not save data: "+error.message);return false;}
   return true;
 }
