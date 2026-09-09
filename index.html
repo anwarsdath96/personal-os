@@ -188,6 +188,7 @@ input:focus,select:focus{border-color:#687382}
 .quality-bar{background:#aeb4bd}
 
 .system-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.simple-tracker{max-width:100%}
 .system-card{
   background:#101217;
   border:1px solid #303640;
@@ -213,6 +214,19 @@ input:focus,select:focus{border-color:#687382}
   border-color:#36e38b;
   color:#fff;
 }
+.choice.active.no-choice{
+  background:#8f202b;
+  border-color:#f05b68;
+  color:#fff;
+}
+.choice:disabled{
+  opacity:.38;
+  cursor:not-allowed;
+  border-color:#303640;
+  background:#171a20;
+  color:#646b75;
+}
+.choice:disabled:hover{border-color:#303640}
 .inner-divider{height:1px;background:#292f38;margin:22px 0}
 .field-label{font-size:12px;color:#aeb4bd;margin-bottom:9px}
 
@@ -484,6 +498,155 @@ input:focus,select:focus{border-color:#687382}
 
 .cloud-badge{font-size:11px;color:#b9ffd8;margin-top:8px}
 
+.bar.yes-bar{background:#4fd18a}
+.bar.no-bar{background:#ef6973}
+.bar.blue-bar{background:#5ca4f5}
+.bar.purple-bar{background:#8b7cf7}
+.bar.empty-bar{background:#30353e;min-height:3px}
+.range-note{color:#646b75;font-size:12px;margin:-6px 0 16px}
+
+.health-card{
+  background:#171a20;
+  border:1px solid #292f38;
+  border-radius:16px;
+  padding:22px 22px 20px;
+}
+.health-card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  margin-bottom:16px;
+}
+.health-card-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.health-card-sub{color:#858c96;font-size:13px}
+.range-toggle{display:flex;gap:8px;flex:0 0 auto;padding-top:2px}
+.range-btn{
+  border:1px solid #303640;
+  background:#101217;
+  color:#aeb4bd;
+  padding:9px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:600;
+}
+.range-btn.active{
+  background:#3b5bdb;
+  border-color:#5b7cff;
+  color:#fff;
+}
+.health-chart{
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr);
+  gap:10px;
+  min-height:430px;
+}
+.health-y{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  color:#8b93a0;
+  font-size:12px;
+  padding:6px 0 42px;
+  text-align:right;
+}
+.health-plot{position:relative;min-height:390px}
+.health-bands{
+  position:absolute;
+  inset:0 0 42px;
+  display:flex;
+  flex-direction:column;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid #2a313b;
+}
+.health-band{
+  flex:1;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  padding-right:16px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.health-band:last-child{border-bottom:0}
+.health-band.excellent{background:#16382a}
+.health-band.good{background:#173456}
+.health-band.attention{background:#3c3016}
+.health-band.critical{background:#3a1b22}
+.health-bars{
+  position:absolute;
+  inset:28px 132px 42px 18px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-around;
+  gap:8px;
+  z-index:1;
+}
+.health-bar-col{
+  flex:1;
+  height:100%;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  min-width:0;
+}
+.health-bar{
+  position:relative;
+  width:46%;
+  min-width:28px;
+  max-width:64px;
+  border-radius:8px 8px 2px 2px;
+  min-height:4px;
+}
+.health-bar-value{
+  position:absolute;
+  top:-22px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:13px;
+  font-weight:700;
+  color:#e8edf3;
+  white-space:nowrap;
+}
+.health-bar.excellent{background:#7dff9d}
+.health-bar.good{background:#7b8cff}
+.health-bar.attention{background:#f0b429}
+.health-bar.critical{background:#ff7a7a}
+.health-x{
+  position:absolute;
+  left:18px;right:132px;bottom:0;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  gap:8px;
+}
+.health-x span{
+  flex:1;
+  text-align:center;
+  color:#c5ccd6;
+  font-size:13px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.band-label{text-align:right;line-height:1.2;pointer-events:none}
+.band-label strong{display:block;font-size:13px;font-weight:700;margin-bottom:2px}
+.band-label span{display:block;font-size:12px;color:#9aa3ae}
+.health-band.excellent .band-label strong{color:#7dff9d}
+.health-band.good .band-label strong{color:#8fa0ff}
+.health-band.attention .band-label strong{color:#f0b429}
+.health-band.critical .band-label strong{color:#ff8a8a}
+@media(max-width:800px){
+  .health-chart{grid-template-columns:40px 1fr;min-height:360px}
+  .health-card-head{flex-direction:column}
+  .health-bars{right:18px}
+  .health-x{right:18px}
+  .band-label{display:none}
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -638,6 +801,26 @@ input:focus,select:focus{border-color:#687382}
           </div>
         </section>
 
+        <section id="simpleTrackerPage" style="display:none">
+          <div class="date-strip" id="simpleDateStrip"></div>
+          <div class="card">
+            <div class="card-description" id="simpleTrackerDescription"></div>
+            <div class="simple-tracker">
+              <div class="system-card">
+                <div class="system-card-title" id="simpleTrackerQuestion"></div>
+                <div class="choice-row">
+                  <button type="button" class="choice" id="simpleYes" onclick="setSimpleTrackerChoice('yes')">Yes</button>
+                  <button type="button" class="choice" id="simpleNo" onclick="setSimpleTrackerChoice('no')">No</button>
+                </div>
+              </div>
+            </div>
+            <div class="save-row">
+              <button class="save-btn" onclick="saveSimpleTracker()">Save</button>
+            </div>
+            <div class="note">Data is stored securely in the cloud and linked to your account.</div>
+          </div>
+        </section>
+
         <section id="meditationPage" style="display:none">
           <div class="date-strip" id="meditationDateStrip"></div>
 
@@ -762,6 +945,12 @@ input:focus,select:focus{border-color:#687382}
           </div>
         </section>
 
+        <section id="engineDashboardPage" style="display:none">
+          <div class="range-note" id="engineDashRange"></div>
+          <div class="metrics" id="engineDashMetrics"></div>
+          <div id="engineDashCharts"></div>
+        </section>
+
         <div id="placeholderPage" class="placeholder" style="display:none">
           <strong id="placeholderTitle">System</strong>
           This system workspace is ready to be configured.
@@ -806,6 +995,8 @@ let authMode = "login";
 let currentUser = null;
 let workoutState = {gym:"",gymTime:"",cardio:"",cardioTime:null};
 let meditationState = {morning:"",morningTime:null,night:"",nightTime:null};
+let simpleTrackerState = {system:"",value:""};
+let overviewRangeDays = 7;
 
 function getDateString(date){
   return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
@@ -970,8 +1161,8 @@ function selectItem(item){
 function overviewConfig(layer){
   if(layer===1){
     return {
-      title:"Layer 1 Overview",
-      sub:"Bird's-eye view of your Personal Engine. Track, improve, repeat.",
+      title:"Personal Engine Overview",
+      sub:"Current health score for each system",
       systems:[
         ["Sleep",82,"Healthy","today","green"],
         ["Workout",91,"Excellent","today","green"],
@@ -997,8 +1188,8 @@ function overviewConfig(layer){
   }
   if(layer===2){
     return {
-      title:"Layer 2 Overview",
-      sub:"Bird's-eye view of your Productivity Engine. Manage execution across time horizons.",
+      title:"Productivity Engine Overview",
+      sub:"Current health score for each system",
       systems:[
         ["Day",84,"Healthy","today","green"],
         ["Week",91,"Excellent","this week","green"],
@@ -1024,8 +1215,8 @@ function overviewConfig(layer){
     };
   }
   return {
-    title:"Layer 3 Overview",
-    sub:"Bird's-eye view of your Domain Engine. See how your major life domains are progressing.",
+    title:"Domain Engine Overview",
+    sub:"Current health score for each system",
     systems:[
       ["Money & Business",71,"Stable","today","blue"],
       ["Health & Fitness",86,"Healthy","today","green"],
@@ -1091,136 +1282,124 @@ function renderTrendSVG(values){
     }).join("")}
   </svg>`;
 }
-function renderEngineOverview(){
-  const cfg=overviewConfig(currentLayer);
-  const counts=overviewStatusCounts(cfg.systems);
-  const overallHealth=cfg.health;
-  const statusTotal=cfg.systems.length;
-  const avg=Math.round(cfg.systems.reduce((sum,s)=>sum+s[1],0)/cfg.systems.length);
-  const trendLabels=currentLayer===1?["Sep 3","Sep 4","Sep 5","Sep 6","Sep 7","Sep 8","Sep 9"]:["P-6","P-5","P-4","P-3","P-2","P-1","Now"];
-  const bars=cfg.systems.map(s=>`
-    <div class="mini-bar-wrap">
-      <div class="mini-bar-value">${s[1]}%</div>
-      <div class="mini-bar ${healthColorClass(s[1])}" style="height:${Math.max(5,s[1])}%"></div>
-      <div class="mini-bar-label">${s[0]}</div>
-    </div>`).join("");
-  const rows=cfg.systems.map(s=>`
-    <tr>
-      <td>${s[0]}</td>
-      <td class="health-cell">${s[1]}%</td>
-      <td>${s[1]>=80?"↑":"—"}</td>
-      <td><span class="status-pill ${healthClass(s[1])}">${s[2]}</span></td>
-      <td>${s[3]}</td>
-    </tr>`).join("");
-  const activities=cfg.activity.map(a=>`
-    <div class="activity-row">
-      <div class="activity-icon">${a[0]}</div>
-      <div class="activity-main"><strong>${a[1]}</strong><span>${a[2]}</span></div>
-      <div class="activity-time">${a[3]}</div>
-    </div>`).join("");
-
+function clampScore(n){return Math.max(0,Math.min(100,n));}
+function healthBand(score){
+  if(score>=75) return "excellent";
+  if(score>=50) return "good";
+  if(score>=25) return "attention";
+  return "critical";
+}
+function scoreSystemDay(systemName, entry){
+  if(!entry) return 0;
+  if(systemName==="Sleep"){
+    const hours=Number(entry.hours);
+    let duration=0;
+    if(!Number.isNaN(hours)){
+      if(hours>=7 && hours<=9) duration=100;
+      else if(hours<7) duration=clampScore((hours/7)*100);
+      else duration=clampScore(100-(hours-9)*15);
+    }
+    const quality=entry.quality? (Number(entry.quality)/5)*100 : 0;
+    return clampScore(duration*0.6 + quality*0.4);
+  }
+  if(systemName==="Workout"){
+    let score=0;
+    if(entry.gym==="yes") score+=55;
+    if(entry.cardio==="yes"){
+      const mins=Number(entry.cardioTime||0);
+      score+=clampScore(Math.max(15,(mins/20)*45));
+    }
+    return clampScore(score);
+  }
+  if(systemName==="Meditation"){
+    let score=0;
+    if(entry.morning==="yes") score+=40+clampScore((Number(entry.morningTime||0)/20)*10);
+    if(entry.night==="yes") score+=40+clampScore((Number(entry.nightTime||0)/20)*10);
+    return clampScore(score);
+  }
+  if(entry.value==="yes") return 100;
+  if(entry.value==="no") return 0;
+  return 0;
+}
+async function loadLayerHealthScores(layer, days=overviewRangeDays){
+  const systems=layerItems[layer]||[];
+  const dates=getDateRange(days);
+  return Promise.all(systems.map(async name=>{
+    const data=await getEntries(name,dates[0],dates[dates.length-1]);
+    const total=dates.reduce((sum,date)=>sum+scoreSystemDay(name,data[date]),0);
+    return {name, health:Math.round(total/dates.length), logged:dates.filter(date=>!!data[date]).length};
+  }));
+}
+async function setOverviewRange(days){
+  overviewRangeDays=days;
+  await renderEngineOverview();
+}
+async function renderEngineOverview(){
+  const rangeLabel=overviewRangeDays===30?"last 30 days":"last 7 days";
   document.getElementById("overviewPage").innerHTML=`
-    <div class="overview-top">
-      <div class="overview-card">
-        <div class="overview-card-title">Overall Health</div>
-        <div class="overview-health">
-          ${overviewDonut(overallHealth,"Health")}
-          <div>
-            <div class="overview-big">${overallHealth}%</div>
-            <div class="overview-trend">↑ ${cfg.healthDelta}</div>
-            <div class="overview-muted">vs last period</div>
-            <span class="status-pill status-healthy" style="margin-top:8px">Improving</span>
+    <div class="health-card">
+      <div class="health-card-head">
+        <div>
+          <div class="health-card-title">System Health Overview</div>
+          <div class="health-card-sub">Current health score for each system · ${rangeLabel}</div>
+        </div>
+        <div class="range-toggle">
+          <button class="range-btn${overviewRangeDays===7?" active":""}" onclick="setOverviewRange(7)">Last 7 days</button>
+          <button class="range-btn${overviewRangeDays===30?" active":""}" onclick="setOverviewRange(30)">Last 30 days</button>
+        </div>
+      </div>
+      <div class="health-chart">
+        <div class="health-y"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div>
+        <div class="health-plot">
+          <div class="health-bands">
+            <div class="health-band excellent"><div class="band-label"><strong>Excellent</strong><span>75–100%</span></div></div>
+            <div class="health-band good"><div class="band-label"><strong>Good</strong><span>50–75%</span></div></div>
+            <div class="health-band attention"><div class="band-label"><strong>Needs Attention</strong><span>25–50%</span></div></div>
+            <div class="health-band critical"><div class="band-label"><strong>Critical</strong><span>0–25%</span></div></div>
           </div>
+          <div class="health-bars" id="healthBars"></div>
+          <div class="health-x" id="healthLabels"></div>
         </div>
-      </div>
-
-      <div class="overview-card">
-        <div class="overview-card-title">Systems Status</div>
-        <div class="overview-health">
-          <div class="donut" style="background:conic-gradient(#4fd18a 0deg ${(counts.healthy/statusTotal)*360}deg,#f4cf4d ${(counts.healthy/statusTotal)*360}deg ${((counts.healthy+counts.attention)/statusTotal)*360}deg,#ef6973 ${((counts.healthy+counts.attention)/statusTotal)*360}deg 360deg)">
-            <div class="donut-center"><span class="donut-value">${statusTotal}</span><span class="donut-label">Systems</span></div>
-          </div>
-          <div class="status-list">
-            <div class="status-row"><i class="status-dot" style="background:#4fd18a"></i><span>Healthy</span><strong>${counts.healthy}</strong></div>
-            <div class="status-row"><i class="status-dot" style="background:#f4cf4d"></i><span>Needs Attention</span><strong>${counts.attention}</strong></div>
-            <div class="status-row"><i class="status-dot" style="background:#ef6973"></i><span>Critical</span><strong>${counts.critical}</strong></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="overview-card">
-        <div class="overview-card-title">Execution (This Period)</div>
-        <div class="execution-number">
-          <div><div class="overview-big">${cfg.execution}%</div><div class="overview-muted">Planned actions completed</div></div>
-          <div class="overview-trend">↑ ${cfg.executionDelta}<br><span class="overview-muted">vs last period</span></div>
-        </div>
-        <div class="progress-track"><div class="progress-fill" style="width:${cfg.execution}%"></div></div>
-        <div class="progress-meta"><span>0%</span><span>100%</span></div>
-      </div>
-    </div>
-
-    <div class="overview-grid">
-      <div class="overview-card wide">
-        <div class="overview-card-title">System Health Overview</div>
-        <div class="overview-card-sub">Current health score for each system</div>
-        <div class="mini-bars">${bars}</div>
-      </div>
-
-      <div class="overview-card">
-        <div class="overview-card-title">Execution Trend</div>
-        <div class="overview-card-sub">Last 7 periods</div>
-        <div class="trend-chart">
-          <div class="trend-y"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div>
-          <div class="trend-main">
-            <div class="trend-grid"></div>
-            ${renderTrendSVG(cfg.trend)}
-            <div class="trend-labels">${trendLabels.map(x=>`<span>${x}</span>`).join("")}</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="overview-card wide">
-        <div class="overview-card-title">Systems at a Glance</div>
-        <div class="overview-card-sub">Health, trend, status and latest activity</div>
-        <table class="overview-table">
-          <thead><tr><th>System</th><th>Health</th><th>Trend</th><th>Status</th><th>Last Entry</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>
-
-      <div class="overview-card">
-        <div class="overview-card-title">Recent Activity</div>
-        <div class="activity-list">${activities}</div>
-      </div>
-
-      <div class="overview-card full">
-        <div class="overview-footer">
-          <div><strong>Consistency compounds.</strong> Keep showing up. — Personal OS</div>
-          <span class="status-pill status-stable">${avg}% average system health</span>
-        </div>
-        <div class="preview-note">Overview metrics are illustrative for now; as each system gets configured and tracked, these cards will be driven by its real cloud data.</div>
       </div>
     </div>`;
+
+  const scores=await loadLayerHealthScores(currentLayer, overviewRangeDays);
+  const bars=document.getElementById("healthBars");
+  const labels=document.getElementById("healthLabels");
+  if(!bars||!labels) return;
+  bars.innerHTML=scores.map(s=>{
+    const band=healthBand(s.health);
+    return `<div class="health-bar-col">
+      <div class="health-bar ${band}" style="height:${Math.max(s.health,2)}%">
+        <span class="health-bar-value">${s.health}%</span>
+      </div>
+    </div>`;
+  }).join("");
+  labels.innerHTML=scores.map(s=>`<span title="${s.logged} of ${overviewRangeDays} days logged">${s.name}</span>`).join("");
 }
 
 
 async function renderWorkspace(){
+  // Overview dashboard exists only for the Overview sidebar item. Each system has its own interface.
   if(osMode || !currentUser) return;
   document.getElementById("osPage").style.display="none";
   document.getElementById("systemPage").style.display="block";
   const isSleep=currentLayer===1&&currentItem===1;
   const isOverview=currentItem===0;
+  if(!isOverview) document.getElementById("overviewPage").style.display="none";
   if(isOverview){
-    ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","placeholderPage"].forEach(id=>document.getElementById(id).style.display="none");
+    ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage"].forEach(id=>document.getElementById(id).style.display="none");
     document.getElementById("overviewPage").style.display="block";
     document.getElementById("workspaceTitle").textContent=overviewConfig(currentLayer).title;
-    document.getElementById("workspaceSub").textContent=overviewConfig(currentLayer).sub;
-    renderEngineOverview();
+    document.getElementById("workspaceSub").textContent="";
+    await renderEngineOverview();
     return;
   }
   const isWorkout=currentLayer===1&&currentItem===2;
   const isMeditation=currentLayer===1&&currentItem===3;
-  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","placeholderPage"].forEach(id=>document.getElementById(id).style.display="none");
+  const simpleSystemMap = {4:"Diet",5:"Journaling",6:"Nofap"};
+  const isSimpleTracker=currentLayer===1 && !!simpleSystemMap[currentItem];
+  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage"].forEach(id=>document.getElementById(id).style.display="none");
   if(isSleep){
     document.getElementById("workspaceTitle").textContent="Sleep System";
     document.getElementById("workspaceSub").textContent="Track your sleep duration and quality.";
@@ -1232,11 +1411,31 @@ async function renderWorkspace(){
   }else if(isWorkout){
     document.getElementById("workspaceTitle").textContent="Workout"; document.getElementById("workspaceSub").textContent="Track your gym and cardio activity.";
     if(currentPage==="entry"){document.getElementById("workoutPage").style.display="block";renderDateStrip("workoutDateStrip");await loadWorkoutDate();}
-    else{document.getElementById("placeholderPage").style.display="block";document.getElementById("placeholderTitle").textContent=currentPage==="dashboard"?"Workout Dashboard":"Workout Analytics";}
+    else{document.getElementById("engineDashboardPage").style.display="block";await renderEngineDashboard("Workout");}
   }else if(isMeditation){
     document.getElementById("workspaceTitle").textContent="Meditation"; document.getElementById("workspaceSub").textContent="Track your morning and night meditation.";
     if(currentPage==="entry"){document.getElementById("meditationPage").style.display="block";renderDateStrip("meditationDateStrip");await loadMeditationDate();}
-    else{document.getElementById("placeholderPage").style.display="block";document.getElementById("placeholderTitle").textContent=currentPage==="dashboard"?"Meditation Dashboard":"Meditation Analytics";}
+    else{document.getElementById("engineDashboardPage").style.display="block";await renderEngineDashboard("Meditation");}
+  }else if(isSimpleTracker){
+    const systemName=simpleSystemMap[currentItem];
+    const configs={
+      "Diet":{title:"Diet",sub:"Track your diet consistency.",description:"Record whether you followed your diet today.",question:"Did you follow diet today?"},
+      "Journaling":{title:"Journaling",sub:"Capture your thoughts and reflect.",description:"Record whether you journaled today.",question:"Did you journal today?"},
+      "Nofap":{title:"Nofap",sub:"Track your daily commitment.",description:"Record whether you followed Nofap today.",question:"Did you follow Nofap today?"}
+    };
+    const cfg=configs[systemName];
+    document.getElementById("workspaceTitle").textContent=cfg.title;
+    document.getElementById("workspaceSub").textContent=cfg.sub;
+    if(currentPage==="entry"){
+      document.getElementById("simpleTrackerDescription").textContent=cfg.description;
+      document.getElementById("simpleTrackerQuestion").textContent=cfg.question;
+      document.getElementById("simpleTrackerPage").style.display="block";
+      renderDateStrip("simpleDateStrip");
+      await loadSimpleTrackerDate(systemName);
+    }else{
+      document.getElementById("engineDashboardPage").style.display="block";
+      await renderEngineDashboard(systemName);
+    }
   }else{
     document.getElementById("placeholderPage").style.display="block";
     document.getElementById("placeholderTitle").textContent=layerItems[currentLayer][currentItem-1];
@@ -1266,20 +1465,54 @@ async function loadMeditationDate(){
   const data=await getEntries("Meditation",selectedDate,selectedDate);
   meditationState=data[selectedDate]||{morning:"",morningTime:null,night:"",nightTime:null}; updateMeditationButtons();
 }
-function setActive(id,active){const el=document.getElementById(id);if(el)el.classList.toggle("active",!!active);}
-function setWorkoutChoice(field,value){workoutState[field]=value;updateWorkoutButtons();}
-function setMeditationChoice(field,value){meditationState[field]=value;updateMeditationButtons();}
+function setActive(id,active,noChoice=false){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.toggle("active",!!active);
+  el.classList.toggle("no-choice",!!active&&noChoice);
+}
+function setWorkoutChoice(field,value){
+  workoutState[field]=value;
+  if(field==="gym"&&value==="no") workoutState.gymTime="";
+  if(field==="cardio"&&value==="no") workoutState.cardioTime=null;
+  updateWorkoutButtons();
+}
+function setMeditationChoice(field,value){
+  meditationState[field]=value;
+  if(field==="morning"&&value==="no") meditationState.morningTime=null;
+  if(field==="night"&&value==="no") meditationState.nightTime=null;
+  updateMeditationButtons();
+}
 function updateWorkoutButtons(){
-  setActive("gymYes",workoutState.gym==="yes");setActive("gymNo",workoutState.gym==="no");
-  setActive("gymMorning",workoutState.gymTime==="morning");setActive("gymNight",workoutState.gymTime==="night");
-  setActive("cardioYes",workoutState.cardio==="yes");setActive("cardioNo",workoutState.cardio==="no");
-  [5,10,15,20].forEach(v=>setActive("cardio"+v,workoutState.cardioTime===v));
+  const gymYes=workoutState.gym==="yes", gymNo=workoutState.gym==="no";
+  setActive("gymYes",gymYes); setActive("gymNo",gymNo,true);
+  ["gymMorning","gymNight"].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.disabled=!gymYes;
+  });
+  setActive("gymMorning",workoutState.gymTime==="morning");
+  setActive("gymNight",workoutState.gymTime==="night");
+
+  const cardioYes=workoutState.cardio==="yes", cardioNo=workoutState.cardio==="no";
+  setActive("cardioYes",cardioYes); setActive("cardioNo",cardioNo,true);
+  [5,10,15,20].forEach(v=>{
+    const el=document.getElementById("cardio"+v); if(el) el.disabled=!cardioYes;
+    setActive("cardio"+v,workoutState.cardioTime===v);
+  });
 }
 function updateMeditationButtons(){
-  setActive("morningYes",meditationState.morning==="yes");setActive("morningNo",meditationState.morning==="no");
-  [5,10,15,20].forEach(v=>setActive("morning"+v,meditationState.morningTime===v));
-  setActive("nightYes",meditationState.night==="yes");setActive("nightNo",meditationState.night==="no");
-  [5,10,15,20].forEach(v=>setActive("night"+v,meditationState.nightTime===v));
+  const morningYes=meditationState.morning==="yes", morningNo=meditationState.morning==="no";
+  setActive("morningYes",morningYes); setActive("morningNo",morningNo,true);
+  [5,10,15,20].forEach(v=>{
+    const el=document.getElementById("morning"+v); if(el) el.disabled=!morningYes;
+    setActive("morning"+v,meditationState.morningTime===v);
+  });
+
+  const nightYes=meditationState.night==="yes", nightNo=meditationState.night==="no";
+  setActive("nightYes",nightYes); setActive("nightNo",nightNo,true);
+  [5,10,15,20].forEach(v=>{
+    const el=document.getElementById("night"+v); if(el) el.disabled=!nightYes;
+    setActive("night"+v,meditationState.nightTime===v);
+  });
 }
 async function saveWorkout(){
   if(!workoutState.gym||!workoutState.cardio){alert("Please select Yes or No for both Gym and Cardio.");return;}
@@ -1292,6 +1525,26 @@ async function saveMeditation(){
   if(meditationState.morning==="yes"&&!meditationState.morningTime){alert("Please select a Morning meditation time.");return;}
   if(meditationState.night==="yes"&&!meditationState.nightTime){alert("Please select a Night meditation time.");return;}
   if(await saveSystemEntry("Meditation",selectedDate,meditationState)) alert("Meditation data saved to the cloud.");
+}
+
+async function loadSimpleTrackerDate(systemName){
+  const data=await getEntries(systemName,selectedDate,selectedDate);
+  simpleTrackerState={system:systemName,value:data[selectedDate]?.value||""};
+  updateSimpleTrackerButtons();
+}
+function setSimpleTrackerChoice(value){
+  simpleTrackerState.value=value;
+  updateSimpleTrackerButtons();
+}
+function updateSimpleTrackerButtons(){
+  setActive("simpleYes",simpleTrackerState.value==="yes");
+  setActive("simpleNo",simpleTrackerState.value==="no",true);
+}
+async function saveSimpleTracker(){
+  if(!simpleTrackerState.value){alert("Please select Yes or No.");return;}
+  if(await saveSystemEntry(simpleTrackerState.system,selectedDate,{value:simpleTrackerState.value})){
+    alert(simpleTrackerState.system+" data saved to the cloud.");
+  }
 }
 
 async function showPage(page){
@@ -1309,7 +1562,7 @@ function renderDateStrip(targetId="dateStrip"){
     const stateClass=offset<0?" past":(offset>0?" future":" today-date");const selectedClass=dateString===selectedDate?" selected":"";
     const button=document.createElement("div");button.className="date"+stateClass+selectedClass;
     button.innerHTML=`<div class="day">${date.toLocaleDateString(undefined,{weekday:"short"})}</div><div class="number">${date.getDate()}</div>${offset===0?'<div class="today-label">Today</div>':''}`;
-    button.onclick=async()=>{selectedDate=dateString;renderDateStrip(targetId);document.getElementById("currentDateLabel").innerHTML=formatDate(selectedDate);await loadSelectedDate();await loadWorkoutDate();await loadMeditationDate();};
+    button.onclick=async()=>{selectedDate=dateString;renderDateStrip(targetId);document.getElementById("currentDateLabel").innerHTML=formatDate(selectedDate);await loadSelectedDate();await loadWorkoutDate();await loadMeditationDate();if(currentLayer===1&&[4,5,6].includes(currentItem)) await loadSimpleTrackerDate(["","Sleep","Workout","Meditation","Diet","Journaling","Nofap"][currentItem]);};
     container.appendChild(button);
   }
   document.getElementById("currentDateLabel").innerHTML=formatDate(selectedDate);
@@ -1330,6 +1583,159 @@ async function renderDashboard(){
 function renderChart(id,data,dates,type){
   const chart=document.getElementById(id);chart.innerHTML="";const max=type==="hours"?Math.max(10,...dates.map(d=>data[d]?Number(data[d].hours):0)):5;
   dates.forEach(date=>{const entry=data[date];const container=document.createElement("div");container.className="bar-container";if(entry){const value=document.createElement("div");value.className="bar-value";value.textContent=type==="hours"?entry.hours+"h":qualityNames[entry.quality];const bar=document.createElement("div");bar.className="bar"+(type==="quality"?" quality-bar":"");const v=type==="hours"?Number(entry.hours):Number(entry.quality);bar.style.height=`${(v/max)*100}%`;container.appendChild(value);container.appendChild(bar);}else{const empty=document.createElement("div");empty.style.height="3px";empty.style.width="55%";empty.style.background="#30353e";empty.style.borderRadius="5px 5px 0 0";container.appendChild(empty);}const label=document.createElement("div");label.className="bar-label";label.textContent=new Date(date+"T00:00:00").toLocaleDateString(undefined,{weekday:"short"});container.appendChild(label);chart.appendChild(container);});
+}
+
+function getDateRange(days){
+  const dates=[], today=new Date();
+  for(let i=days-1;i>=0;i--){
+    const date=new Date(today);
+    date.setDate(today.getDate()-i);
+    dates.push(getDateString(date));
+  }
+  return dates;
+}
+function shortWeekday(dateString){
+  return new Date(dateString+"T00:00:00").toLocaleDateString(undefined,{weekday:"short"});
+}
+function avgOrDash(values, digits=1){
+  if(!values.length) return "—";
+  return (values.reduce((s,v)=>s+Number(v),0)/values.length).toFixed(digits);
+}
+function currentStreak(dates, isSuccess){
+  let streak=0;
+  for(let i=dates.length-1;i>=0;i--){
+    if(isSuccess(dates[i])) streak++;
+    else break;
+  }
+  return streak;
+}
+function renderEngineMetrics(metrics){
+  document.getElementById("engineDashMetrics").innerHTML=metrics.map(m=>`
+    <div class="metric">
+      <div class="metric-label">${m.label}</div>
+      <div class="metric-value">${m.value}</div>
+      <div class="metric-small">${m.small||""}</div>
+    </div>`).join("");
+}
+function renderBarChart(containerId, dates, getBar){
+  const chart=document.createElement("div");
+  chart.className="chart";
+  chart.id=containerId;
+  dates.forEach(date=>{
+    const spec=getBar(date);
+    const wrap=document.createElement("div");
+    wrap.className="bar-container";
+    if(spec.valueText){
+      const value=document.createElement("div");
+      value.className="bar-value";
+      value.textContent=spec.valueText;
+      wrap.appendChild(value);
+    }
+    const bar=document.createElement("div");
+    bar.className="bar "+(spec.barClass||"");
+    bar.style.height=spec.height||"3px";
+    wrap.appendChild(bar);
+    const label=document.createElement("div");
+    label.className="bar-label";
+    label.textContent=shortWeekday(date);
+    wrap.appendChild(label);
+    chart.appendChild(wrap);
+  });
+  return chart;
+}
+function renderChartCard(title, chartEl){
+  const card=document.createElement("div");
+  card.className="chart-card";
+  const heading=document.createElement("div");
+  heading.className="chart-title";
+  heading.textContent=title;
+  card.appendChild(heading);
+  card.appendChild(chartEl);
+  return card;
+}
+
+async function renderEngineDashboard(systemName){
+  const dayCount=currentPage==="analytics"?14:7;
+  const dates=getDateRange(dayCount);
+  const data=await getEntries(systemName,dates[0],dates[dates.length-1]);
+  const logged=dates.filter(d=>!!data[d]);
+  const consistency=Math.round(logged.length/dates.length*100)+"%";
+  const rangeLabel=currentPage==="analytics"?"Last 14 days":"Last 7 days";
+  document.getElementById("engineDashRange").textContent=rangeLabel+" · live data from your cloud entries";
+  const charts=document.getElementById("engineDashCharts");
+  charts.innerHTML="";
+
+  if(systemName==="Workout"){
+    const gymYes=logged.filter(d=>data[d].gym==="yes");
+    const cardioYes=logged.filter(d=>data[d].cardio==="yes");
+    const cardioMins=cardioYes.map(d=>Number(data[d].cardioTime||0)).filter(v=>v>0);
+    renderEngineMetrics([
+      {label:`GYM DAYS · ${dayCount} DAYS`, value:String(gymYes.length), small:`of ${logged.length} logged`},
+      {label:`CARDIO DAYS · ${dayCount} DAYS`, value:String(cardioYes.length), small:cardioMins.length?`avg ${avgOrDash(cardioMins,0)} min`:"minutes when done"},
+      {label:"DAYS LOGGED", value:String(logged.length), small:`of ${dayCount}`},
+      {label:"LOGGING CONSISTENCY", value:consistency, small:rangeLabel.toLowerCase()}
+    ]);
+    charts.appendChild(renderChartCard("Gym Attendance", renderBarChart("gymChart", dates, date=>{
+      const entry=data[date];
+      if(!entry||!entry.gym) return {height:"3px", barClass:"empty-bar"};
+      if(entry.gym==="yes") return {valueText:entry.gymTime||"Yes", height:"100%", barClass:"yes-bar"};
+      return {valueText:"No", height:"28%", barClass:"no-bar"};
+    })));
+    charts.appendChild(renderChartCard("Cardio Minutes", renderBarChart("cardioChart", dates, date=>{
+      const entry=data[date];
+      if(!entry||entry.cardio!=="yes") return {height:entry&&entry.cardio==="no"?"28%":"3px", valueText:entry&&entry.cardio==="no"?"No":"", barClass:entry&&entry.cardio==="no"?"no-bar":"empty-bar"};
+      const mins=Number(entry.cardioTime||0);
+      return {valueText:mins+"m", height:`${Math.max(18,(mins/20)*100)}%`, barClass:"blue-bar"};
+    })));
+    return;
+  }
+
+  if(systemName==="Meditation"){
+    const morningYes=logged.filter(d=>data[d].morning==="yes");
+    const nightYes=logged.filter(d=>data[d].night==="yes");
+    renderEngineMetrics([
+      {label:`MORNING SESSIONS · ${dayCount} DAYS`, value:String(morningYes.length), small:morningYes.length?`avg ${avgOrDash(morningYes.map(d=>data[d].morningTime),0)} min`:"sessions"},
+      {label:`NIGHT SESSIONS · ${dayCount} DAYS`, value:String(nightYes.length), small:nightYes.length?`avg ${avgOrDash(nightYes.map(d=>data[d].nightTime),0)} min`:"sessions"},
+      {label:"DAYS LOGGED", value:String(logged.length), small:`of ${dayCount}`},
+      {label:"LOGGING CONSISTENCY", value:consistency, small:rangeLabel.toLowerCase()}
+    ]);
+    charts.appendChild(renderChartCard("Morning Meditation", renderBarChart("morningChart", dates, date=>{
+      const entry=data[date];
+      if(!entry||!entry.morning) return {height:"3px", barClass:"empty-bar"};
+      if(entry.morning!=="yes") return {valueText:"No", height:"28%", barClass:"no-bar"};
+      const mins=Number(entry.morningTime||0);
+      return {valueText:mins+"m", height:`${Math.max(18,(mins/20)*100)}%`, barClass:"purple-bar"};
+    })));
+    charts.appendChild(renderChartCard("Night Meditation", renderBarChart("nightChart", dates, date=>{
+      const entry=data[date];
+      if(!entry||!entry.night) return {height:"3px", barClass:"empty-bar"};
+      if(entry.night!=="yes") return {valueText:"No", height:"28%", barClass:"no-bar"};
+      const mins=Number(entry.nightTime||0);
+      return {valueText:mins+"m", height:`${Math.max(18,(mins/20)*100)}%`, barClass:"blue-bar"};
+    })));
+    return;
+  }
+
+  const yesDays=logged.filter(d=>data[d].value==="yes");
+  const labels={
+    Diet:{yes:"DIET FOLLOWED", chart:"Diet Follow-through", success:"Yes", fail:"Missed"},
+    Journaling:{yes:"DAYS JOURNALED", chart:"Journaling Streak View", success:"Yes", fail:"No"},
+    Nofap:{yes:"DAYS KEPT", chart:"Daily Commitment", success:"Yes", fail:"No"}
+  }[systemName]||{yes:"YES DAYS", chart:"Daily Result", success:"Yes", fail:"No"};
+  const followThrough=logged.length?Math.round(yesDays.length/logged.length*100)+"%":"—";
+  const streak=currentStreak(dates, d=>data[d]&&data[d].value==="yes");
+  renderEngineMetrics([
+    {label:`${labels.yes} · ${dayCount} DAYS`, value:String(yesDays.length), small:`${followThrough} of logged days`},
+    {label:"CURRENT STREAK", value:String(streak), small:streak===1?"day":"days"},
+    {label:"DAYS LOGGED", value:String(logged.length), small:`of ${dayCount}`},
+    {label:"LOGGING CONSISTENCY", value:consistency, small:rangeLabel.toLowerCase()}
+  ]);
+  charts.appendChild(renderChartCard(labels.chart, renderBarChart(systemName+"Chart", dates, date=>{
+    const entry=data[date];
+    if(!entry||!entry.value) return {height:"3px", barClass:"empty-bar"};
+    if(entry.value==="yes") return {valueText:labels.success, height:"100%", barClass:"yes-bar"};
+    return {valueText:labels.fail, height:"28%", barClass:"no-bar"};
+  })));
 }
 
 initializeApp();
