@@ -120,13 +120,41 @@ body{
   gap:8px;
 }
 .date{
+  position:relative;
   background:#171a20;
   border:1px solid #292f38;
   border-radius:10px;
-  padding:10px 6px;
+  padding:14px 8px 10px;
   text-align:center;
   cursor:pointer;
 }
+.date-check{
+  position:absolute;
+  top:6px;
+  right:6px;
+  width:13px;
+  height:13px;
+  border:1.5px solid rgba(255,255,255,.45);
+  border-radius:3px;
+  background:transparent;
+  box-sizing:border-box;
+}
+.date-check.on{
+  background:#4fd18a;
+  border-color:#4fd18a;
+}
+.date-check.on::after{
+  content:"";
+  position:absolute;
+  left:3px;top:0;
+  width:4px;height:8px;
+  border:solid #102016;
+  border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+.date.selected .date-check{border-color:#555}
+.date.selected .date-check.on{background:#0f6b3a;border-color:#0f6b3a}
+.date.selected .date-check.on::after{border-color:#fff}
 .date:hover{border-color:#555c68}
 .date.selected{background:#f1f3f5;color:#111}
 .date.past{
@@ -155,7 +183,7 @@ body{
 .date .today-label{font-size:10px;margin-top:4px;color:#b9ffd8;font-weight:600}
 .date.selected{box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
 
-.date .day{font-size:11px;color:#8d949e;margin-bottom:5px}
+.date .day{font-size:10px;color:#8d949e;margin-bottom:5px;white-space:nowrap}
 .date.selected .day{color:#555}
 .date .number{font-size:17px;font-weight:600}
 .card,.chart-card,.metric{
@@ -833,7 +861,7 @@ input:focus,select:focus{border-color:#687382}
         <div class="workspace-head">
           <div>
             <div class="workspace-title" id="workspaceTitle">Sleep System</div>
-            <div class="workspace-sub" id="workspaceSub">Track your sleep duration and quality.</div>
+            <div class="workspace-sub" id="workspaceSub"></div>
           </div>
           <div class="current-date" id="currentDateLabel"></div>
         </div>
@@ -843,7 +871,6 @@ input:focus,select:focus{border-color:#687382}
 
           <div class="card">
             <div class="card-title" id="selectedDateTitle">Today's Sleep</div>
-            <div class="card-description">Record the two variables that define this system.</div>
 
             <div class="form-grid">
               <div>
@@ -859,7 +886,7 @@ input:focus,select:focus{border-color:#687382}
             <div class="save-row">
               <button class="save-btn" onclick="saveEntry()">Save Sleep</button>
             </div>
-            <div class="note">Your data is stored securely in the cloud and linked to your account.</div>
+            
           </div>
 
         </section>
@@ -912,14 +939,13 @@ input:focus,select:focus{border-color:#687382}
             <div class="save-row">
               <button class="save-btn" onclick="saveWorkout()">Save</button>
             </div>
-            <div class="note">Workout data is stored securely in the cloud and linked to your account.</div>
+            
           </div>
         </section>
 
         <section id="simpleTrackerPage" style="display:none">
           <div class="entry-dates" id="simpleDateStrip"></div>
           <div class="card">
-            <div class="card-description" id="simpleTrackerDescription"></div>
             <div class="simple-tracker">
               <div class="system-card">
                 <div class="system-card-title" id="simpleTrackerQuestion"></div>
@@ -932,7 +958,7 @@ input:focus,select:focus{border-color:#687382}
             <div class="save-row">
               <button class="save-btn" onclick="saveSimpleTracker()">Save</button>
             </div>
-            <div class="note">Data is stored securely in the cloud and linked to your account.</div>
+            
           </div>
         </section>
 
@@ -940,7 +966,7 @@ input:focus,select:focus{border-color:#687382}
           <div class="entry-dates" id="meditationDateStrip"></div>
 
           <div class="card">
-            <div class="card-description">Record your morning and night meditation practice.</div>
+            
 
             <div class="system-grid">
               <div class="system-card">
@@ -985,7 +1011,7 @@ input:focus,select:focus{border-color:#687382}
             <div class="save-row">
               <button class="save-btn" onclick="saveMeditation()">Save</button>
             </div>
-            <div class="note">Meditation data is stored securely in the cloud and linked to your account.</div>
+            
           </div>
         </section>
 
@@ -1546,19 +1572,19 @@ async function renderWorkspace(){
   ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage"].forEach(id=>document.getElementById(id).style.display="none");
   if(isSleep){
     document.getElementById("workspaceTitle").textContent="Sleep System";
-    document.getElementById("workspaceSub").textContent="Track your sleep duration and quality.";
+    document.getElementById("workspaceSub").textContent="";
     if(currentPage==="entry") document.getElementById("todayPage").style.display="block";
     else if(currentPage==="dashboard") document.getElementById("dashboardPage").style.display="block";
     else document.getElementById("analyticsPage").style.display="block";
-    renderDateStrip("dateStrip"); await loadSelectedDate();
+    await renderDateStrip("dateStrip"); await loadSelectedDate();
     if(currentPage==="dashboard"||currentPage==="analytics") await renderDashboard();
   }else if(isWorkout){
-    document.getElementById("workspaceTitle").textContent="Workout"; document.getElementById("workspaceSub").textContent="Track your gym and cardio activity.";
-    if(currentPage==="entry"){document.getElementById("workoutPage").style.display="block";renderDateStrip("workoutDateStrip");await loadWorkoutDate();}
+    document.getElementById("workspaceTitle").textContent="Workout"; document.getElementById("workspaceSub").textContent="";
+    if(currentPage==="entry"){document.getElementById("workoutPage").style.display="block";await renderDateStrip("workoutDateStrip");await loadWorkoutDate();}
     else{document.getElementById("engineDashboardPage").style.display="block";await renderEngineDashboard("Workout");}
   }else if(isMeditation){
-    document.getElementById("workspaceTitle").textContent="Meditation"; document.getElementById("workspaceSub").textContent="Track your morning and night meditation.";
-    if(currentPage==="entry"){document.getElementById("meditationPage").style.display="block";renderDateStrip("meditationDateStrip");await loadMeditationDate();}
+    document.getElementById("workspaceTitle").textContent="Meditation"; document.getElementById("workspaceSub").textContent="";
+    if(currentPage==="entry"){document.getElementById("meditationPage").style.display="block";await renderDateStrip("meditationDateStrip");await loadMeditationDate();}
     else{document.getElementById("engineDashboardPage").style.display="block";await renderEngineDashboard("Meditation");}
   }else if(isSimpleTracker){
     const systemName=simpleSystemMap[currentItem];
@@ -1569,12 +1595,11 @@ async function renderWorkspace(){
     };
     const cfg=configs[systemName];
     document.getElementById("workspaceTitle").textContent=cfg.title;
-    document.getElementById("workspaceSub").textContent=cfg.sub;
+    document.getElementById("workspaceSub").textContent="";
     if(currentPage==="entry"){
-      document.getElementById("simpleTrackerDescription").textContent=cfg.description;
       document.getElementById("simpleTrackerQuestion").textContent=cfg.question;
       document.getElementById("simpleTrackerPage").style.display="block";
-      renderDateStrip("simpleDateStrip");
+      await renderDateStrip("simpleDateStrip");
       await loadSimpleTrackerDate(systemName);
     }else{
       document.getElementById("engineDashboardPage").style.display="block";
@@ -1669,6 +1694,7 @@ async function saveEntry(){
   const band=sleepDurationBands[sleepDurationBand];
   if(await saveSystemEntry("Sleep",selectedDate,{hours:band.hours,durationBand:sleepDurationBand,quality:parseInt(sleepQualityValue)})){
     await loadSelectedDate();
+    await renderDateStrip(currentDateStripId());
     alert("Sleep data saved to the cloud.");
   }
 }
@@ -1734,13 +1760,19 @@ async function saveWorkout(){
   if(!workoutState.gym||!workoutState.cardio){alert("Please select Yes or No for both Gym and Cardio.");return;}
   if(workoutState.gym==="yes"&&!workoutState.gymTime){alert("Please select Morning or Night for Gym.");return;}
   if(workoutState.cardio==="yes"&&!workoutState.cardioTime){alert("Please select a Cardio time.");return;}
-  if(await saveSystemEntry("Workout",selectedDate,workoutState)) alert("Workout data saved to the cloud.");
+  if(await saveSystemEntry("Workout",selectedDate,workoutState)){
+    await renderDateStrip(currentDateStripId());
+    alert("Workout data saved to the cloud.");
+  }
 }
 async function saveMeditation(){
   if(!meditationState.morning||!meditationState.night){alert("Please select Yes or No for both Morning and Night.");return;}
   if(meditationState.morning==="yes"&&!meditationState.morningTime){alert("Please select a Morning meditation time.");return;}
   if(meditationState.night==="yes"&&!meditationState.nightTime){alert("Please select a Night meditation time.");return;}
-  if(await saveSystemEntry("Meditation",selectedDate,meditationState)) alert("Meditation data saved to the cloud.");
+  if(await saveSystemEntry("Meditation",selectedDate,meditationState)){
+    await renderDateStrip(currentDateStripId());
+    alert("Meditation data saved to the cloud.");
+  }
 }
 
 async function loadSimpleTrackerDate(systemName){
@@ -1759,6 +1791,7 @@ function updateSimpleTrackerButtons(){
 async function saveSimpleTracker(){
   if(!simpleTrackerState.value){alert("Please select Yes or No.");return;}
   if(await saveSystemEntry(simpleTrackerState.system,selectedDate,{value:simpleTrackerState.value})){
+    await renderDateStrip(currentDateStripId());
     alert(simpleTrackerState.system+" data saved to the cloud.");
   }
 }
@@ -1781,9 +1814,19 @@ function dateToneClass(date, today){
   if(a===b) return " today-date";
   return a<b?" past":" future";
 }
+function currentEntrySystem(){
+  if(currentLayer===1 && currentItem>=1) return layerItems[1][currentItem-1];
+  return null;
+}
+function currentDateStripId(){
+  if(currentItem===2) return "workoutDateStrip";
+  if(currentItem===3) return "meditationDateStrip";
+  if(currentItem>=4) return "simpleDateStrip";
+  return "dateStrip";
+}
 async function onPickEntryDate(dateString, targetId){
   selectedDate=dateString;
-  renderDateStrip(targetId);
+  await renderDateStrip(targetId);
   document.getElementById("currentDateLabel").innerHTML=formatDate(selectedDate);
   await loadSelectedDate();
   await loadWorkoutDate();
@@ -1792,13 +1835,11 @@ async function onPickEntryDate(dateString, targetId){
     await loadSimpleTrackerDate(["","Sleep","Workout","Meditation","Diet","Journaling","Nofap"][currentItem]);
   }
 }
-function setEntryDateView(view){
+async function setEntryDateView(view){
   entryDateView=view;
-  ["dateStrip","workoutDateStrip","meditationDateStrip","simpleDateStrip"].forEach(id=>{
-    if(document.getElementById(id)) renderDateStrip(id);
-  });
+  await renderDateStrip(currentDateStripId());
 }
-function renderDateStrip(targetId="dateStrip"){
+async function renderDateStrip(targetId="dateStrip"){
   const container=document.getElementById(targetId);
   if(!container) return;
   container.className="entry-dates";
@@ -1827,6 +1868,13 @@ function renderDateStrip(targetId="dateStrip"){
     }
   }
 
+  const systemName=currentEntrySystem();
+  const logged={};
+  if(systemName && dates.length){
+    const rows=await getEntries(systemName,getDateString(dates[0]),getDateString(dates[dates.length-1]));
+    Object.keys(rows||{}).forEach(key=>logged[key]=true);
+  }
+
   const grid=document.createElement("div");
   grid.className="date-grid";
   dates.forEach(date=>{
@@ -1835,7 +1883,8 @@ function renderDateStrip(targetId="dateStrip"){
     const outside=entryDateView==="month"&&!inMonth;
     const button=document.createElement("div");
     button.className="date"+dateToneClass(date,today)+(dateString===selectedDate?" selected":"")+(outside?" outside":"");
-    button.innerHTML=`<div class="day">${date.toLocaleDateString(undefined,{weekday:"short"})}</div><div class="number">${date.getDate()}</div>${getDateString(date)===getDateString(today)?'<div class="today-label">Today</div>':''}`;
+    const weekday=date.toLocaleDateString(undefined,{weekday:"long"});
+    button.innerHTML=`<span class="date-check${logged[dateString]?" on":""}"></span><div class="day">${weekday}</div><div class="number">${date.getDate()}</div>${getDateString(date)===getDateString(today)?'<div class="today-label">Today</div>':''}`;
     if(!outside) button.onclick=()=>onPickEntryDate(dateString,targetId);
     grid.appendChild(button);
   });
