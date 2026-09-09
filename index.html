@@ -15,13 +15,13 @@ body{
 .app{max-width:1250px;margin:0 auto;padding:24px 24px 60px}
 .topbar{
   display:grid;
-  grid-template-columns:220px 1fr 1fr 1fr auto;
+  grid-template-columns:220px minmax(175px,1fr) minmax(175px,1fr) minmax(175px,1fr) auto;
   gap:12px;
   align-items:stretch;
   margin-bottom:14px;
 }
 .top-tab{
-  min-height:72px;
+  min-height:76px;
   border:1px solid #292f38;
   background:#171a20;
   color:#aeb4bd;
@@ -215,6 +215,203 @@ input:focus,select:focus{border-color:#687382}
 }
 .inner-divider{height:1px;background:#292f38;margin:22px 0}
 .field-label{font-size:12px;color:#aeb4bd;margin-bottom:9px}
+
+.overview-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+.overview-card{
+  background:#171a20;
+  border:1px solid #292f38;
+  border-radius:13px;
+  padding:20px;
+  min-width:0;
+}
+.overview-card.wide{grid-column:span 2}
+.overview-card.full{grid-column:1/-1}
+.overview-card-title{
+  font-size:15px;
+  font-weight:650;
+  margin-bottom:15px;
+}
+.overview-card-sub{
+  color:#858c96;
+  font-size:11px;
+  margin-top:-9px;
+  margin-bottom:14px;
+}
+.overview-top{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-bottom:14px;
+}
+.overview-health{
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+.donut{
+  width:104px;
+  height:104px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  position:relative;
+}
+.donut::after{
+  content:"";
+  position:absolute;
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:#171a20;
+}
+.donut-center{
+  position:relative;
+  z-index:1;
+  text-align:center;
+}
+.donut-value{
+  display:block;
+  font-size:22px;
+  font-weight:750;
+}
+.donut-label{
+  display:block;
+  color:#858c96;
+  font-size:10px;
+  margin-top:2px;
+}
+.overview-big{
+  font-size:30px;
+  font-weight:750;
+  line-height:1;
+}
+.overview-trend{
+  color:#4fe38b;
+  font-size:13px;
+  margin-top:8px;
+}
+.overview-muted{
+  color:#858c96;
+  font-size:11px;
+  margin-top:5px;
+}
+.status-list{display:flex;flex-direction:column;gap:10px;width:100%}
+.status-row{display:grid;grid-template-columns:10px 1fr auto;gap:9px;align-items:center;font-size:12px}
+.status-dot{width:9px;height:9px;border-radius:50%}
+.status-row span:nth-child(2){color:#b7bec8}
+.status-row strong{font-size:12px}
+.execution-number{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.execution-number .overview-big{font-size:34px}
+.progress-track{
+  height:10px;
+  background:#252b34;
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:17px;
+}
+.progress-fill{
+  height:100%;
+  border-radius:99px;
+  background:#4fd18a;
+}
+.progress-meta{display:flex;justify-content:space-between;margin-top:7px;color:#858c96;font-size:10px}
+.mini-bars{
+  height:180px;
+  display:flex;
+  align-items:flex-end;
+  gap:12px;
+  padding:10px 4px 0;
+  border-bottom:1px solid #30353e;
+}
+.mini-bar-wrap{
+  flex:1;height:100%;display:flex;flex-direction:column;
+  justify-content:flex-end;align-items:center;min-width:0;
+}
+.mini-bar-value{font-size:10px;color:#c4cad2;margin-bottom:5px}
+.mini-bar{
+  width:58%;min-height:4px;border-radius:5px 5px 0 0;
+  background:#4fd18a;
+}
+.mini-bar.warn{background:#f4cf4d}
+.mini-bar.critical{background:#ef6973}
+.mini-bar.blue{background:#5ca4f5}
+.mini-bar-label{font-size:9px;color:#737b86;margin-top:7px;text-align:center;white-space:nowrap}
+.trend-chart{
+  height:180px;
+  display:flex;
+  align-items:stretch;
+  gap:0;
+  position:relative;
+  border-bottom:1px solid #30353e;
+}
+.trend-y{
+  width:30px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:4px 0 20px;
+  color:#606873;
+  font-size:9px;
+}
+.trend-main{flex:1;position:relative}
+.trend-grid{
+  position:absolute;inset:4px 0 22px;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(25% - 1px),#292f38 calc(25% - 1px),#292f38 25%);
+}
+.trend-svg{position:absolute;inset:4px 0 22px;width:100%;height:calc(100% - 26px);overflow:visible}
+.trend-labels{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;color:#737b86;font-size:9px}
+.overview-table{width:100%;border-collapse:collapse;font-size:12px}
+.overview-table th{
+  text-align:left;color:#737b86;font-weight:500;padding:0 0 10px;
+  border-bottom:1px solid #30353e;
+}
+.overview-table td{padding:9px 0;border-bottom:1px solid #252b34;color:#c3c9d1}
+.overview-table tr:last-child td{border-bottom:0}
+.health-cell{font-weight:650}
+.status-pill{
+  display:inline-block;padding:4px 9px;border-radius:99px;
+  font-size:10px;font-weight:600;
+}
+.status-healthy{background:#194f38;color:#9df0bf}
+.status-attention{background:#5a4b16;color:#f6dc72}
+.status-critical{background:#5b252b;color:#ff9ca5}
+.status-stable{background:#193d62;color:#9dcaff}
+.activity-list{display:flex;flex-direction:column}
+.activity-row{
+  display:grid;grid-template-columns:28px 1fr auto;gap:10px;
+  align-items:center;padding:9px 0;border-bottom:1px solid #252b34;
+}
+.activity-row:last-child{border-bottom:0}
+.activity-icon{
+  width:28px;height:28px;border-radius:50%;background:#242a32;
+  display:grid;place-items:center;font-size:13px;
+}
+.activity-main strong{font-size:12px}
+.activity-main span{color:#858c96;font-size:11px;margin-left:8px}
+.activity-time{color:#858c96;font-size:10px}
+.overview-footer{
+  display:flex;justify-content:space-between;align-items:center;gap:15px;
+  color:#aeb4bd;font-size:12px;
+}
+.overview-footer strong{color:#f1f3f5}
+.preview-note{
+  color:#646b75;font-size:10px;margin-top:10px;line-height:1.4;
+}
+@media(max-width:1000px){
+  .overview-top{grid-template-columns:1fr 1fr}
+  .overview-card.wide{grid-column:span 1}
+  .overview-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+  .overview-top,.overview-grid{grid-template-columns:1fr}
+  .overview-card.wide,.overview-card.full{grid-column:span 1}
+}
+
 .placeholder{
   background:#171a20;border:1px solid #292f38;border-radius:13px;
   padding:40px;text-align:center;color:#858c96
@@ -241,9 +438,52 @@ input:focus,select:focus{border-color:#687382}
 .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}.auth-tab{border:1px solid #303640;background:#101217;color:#aeb4bd;padding:11px;border-radius:8px;cursor:pointer}.auth-tab.active{background:#f1f3f5;color:#111}
 .auth-field{margin-bottom:14px}.auth-actions{display:flex;justify-content:flex-end;margin-top:18px}.auth-btn{width:100%;border:0;background:#f1f3f5;color:#111;padding:12px 18px;border-radius:9px;font-weight:650;cursor:pointer}.auth-btn:disabled{opacity:.55;cursor:wait}
 .auth-message{font-size:12px;color:#aeb4bd;margin-top:14px;line-height:1.5;min-height:18px}.auth-message.error{color:#f0a3ad}.auth-message.success{color:#b9ffd8}
-.user-bar{display:flex;align-items:center;gap:8px;margin-left:auto}.user-email{font-size:11px;color:#858c96;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.logout-btn{border:1px solid #303640;background:#171a20;color:#aeb4bd;padding:8px 11px;border-radius:8px;cursor:pointer;font-size:12px}
+.logout-btn{border:1px solid #303640;background:#171a20;color:#aeb4bd;padding:8px 11px;border-radius:8px;cursor:pointer;font-size:12px}
+
+.current-date{
+  text-align:right;
+  line-height:1.15;
+  min-width:145px;
+  padding-top:1px;
+}
+.current-date .date-number{
+  display:block;
+  font-size:18px;
+  font-weight:700;
+  color:#f1f3f5;
+}
+.current-date .weekday{
+  display:block;
+  font-size:12px;
+  color:#858c96;
+  margin-top:5px;
+}
+.sidebar{
+  display:flex;
+  flex-direction:column;
+}
+.sidebar-account{
+  margin-top:auto;
+  padding:12px 8px 4px;
+  border-top:1px solid #292f38;
+}
+.sidebar-email{
+  color:#aeb4bd;
+  font-size:11px;
+  line-height:1.35;
+  margin-bottom:9px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.sidebar-logout{
+  width:100%;
+  font-size:12px;
+  padding:8px 10px;
+}
+
 .cloud-badge{font-size:11px;color:#b9ffd8;margin-top:8px}
-@media(max-width:700px){.user-email{max-width:120px}}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -288,7 +528,6 @@ input:focus,select:focus{border-color:#687382}
       <button class="small-tab active" id="entryTab" onclick="showPage('entry')">Entry</button>
       <button class="small-tab" id="dashboardTab" onclick="showPage('dashboard')">Dashboard</button>
       <button class="small-tab" id="analyticsTab" onclick="showPage('analytics')">Analytics</button>
-      <div class="user-bar"><span class="user-email" id="userEmail"></span><button class="logout-btn" onclick="logout()">Log out</button></div>
     </div>
   </div>
 
@@ -296,6 +535,10 @@ input:focus,select:focus{border-color:#687382}
     <aside class="sidebar">
       <div class="sidebar-title" id="sidebarTitle">Overview</div>
       <div id="sidebarItems"></div>
+      <div class="sidebar-account">
+        <div class="sidebar-email" id="userEmail"></div>
+        <button class="logout-btn sidebar-logout" onclick="logout()">Log out</button>
+      </div>
     </aside>
 
     <main class="main">
@@ -307,7 +550,7 @@ input:focus,select:focus{border-color:#687382}
             <div class="workspace-title" id="workspaceTitle">Sleep System</div>
             <div class="workspace-sub" id="workspaceSub">Track your sleep duration and quality.</div>
           </div>
-          <div class="workspace-sub" id="currentDateLabel"></div>
+          <div class="current-date" id="currentDateLabel"></div>
         </div>
 
         <section id="todayPage">
@@ -520,9 +763,10 @@ input:focus,select:focus{border-color:#687382}
         </section>
 
         <div id="placeholderPage" class="placeholder" style="display:none">
-          <strong id="placeholderTitle">Layer 2</strong>
+          <strong id="placeholderTitle">System</strong>
           This system workspace is ready to be configured.
         </div>
+        <section id="overviewPage" style="display:none"></section>
       </div>
     </main>
   </div>
@@ -567,7 +811,10 @@ function getDateString(date){
   return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
 }
 function formatDate(dateString){
-  return new Date(dateString+"T00:00:00").toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+  const date = new Date(dateString+"T00:00:00");
+  const monthDay = date.toLocaleDateString(undefined,{month:"long",day:"2-digit"});
+  const weekday = date.toLocaleDateString(undefined,{weekday:"long"});
+  return `<span class="date-number">${monthDay}</span><span class="weekday">${weekday}</span>`;
 }
 function setAuthMessage(message, type=""){
   const el=document.getElementById("authMessage");
@@ -719,6 +966,244 @@ function selectItem(item){
   renderSidebar(); renderWorkspace();
 }
 
+
+function overviewConfig(layer){
+  if(layer===1){
+    return {
+      title:"Layer 1 Overview",
+      sub:"Bird's-eye view of your Personal Engine. Track, improve, repeat.",
+      systems:[
+        ["Sleep",82,"Healthy","today","green"],
+        ["Workout",91,"Excellent","today","green"],
+        ["Meditation",68,"Needs Attention","2 days ago","yellow"],
+        ["Diet",74,"Stable","today","blue"],
+        ["Journaling",55,"Critical","3 days ago","red"],
+        ["Nofap",88,"Strong","today","green"]
+      ],
+      execution:84,
+      executionDelta:"+8%",
+      health:78,
+      healthDelta:"+12%",
+      trend:[70,76,64,82,79,88,91],
+      activity:[
+        ["☾","Sleep","7.5 hours · Good quality","Today, 7:30 AM"],
+        ["✚","Workout","Upper body · 45 mins","Today, 6:45 AM"],
+        ["◉","Diet","Tracked 2 meals","Today, 1:20 PM"],
+        ["◌","Meditation","10 minutes","Yesterday, 10:12 PM"],
+        ["▤","Journaling","Daily entry","Sep 7, 11:05 PM"],
+        ["∞","Nofap","Day 12","Today"]
+      ]
+    };
+  }
+  if(layer===2){
+    return {
+      title:"Layer 2 Overview",
+      sub:"Bird's-eye view of your Productivity Engine. Manage execution across time horizons.",
+      systems:[
+        ["Day",84,"Healthy","today","green"],
+        ["Week",91,"Excellent","this week","green"],
+        ["Bi-week",76,"Stable","this period","blue"],
+        ["Month",88,"Strong","this month","green"],
+        ["Quarter",72,"Stable","this quarter","blue"],
+        ["Bi-Quarter",81,"Healthy","this period","green"],
+        ["Year",93,"Excellent","this year","green"]
+      ],
+      execution:86,
+      executionDelta:"+11%",
+      health:83,
+      healthDelta:"+9%",
+      trend:[68,72,77,74,82,86,91],
+      activity:[
+        ["D","Day","6 / 8 planned actions completed","Today"],
+        ["W","Week","27 / 32 weekly actions completed","This week"],
+        ["B","Bi-week","Execution at 76%","Current period"],
+        ["M","Month","Strong monthly consistency","Current month"],
+        ["Q","Quarter","72% of planned outcomes tracked","Current quarter"],
+        ["Y","Year","93% system consistency","Current year"]
+      ]
+    };
+  }
+  return {
+    title:"Layer 3 Overview",
+    sub:"Bird's-eye view of your Domain Engine. See how your major life domains are progressing.",
+    systems:[
+      ["Money & Business",71,"Stable","today","blue"],
+      ["Health & Fitness",86,"Healthy","today","green"],
+      ["Dating & Game",64,"Needs Attention","3 days ago","yellow"],
+      ["Learning & Upskilling",79,"Healthy","today","green"],
+      ["Communication",73,"Stable","yesterday","blue"],
+      ["Good Life",91,"Excellent","today","green"]
+    ],
+    execution:79,
+    executionDelta:"+6%",
+    health:77,
+    healthDelta:"+7%",
+    trend:[61,68,66,72,70,76,84],
+    activity:[
+      ["$","Money & Business","Weekly business review completed","Today"],
+      ["+","Health & Fitness","Workout and walk logged","Today"],
+      ["♡","Dating & Game","2 social activities tracked","Yesterday"],
+      ["L","Learning & Upskilling","45 min learning session","Yesterday"],
+      ["C","Communication","Speaking practice completed","Sep 8"],
+      ["G","Good Life","Bachata session completed","Sep 7"]
+    ]
+  };
+}
+
+function healthClass(score){
+  if(score>=85) return "status-healthy";
+  if(score>=70) return "status-stable";
+  if(score>=60) return "status-attention";
+  return "status-critical";
+}
+function healthColorClass(score){
+  if(score>=85) return "green";
+  if(score>=70) return "blue";
+  if(score>=60) return "warn";
+  return "critical";
+}
+function overviewDonut(score, innerLabel){
+  const deg=Math.max(0,Math.min(100,score))*3.6;
+  return `<div class="donut" style="background:conic-gradient(#4fd18a 0deg ${deg}deg,#2a3038 ${deg}deg 360deg)">
+    <div class="donut-center"><span class="donut-value">${score}%</span><span class="donut-label">${innerLabel}</span></div>
+  </div>`;
+}
+function overviewStatusCounts(systems){
+  const healthy=systems.filter(s=>s[2]==="Healthy"||s[2]==="Excellent"||s[2]==="Strong").length;
+  const attention=systems.filter(s=>s[2]==="Needs Attention").length;
+  const critical=systems.filter(s=>s[2]==="Critical").length;
+  return {healthy,attention,critical};
+}
+function renderTrendSVG(values){
+  const max=100,min=0;
+  const pts=values.map((v,i)=>{
+    const x=(i/(values.length-1))*100;
+    const y=100-((v-min)/(max-min))*100;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+  const area=`0,100 ${pts} 100,100`;
+  return `<svg class="trend-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <polygon points="${area}" fill="rgba(73,133,218,.14)"></polygon>
+    <polyline points="${pts}" fill="none" stroke="#5ca4f5" stroke-width="1.6" vector-effect="non-scaling-stroke"></polyline>
+    ${values.map((v,i)=>{
+      const x=(i/(values.length-1))*100,y=100-v;
+      return `<circle cx="${x}" cy="${y}" r="1.6" fill="#5ca4f5"></circle>`;
+    }).join("")}
+  </svg>`;
+}
+function renderEngineOverview(){
+  const cfg=overviewConfig(currentLayer);
+  const counts=overviewStatusCounts(cfg.systems);
+  const overallHealth=cfg.health;
+  const statusTotal=cfg.systems.length;
+  const avg=Math.round(cfg.systems.reduce((sum,s)=>sum+s[1],0)/cfg.systems.length);
+  const trendLabels=currentLayer===1?["Sep 3","Sep 4","Sep 5","Sep 6","Sep 7","Sep 8","Sep 9"]:["P-6","P-5","P-4","P-3","P-2","P-1","Now"];
+  const bars=cfg.systems.map(s=>`
+    <div class="mini-bar-wrap">
+      <div class="mini-bar-value">${s[1]}%</div>
+      <div class="mini-bar ${healthColorClass(s[1])}" style="height:${Math.max(5,s[1])}%"></div>
+      <div class="mini-bar-label">${s[0]}</div>
+    </div>`).join("");
+  const rows=cfg.systems.map(s=>`
+    <tr>
+      <td>${s[0]}</td>
+      <td class="health-cell">${s[1]}%</td>
+      <td>${s[1]>=80?"↑":"—"}</td>
+      <td><span class="status-pill ${healthClass(s[1])}">${s[2]}</span></td>
+      <td>${s[3]}</td>
+    </tr>`).join("");
+  const activities=cfg.activity.map(a=>`
+    <div class="activity-row">
+      <div class="activity-icon">${a[0]}</div>
+      <div class="activity-main"><strong>${a[1]}</strong><span>${a[2]}</span></div>
+      <div class="activity-time">${a[3]}</div>
+    </div>`).join("");
+
+  document.getElementById("overviewPage").innerHTML=`
+    <div class="overview-top">
+      <div class="overview-card">
+        <div class="overview-card-title">Overall Health</div>
+        <div class="overview-health">
+          ${overviewDonut(overallHealth,"Health")}
+          <div>
+            <div class="overview-big">${overallHealth}%</div>
+            <div class="overview-trend">↑ ${cfg.healthDelta}</div>
+            <div class="overview-muted">vs last period</div>
+            <span class="status-pill status-healthy" style="margin-top:8px">Improving</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <div class="overview-card-title">Systems Status</div>
+        <div class="overview-health">
+          <div class="donut" style="background:conic-gradient(#4fd18a 0deg ${(counts.healthy/statusTotal)*360}deg,#f4cf4d ${(counts.healthy/statusTotal)*360}deg ${((counts.healthy+counts.attention)/statusTotal)*360}deg,#ef6973 ${((counts.healthy+counts.attention)/statusTotal)*360}deg 360deg)">
+            <div class="donut-center"><span class="donut-value">${statusTotal}</span><span class="donut-label">Systems</span></div>
+          </div>
+          <div class="status-list">
+            <div class="status-row"><i class="status-dot" style="background:#4fd18a"></i><span>Healthy</span><strong>${counts.healthy}</strong></div>
+            <div class="status-row"><i class="status-dot" style="background:#f4cf4d"></i><span>Needs Attention</span><strong>${counts.attention}</strong></div>
+            <div class="status-row"><i class="status-dot" style="background:#ef6973"></i><span>Critical</span><strong>${counts.critical}</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <div class="overview-card-title">Execution (This Period)</div>
+        <div class="execution-number">
+          <div><div class="overview-big">${cfg.execution}%</div><div class="overview-muted">Planned actions completed</div></div>
+          <div class="overview-trend">↑ ${cfg.executionDelta}<br><span class="overview-muted">vs last period</span></div>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:${cfg.execution}%"></div></div>
+        <div class="progress-meta"><span>0%</span><span>100%</span></div>
+      </div>
+    </div>
+
+    <div class="overview-grid">
+      <div class="overview-card wide">
+        <div class="overview-card-title">System Health Overview</div>
+        <div class="overview-card-sub">Current health score for each system</div>
+        <div class="mini-bars">${bars}</div>
+      </div>
+
+      <div class="overview-card">
+        <div class="overview-card-title">Execution Trend</div>
+        <div class="overview-card-sub">Last 7 periods</div>
+        <div class="trend-chart">
+          <div class="trend-y"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div>
+          <div class="trend-main">
+            <div class="trend-grid"></div>
+            ${renderTrendSVG(cfg.trend)}
+            <div class="trend-labels">${trendLabels.map(x=>`<span>${x}</span>`).join("")}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overview-card wide">
+        <div class="overview-card-title">Systems at a Glance</div>
+        <div class="overview-card-sub">Health, trend, status and latest activity</div>
+        <table class="overview-table">
+          <thead><tr><th>System</th><th>Health</th><th>Trend</th><th>Status</th><th>Last Entry</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+
+      <div class="overview-card">
+        <div class="overview-card-title">Recent Activity</div>
+        <div class="activity-list">${activities}</div>
+      </div>
+
+      <div class="overview-card full">
+        <div class="overview-footer">
+          <div><strong>Consistency compounds.</strong> Keep showing up. — Personal OS</div>
+          <span class="status-pill status-stable">${avg}% average system health</span>
+        </div>
+        <div class="preview-note">Overview metrics are illustrative for now; as each system gets configured and tracked, these cards will be driven by its real cloud data.</div>
+      </div>
+    </div>`;
+}
+
+
 async function renderWorkspace(){
   if(osMode || !currentUser) return;
   document.getElementById("osPage").style.display="none";
@@ -726,11 +1211,12 @@ async function renderWorkspace(){
   const isSleep=currentLayer===1&&currentItem===1;
   const isOverview=currentItem===0;
   if(isOverview){
-    ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage"].forEach(id=>document.getElementById(id).style.display="none");
-    document.getElementById("placeholderPage").style.display="block";
-    document.getElementById("workspaceTitle").textContent=`Layer ${currentLayer} Overview`;
-    document.getElementById("workspaceSub").textContent="Overview of the systems in this engine.";
-    document.getElementById("placeholderTitle").textContent="Overview"; return;
+    ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","placeholderPage"].forEach(id=>document.getElementById(id).style.display="none");
+    document.getElementById("overviewPage").style.display="block";
+    document.getElementById("workspaceTitle").textContent=overviewConfig(currentLayer).title;
+    document.getElementById("workspaceSub").textContent=overviewConfig(currentLayer).sub;
+    renderEngineOverview();
+    return;
   }
   const isWorkout=currentLayer===1&&currentItem===2;
   const isMeditation=currentLayer===1&&currentItem===3;
@@ -823,10 +1309,10 @@ function renderDateStrip(targetId="dateStrip"){
     const stateClass=offset<0?" past":(offset>0?" future":" today-date");const selectedClass=dateString===selectedDate?" selected":"";
     const button=document.createElement("div");button.className="date"+stateClass+selectedClass;
     button.innerHTML=`<div class="day">${date.toLocaleDateString(undefined,{weekday:"short"})}</div><div class="number">${date.getDate()}</div>${offset===0?'<div class="today-label">Today</div>':''}`;
-    button.onclick=async()=>{selectedDate=dateString;renderDateStrip(targetId);document.getElementById("currentDateLabel").textContent=formatDate(selectedDate);await loadSelectedDate();await loadWorkoutDate();await loadMeditationDate();};
+    button.onclick=async()=>{selectedDate=dateString;renderDateStrip(targetId);document.getElementById("currentDateLabel").innerHTML=formatDate(selectedDate);await loadSelectedDate();await loadWorkoutDate();await loadMeditationDate();};
     container.appendChild(button);
   }
-  document.getElementById("currentDateLabel").textContent=formatDate(selectedDate);
+  document.getElementById("currentDateLabel").innerHTML=formatDate(selectedDate);
 }
 function getLastSevenDays(){
   const dates=[],today=new Date();for(let i=6;i>=0;i--){const date=new Date(today);date.setDate(today.getDate()-i);dates.push(getDateString(date));}return dates;
