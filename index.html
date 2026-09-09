@@ -100,11 +100,24 @@ body{
 }
 .workspace-title{font-size:27px;font-weight:700}
 .workspace-sub{font-size:13px;color:#858c96;margin-top:4px}
-.date-strip{
+.date-strip, .entry-dates{
+  margin-bottom:22px;
+}
+.entry-dates{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 92px;
+  gap:10px;
+  align-items:start;
+}
+.date-grid{
   display:grid;
   grid-template-columns:repeat(7,1fr);
   gap:8px;
-  margin-bottom:22px;
+}
+.date-view-toggle{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
 }
 .date{
   background:#171a20;
@@ -135,6 +148,10 @@ body{
   box-shadow:0 0 0 1px rgba(54,227,139,.18);
 }
 .date.today-date .day{color:#b9ffd8}
+.date.outside{
+  opacity:.22;
+  pointer-events:none;
+}
 .date .today-label{font-size:10px;margin-top:4px;color:#b9ffd8;font-weight:600}
 .date.selected{box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
 
@@ -167,17 +184,30 @@ input:focus,select:focus{border-color:#687382}
 .status-label{font-size:12px;color:#858c96;margin-bottom:7px}
 .status-value{font-size:21px;font-weight:600}
 .note{color:#646b75;font-size:12px;margin-top:15px}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
-.metric{padding:19px}
-.metric-label{color:#858c96;font-size:11px;margin-bottom:9px}
-.metric-value{font-size:24px;font-weight:650}
-.metric-small{color:#858c96;font-size:12px;margin-top:4px}
-.chart-card{padding:22px;margin-bottom:18px}
-.chart-title{font-size:15px;font-weight:600;margin-bottom:18px}
-.chart{
-  height:220px;display:flex;align-items:flex-end;gap:12px;
-  padding:10px 5px 0;border-bottom:1px solid #30353e
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.metric{padding:14px 16px}
+.metric-label{color:#858c96;font-size:11px;margin-bottom:7px}
+.metric-value{font-size:22px;font-weight:650}
+.metric-small{color:#858c96;font-size:12px;margin-top:3px}
+.chart-card{padding:14px 16px 12px;margin-bottom:12px}
+.chart-card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
 }
+.chart-title{font-size:15px;font-weight:600;margin-bottom:10px}
+.chart-card-head .chart-title{margin-bottom:0}
+.chart-card-head .range-btn{padding:7px 12px;font-size:12px;border-radius:8px}
+.chart{
+  height:148px;display:flex;align-items:flex-end;gap:8px;
+  padding:6px 4px 0;border-bottom:1px solid #30353e
+}
+.chart.dense{gap:3px}
+.chart.dense .bar{width:70%}
+.chart.dense .bar-value{font-size:9px;margin-bottom:3px}
+.chart.dense .bar-label{font-size:8px;margin-top:5px}
 .bar-container{
   flex:1;height:100%;display:flex;flex-direction:column;
   justify-content:flex-end;align-items:center;min-width:0
@@ -199,6 +229,88 @@ input:focus,select:focus{border-color:#687382}
 .system-card-question{font-size:13px;color:#9aa2ad;margin-bottom:20px}
 .choice-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .choice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.notion-select{position:relative;width:100%}
+.notion-trigger{
+  width:100%;
+  min-height:46px;
+  border:1px solid #303640;
+  background:#101217;
+  border-radius:9px;
+  padding:8px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  cursor:pointer;
+  color:#f1f3f5;
+  text-align:left;
+}
+.notion-trigger:hover{border-color:#687382}
+.notion-select.open .notion-trigger{border-color:#687382}
+.notion-trigger-label{color:#646b75;font-size:14px}
+.notion-chevron{color:#858c96;font-size:12px}
+.notion-menu{
+  display:none;
+  position:absolute;
+  left:0;right:0;
+  top:calc(100% + 6px);
+  z-index:40;
+  background:#2b2b2b;
+  border:1px solid #3a3a3a;
+  border-radius:10px;
+  padding:8px;
+  box-shadow:0 16px 40px rgba(0,0,0,.45);
+}
+.notion-select.open .notion-menu{display:block}
+.notion-search{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#f1f3f5;
+  padding:8px 8px 10px;
+  font-size:14px;
+  outline:none;
+}
+.notion-search::placeholder{color:#8a8a8a}
+.notion-menu-title{color:#9a9a9a;font-size:12px;padding:4px 8px 8px}
+.notion-option{
+  width:100%;
+  border:0;
+  background:transparent;
+  padding:6px 8px;
+  border-radius:6px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  text-align:left;
+}
+.notion-option:hover{background:#3a3a3a}
+.notion-pill{
+  display:inline-flex;
+  align-items:center;
+  border-radius:6px;
+  padding:3px 8px;
+  font-size:13px;
+  font-weight:650;
+  line-height:1.3;
+  color:#fff;
+}
+.pill-red{background:#9a4a52}
+.pill-orange{background:#8a6a32}
+.pill-blue{background:#3b5c9a}
+.pill-green{background:#4d6b58}
+.pill-purple{background:#6b5b9a}
+.pill-gold{background:#8a7340}
+.pill-worst{background:#9a4a52}
+.pill-bad{background:#6e5a38}
+.pill-okay{background:#3b5c9a}
+.pill-good{background:#8a7340}
+.pill-best{background:#4d6b58}
+.bar.hours-red{background:#ff6b78}
+.bar.hours-orange{background:#f0b429}
+.bar.hours-blue{background:#5ca4f5}
+.bar.hours-green{background:#4fd18a}
+.bar.hours-purple{background:#a78bfa}
 .choice{
   border:1px solid #454d59;
   background:#20252d;
@@ -443,7 +555,9 @@ input:focus,select:focus{border-color:#687382}
   .layout{grid-template-columns:1fr}
   .sidebar{min-height:auto}
   .form-grid,.status-grid,.metrics,.system-grid{grid-template-columns:1fr}
-  .date-strip{gap:4px}
+  .form-grid{grid-template-columns:1fr}
+  .date-grid{gap:4px}
+  .entry-dates{grid-template-columns:1fr}
 }
 
 .auth-overlay{position:fixed;inset:0;background:rgba(8,10,13,.96);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9999}
@@ -503,7 +617,15 @@ input:focus,select:focus{border-color:#687382}
 .bar.blue-bar{background:#5ca4f5}
 .bar.purple-bar{background:#8b7cf7}
 .bar.empty-bar{background:#30353e;min-height:3px}
-.range-note{color:#646b75;font-size:12px;margin:-6px 0 16px}
+.range-note{color:#646b75;font-size:12px;margin:0}
+.dash-toolbar{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px;
+}
+.dash-toolbar .range-btn{padding:7px 12px;font-size:12px;border-radius:8px}
 
 .health-card{
   background:#171a20;
@@ -717,7 +839,7 @@ input:focus,select:focus{border-color:#687382}
         </div>
 
         <section id="todayPage">
-          <div class="date-strip" id="dateStrip"></div>
+          <div class="entry-dates" id="dateStrip"></div>
 
           <div class="card">
             <div class="card-title" id="selectedDateTitle">Today's Sleep</div>
@@ -725,19 +847,12 @@ input:focus,select:focus{border-color:#687382}
 
             <div class="form-grid">
               <div>
-                <label for="hours">Sleep duration (hours)</label>
-                <input type="number" id="hours" min="0" max="24" step="0.1" placeholder="e.g. 7.5">
+                <label>Sleep duration</label>
+                <div class="notion-select" id="durationSelect"></div>
               </div>
               <div>
-                <label for="quality">Sleep quality</label>
-                <select id="quality">
-                  <option value="">Select quality</option>
-                  <option value="1">Bad</option>
-                  <option value="2">Okay</option>
-                  <option value="3">Good</option>
-                  <option value="4">Better</option>
-                  <option value="5">Best</option>
-                </select>
+                <label>Sleep quality</label>
+                <div class="notion-select" id="qualitySelect"></div>
               </div>
             </div>
 
@@ -751,7 +866,7 @@ input:focus,select:focus{border-color:#687382}
 
 
         <section id="workoutPage" style="display:none">
-          <div class="date-strip" id="workoutDateStrip"></div>
+          <div class="entry-dates" id="workoutDateStrip"></div>
 
           <div class="card">
             <div class="card-description">Record whether you trained today and when you trained.</div>
@@ -786,10 +901,10 @@ input:focus,select:focus{border-color:#687382}
                 <div class="inner-divider"></div>
                 <div class="field-label">Time</div>
                 <div class="choice-grid">
-                  <button type="button" class="choice" id="cardio5" onclick="setWorkoutChoice('cardioTime',5)">5 min</button>
-                  <button type="button" class="choice" id="cardio10" onclick="setWorkoutChoice('cardioTime',10)">10 min</button>
                   <button type="button" class="choice" id="cardio15" onclick="setWorkoutChoice('cardioTime',15)">15 min</button>
-                  <button type="button" class="choice" id="cardio20" onclick="setWorkoutChoice('cardioTime',20)">20 min</button>
+                  <button type="button" class="choice" id="cardio30" onclick="setWorkoutChoice('cardioTime',30)">30 min</button>
+                  <button type="button" class="choice" id="cardio45" onclick="setWorkoutChoice('cardioTime',45)">45 min</button>
+                  <button type="button" class="choice" id="cardio60" onclick="setWorkoutChoice('cardioTime',60)">1 hour</button>
                 </div>
               </div>
             </div>
@@ -802,7 +917,7 @@ input:focus,select:focus{border-color:#687382}
         </section>
 
         <section id="simpleTrackerPage" style="display:none">
-          <div class="date-strip" id="simpleDateStrip"></div>
+          <div class="entry-dates" id="simpleDateStrip"></div>
           <div class="card">
             <div class="card-description" id="simpleTrackerDescription"></div>
             <div class="simple-tracker">
@@ -822,7 +937,7 @@ input:focus,select:focus{border-color:#687382}
         </section>
 
         <section id="meditationPage" style="display:none">
-          <div class="date-strip" id="meditationDateStrip"></div>
+          <div class="entry-dates" id="meditationDateStrip"></div>
 
           <div class="card">
             <div class="card-description">Record your morning and night meditation practice.</div>
@@ -877,29 +992,35 @@ input:focus,select:focus{border-color:#687382}
         <section id="dashboardPage" style="display:none">
           <div class="metrics">
             <div class="metric">
-              <div class="metric-label">AVG SLEEP · 7 DAYS</div>
+              <div class="metric-label" id="avgHoursLabel">AVG SLEEP · 7 DAYS</div>
               <div class="metric-value" id="avgHours">—</div>
               <div class="metric-small">hours</div>
             </div>
             <div class="metric">
-              <div class="metric-label">AVG QUALITY · 7 DAYS</div>
+              <div class="metric-label" id="avgQualityLabel">AVG QUALITY · 7 DAYS</div>
               <div class="metric-value" id="avgQuality">—</div>
               <div class="metric-small">out of 5</div>
             </div>
             <div class="metric">
               <div class="metric-label">DAYS LOGGED</div>
               <div class="metric-value" id="daysLogged">0</div>
-              <div class="metric-small">of 7</div>
+              <div class="metric-small" id="daysLoggedSmall">of 7</div>
             </div>
             <div class="metric">
               <div class="metric-label">LOGGING CONSISTENCY</div>
               <div class="metric-value" id="consistency">0%</div>
-              <div class="metric-small">last 7 days</div>
+              <div class="metric-small" id="consistencySmall">last 7 days</div>
             </div>
           </div>
 
           <div class="chart-card">
-            <div class="chart-title">Sleep Duration</div>
+            <div class="chart-card-head">
+              <div class="chart-title">Sleep Duration</div>
+              <div class="range-toggle">
+                <button class="range-btn sleep-range-7 active" onclick="setSleepDashRange(7)">Last 7 days</button>
+                <button class="range-btn sleep-range-30" onclick="setSleepDashRange(30)">Last 30 days</button>
+              </div>
+            </div>
             <div class="chart" id="hoursChart"></div>
           </div>
 
@@ -913,29 +1034,35 @@ input:focus,select:focus{border-color:#687382}
         <section id="analyticsPage" style="display:none">
           <div class="metrics">
             <div class="metric">
-              <div class="metric-label">AVG SLEEP · 7 DAYS</div>
+              <div class="metric-label" id="analyticsAvgHoursLabel">AVG SLEEP · 7 DAYS</div>
               <div class="metric-value" id="analyticsAvgHours">—</div>
               <div class="metric-small">hours</div>
             </div>
             <div class="metric">
-              <div class="metric-label">AVG QUALITY · 7 DAYS</div>
+              <div class="metric-label" id="analyticsAvgQualityLabel">AVG QUALITY · 7 DAYS</div>
               <div class="metric-value" id="analyticsAvgQuality">—</div>
               <div class="metric-small">out of 5</div>
             </div>
             <div class="metric">
               <div class="metric-label">DAYS LOGGED</div>
               <div class="metric-value" id="analyticsDaysLogged">0</div>
-              <div class="metric-small">of 7</div>
+              <div class="metric-small" id="analyticsDaysLoggedSmall">of 7</div>
             </div>
             <div class="metric">
               <div class="metric-label">LOGGING CONSISTENCY</div>
               <div class="metric-value" id="analyticsConsistency">0%</div>
-              <div class="metric-small">last 7 days</div>
+              <div class="metric-small" id="analyticsConsistencySmall">last 7 days</div>
             </div>
           </div>
 
           <div class="chart-card">
-            <div class="chart-title">Sleep Duration Trend</div>
+            <div class="chart-card-head">
+              <div class="chart-title">Sleep Duration Trend</div>
+              <div class="range-toggle">
+                <button class="range-btn sleep-range-7 active" onclick="setSleepDashRange(7)">Last 7 days</button>
+                <button class="range-btn sleep-range-30" onclick="setSleepDashRange(30)">Last 30 days</button>
+              </div>
+            </div>
             <div class="chart" id="analyticsHoursChart"></div>
           </div>
 
@@ -946,7 +1073,12 @@ input:focus,select:focus{border-color:#687382}
         </section>
 
         <section id="engineDashboardPage" style="display:none">
-          <div class="range-note" id="engineDashRange"></div>
+          <div class="dash-toolbar">
+            <div class="range-toggle">
+              <button class="range-btn dash-range-7 active" onclick="setDashRange(7)">Last 7 days</button>
+              <button class="range-btn dash-range-30" onclick="setDashRange(30)">Last 30 days</button>
+            </div>
+          </div>
           <div class="metrics" id="engineDashMetrics"></div>
           <div id="engineDashCharts"></div>
         </section>
@@ -979,7 +1111,8 @@ const supabaseClient = (SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.inc
     })
   : null;
 
-const qualityNames = {1:"Bad",2:"Okay",3:"Good",4:"Better",5:"Best"};
+const qualityNames = {1:"Worst",2:"Bad",3:"Okay",4:"Good",5:"Best"};
+const qualityPills = {1:"pill-worst",2:"pill-bad",3:"pill-okay",4:"pill-good",5:"pill-best"};
 const layerItems = {
   1: ["Sleep","Workout","Meditation","Diet","Journaling","Nofap"],
   2: ["Day","Week","Bi-week","Month","Quarter","Bi-Quarter","Year"],
@@ -997,6 +1130,17 @@ let workoutState = {gym:"",gymTime:"",cardio:"",cardioTime:null};
 let meditationState = {morning:"",morningTime:null,night:"",nightTime:null};
 let simpleTrackerState = {system:"",value:""};
 let overviewRangeDays = 7;
+let dashRangeDays = 7;
+let entryDateView = "week";
+let sleepDurationBand = "";
+let sleepQualityValue = "";
+const sleepDurationBands = {
+  below4:{hours:3,label:"Below 4 hours",short:"<4h",bar:"hours-red",pill:"pill-red"},
+  "4to6":{hours:5,label:"4 to 6 hours",short:"4–6h",bar:"hours-orange",pill:"pill-orange"},
+  "6to7":{hours:6.5,label:"6 to 7 hours",short:"6–7h",bar:"hours-blue",pill:"pill-blue"},
+  "7to8":{hours:7.5,label:"7–8 hours",short:"7–8h",bar:"hours-green",pill:"pill-green"},
+  "8plus":{hours:9,label:"8+ hours",short:"8h+",bar:"hours-purple",pill:"pill-purple"}
+};
 
 function getDateString(date){
   return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
@@ -1307,7 +1451,7 @@ function scoreSystemDay(systemName, entry){
     if(entry.gym==="yes") score+=55;
     if(entry.cardio==="yes"){
       const mins=Number(entry.cardioTime||0);
-      score+=clampScore(Math.max(15,(mins/20)*45));
+      score+=clampScore(Math.max(15,(mins/60)*45));
     }
     return clampScore(score);
   }
@@ -1444,17 +1588,89 @@ async function renderWorkspace(){
   }
 }
 
+function bandFromHours(hours){
+  const h=Number(hours);
+  if(Number.isNaN(h)) return "";
+  if(h<4) return "below4";
+  if(h<6) return "4to6";
+  if(h<7) return "6to7";
+  if(h<=8) return "7to8";
+  return "8plus";
+}
+function notionPill(label, pillClass){
+  return `<span class="notion-pill ${pillClass}">${label}</span>`;
+}
+function closeNotionSelects(exceptId){
+  document.querySelectorAll(".notion-select").forEach(el=>{
+    if(el.id!==exceptId) el.classList.remove("open");
+  });
+}
+function toggleNotionSelect(id){
+  const wrap=document.getElementById(id);
+  const willOpen=!wrap.classList.contains("open");
+  closeNotionSelects();
+  wrap.classList.toggle("open", willOpen);
+}
+function filterNotionOptions(id, query){
+  const q=(query||"").toLowerCase();
+  document.querySelectorAll("#"+id+" .notion-option").forEach(btn=>{
+    btn.style.display=btn.dataset.label.toLowerCase().includes(q)?"":"none";
+  });
+}
+function renderDurationSelect(){
+  const wrap=document.getElementById("durationSelect");
+  if(!wrap) return;
+  const selected=sleepDurationBands[sleepDurationBand];
+  const trigger=selected?notionPill(selected.label, selected.pill):`<span class="notion-trigger-label">Select an option</span>`;
+  const options=Object.entries(sleepDurationBands).map(([id,opt])=>`
+    <button type="button" class="notion-option" data-label="${opt.label}" onclick="chooseSleepDuration('${id}')">${notionPill(opt.label,opt.pill)}</button>
+  `).join("");
+  wrap.innerHTML=`
+    <button type="button" class="notion-trigger" onclick="toggleNotionSelect('durationSelect')">
+      ${trigger}<span class="notion-chevron">▾</span>
+    </button>
+    <div class="notion-menu">${options}</div>`;
+}
+function renderQualitySelect(){
+  const wrap=document.getElementById("qualitySelect");
+  if(!wrap) return;
+  const selected=sleepQualityValue?qualityNames[sleepQualityValue]:"";
+  const trigger=selected?notionPill(selected, qualityPills[sleepQualityValue]):`<span class="notion-trigger-label">Select an option</span>`;
+  const order=[5,4,3,2,1];
+  const options=order.map(id=>`
+    <button type="button" class="notion-option" data-label="${qualityNames[id]}" onclick="chooseSleepQuality('${id}')">${notionPill(qualityNames[id],qualityPills[id])}</button>
+  `).join("");
+  wrap.innerHTML=`
+    <button type="button" class="notion-trigger" onclick="toggleNotionSelect('qualitySelect')">
+      ${trigger}<span class="notion-chevron">▾</span>
+    </button>
+    <div class="notion-menu">${options}</div>`;
+}
+function chooseSleepDuration(band){
+  sleepDurationBand=band;
+  closeNotionSelects();
+  renderDurationSelect();
+}
+function chooseSleepQuality(value){
+  sleepQualityValue=String(value);
+  closeNotionSelects();
+  renderQualitySelect();
+}
 async function loadSelectedDate(){
   const data=await getEntries("Sleep",selectedDate,selectedDate); const entry=data[selectedDate];
-  document.getElementById("selectedDateTitle").textContent=selectedDate===getDateString(new Date())?"Today's Sleep":formatDate(selectedDate);
-  document.getElementById("hours").value=entry?.hours??"";
-  document.getElementById("quality").value=entry?.quality??"";
+  document.getElementById("selectedDateTitle").textContent="Today's Sleep";
+  sleepDurationBand=entry?.durationBand || bandFromHours(entry?.hours) || "";
+  sleepQualityValue=entry?.quality?String(entry.quality):"";
+  renderDurationSelect();
+  renderQualitySelect();
 }
 async function saveEntry(){
-  const hoursInput=document.getElementById("hours").value; const qualityInput=document.getElementById("quality").value;
-  if(!hoursInput||!qualityInput){alert("Please enter both sleep duration and sleep quality.");return;}
-  const hours=parseFloat(hoursInput); if(hours<0||hours>24){alert("Please enter a valid sleep duration.");return;}
-  if(await saveSystemEntry("Sleep",selectedDate,{hours,quality:parseInt(qualityInput)})){await loadSelectedDate();alert("Sleep data saved to the cloud.");}
+  if(!sleepDurationBand||!sleepQualityValue){alert("Please select sleep duration and sleep quality.");return;}
+  const band=sleepDurationBands[sleepDurationBand];
+  if(await saveSystemEntry("Sleep",selectedDate,{hours:band.hours,durationBand:sleepDurationBand,quality:parseInt(sleepQualityValue)})){
+    await loadSelectedDate();
+    alert("Sleep data saved to the cloud.");
+  }
 }
 
 async function loadWorkoutDate(){
@@ -1494,7 +1710,7 @@ function updateWorkoutButtons(){
 
   const cardioYes=workoutState.cardio==="yes", cardioNo=workoutState.cardio==="no";
   setActive("cardioYes",cardioYes); setActive("cardioNo",cardioNo,true);
-  [5,10,15,20].forEach(v=>{
+  [15,30,45,60].forEach(v=>{
     const el=document.getElementById("cardio"+v); if(el) el.disabled=!cardioYes;
     setActive("cardio"+v,workoutState.cardioTime===v);
   });
@@ -1554,35 +1770,175 @@ async function showPage(page){
   document.getElementById("analyticsTab").classList.toggle("active",page==="analytics");
   await renderWorkspace();
 }
-function renderDateStrip(targetId="dateStrip"){
-  const container=document.getElementById(targetId);if(!container)return;container.innerHTML="";
-  const today=new Date();
-  for(let offset=-3;offset<=3;offset++){
-    const date=new Date(today);date.setDate(today.getDate()+offset);const dateString=getDateString(date);
-    const stateClass=offset<0?" past":(offset>0?" future":" today-date");const selectedClass=dateString===selectedDate?" selected":"";
-    const button=document.createElement("div");button.className="date"+stateClass+selectedClass;
-    button.innerHTML=`<div class="day">${date.toLocaleDateString(undefined,{weekday:"short"})}</div><div class="number">${date.getDate()}</div>${offset===0?'<div class="today-label">Today</div>':''}`;
-    button.onclick=async()=>{selectedDate=dateString;renderDateStrip(targetId);document.getElementById("currentDateLabel").innerHTML=formatDate(selectedDate);await loadSelectedDate();await loadWorkoutDate();await loadMeditationDate();if(currentLayer===1&&[4,5,6].includes(currentItem)) await loadSimpleTrackerDate(["","Sleep","Workout","Meditation","Diet","Journaling","Nofap"][currentItem]);};
-    container.appendChild(button);
+function startOfWeekMonday(date){
+  const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());
+  const day=d.getDay();
+  d.setDate(d.getDate()+(day===0?-6:1-day));
+  return d;
+}
+function dateToneClass(date, today){
+  const a=getDateString(date), b=getDateString(today);
+  if(a===b) return " today-date";
+  return a<b?" past":" future";
+}
+async function onPickEntryDate(dateString, targetId){
+  selectedDate=dateString;
+  renderDateStrip(targetId);
+  document.getElementById("currentDateLabel").innerHTML=formatDate(selectedDate);
+  await loadSelectedDate();
+  await loadWorkoutDate();
+  await loadMeditationDate();
+  if(currentLayer===1&&[4,5,6].includes(currentItem)){
+    await loadSimpleTrackerDate(["","Sleep","Workout","Meditation","Diet","Journaling","Nofap"][currentItem]);
   }
+}
+function setEntryDateView(view){
+  entryDateView=view;
+  ["dateStrip","workoutDateStrip","meditationDateStrip","simpleDateStrip"].forEach(id=>{
+    if(document.getElementById(id)) renderDateStrip(id);
+  });
+}
+function renderDateStrip(targetId="dateStrip"){
+  const container=document.getElementById(targetId);
+  if(!container) return;
+  container.className="entry-dates";
+  const today=new Date();
+  const anchor=new Date(selectedDate+"T00:00:00");
+  const dates=[];
+  if(entryDateView==="month"){
+    const first=new Date(anchor.getFullYear(),anchor.getMonth(),1);
+    const gridStart=startOfWeekMonday(first);
+    for(let i=0;i<42;i++){
+      const date=new Date(gridStart);
+      date.setDate(gridStart.getDate()+i);
+      dates.push(date);
+    }
+    while(dates.length>28){
+      const lastWeek=dates.slice(-7);
+      if(lastWeek.every(d=>d.getMonth()!==anchor.getMonth())) dates.splice(-7);
+      else break;
+    }
+  }else{
+    const monday=startOfWeekMonday(anchor);
+    for(let i=0;i<7;i++){
+      const date=new Date(monday);
+      date.setDate(monday.getDate()+i);
+      dates.push(date);
+    }
+  }
+
+  const grid=document.createElement("div");
+  grid.className="date-grid";
+  dates.forEach(date=>{
+    const dateString=getDateString(date);
+    const inMonth=date.getMonth()===anchor.getMonth();
+    const outside=entryDateView==="month"&&!inMonth;
+    const button=document.createElement("div");
+    button.className="date"+dateToneClass(date,today)+(dateString===selectedDate?" selected":"")+(outside?" outside":"");
+    button.innerHTML=`<div class="day">${date.toLocaleDateString(undefined,{weekday:"short"})}</div><div class="number">${date.getDate()}</div>${getDateString(date)===getDateString(today)?'<div class="today-label">Today</div>':''}`;
+    if(!outside) button.onclick=()=>onPickEntryDate(dateString,targetId);
+    grid.appendChild(button);
+  });
+
+  const toggle=document.createElement("div");
+  toggle.className="date-view-toggle";
+  toggle.innerHTML=`
+    <button class="range-btn${entryDateView==="week"?" active":""}" onclick="setEntryDateView('week')">Week</button>
+    <button class="range-btn${entryDateView==="month"?" active":""}" onclick="setEntryDateView('month')">Month</button>`;
+
+  container.innerHTML="";
+  container.appendChild(grid);
+  container.appendChild(toggle);
   document.getElementById("currentDateLabel").innerHTML=formatDate(selectedDate);
 }
 function getLastSevenDays(){
-  const dates=[],today=new Date();for(let i=6;i>=0;i--){const date=new Date(today);date.setDate(today.getDate()-i);dates.push(getDateString(date));}return dates;
+  return getDateRange(7);
+}
+function updateDashRangeButtons(){
+  document.querySelectorAll(".sleep-range-7, .dash-range-7").forEach(btn=>btn.classList.toggle("active", dashRangeDays===7));
+  document.querySelectorAll(".sleep-range-30, .dash-range-30").forEach(btn=>btn.classList.toggle("active", dashRangeDays===30));
+}
+async function setSleepDashRange(days){return setDashRange(days);}
+async function setDashRange(days){
+  dashRangeDays=days;
+  updateDashRangeButtons();
+  if(currentLayer===1 && currentItem===1) await renderDashboard();
+  else if(currentLayer===1 && currentItem>=2) await renderEngineDashboard(layerItems[1][currentItem-1]);
 }
 async function renderDashboard(){
-  const dates=getLastSevenDays();const data=await getEntries("Sleep",dates[0],dates[dates.length-1]);const entries=dates.map(date=>data[date]).filter(Boolean);
+  const days=dashRangeDays;
+  const dates=getDateRange(days);
+  const data=await getEntries("Sleep",dates[0],dates[dates.length-1]);
+  const entries=dates.map(date=>data[date]).filter(Boolean);
+  const rangeText=days+" DAYS";
+  document.getElementById("avgHoursLabel").textContent="AVG SLEEP · "+rangeText;
+  document.getElementById("avgQualityLabel").textContent="AVG QUALITY · "+rangeText;
+  document.getElementById("daysLoggedSmall").textContent="of "+days;
+  document.getElementById("consistencySmall").textContent=days===30?"last 30 days":"last 7 days";
+  document.getElementById("analyticsAvgHoursLabel").textContent="AVG SLEEP · "+rangeText;
+  document.getElementById("analyticsAvgQualityLabel").textContent="AVG QUALITY · "+rangeText;
+  document.getElementById("analyticsDaysLoggedSmall").textContent="of "+days;
+  document.getElementById("analyticsConsistencySmall").textContent=days===30?"last 30 days":"last 7 days";
   if(entries.length){
-    const avgHours=entries.reduce((s,e)=>s+Number(e.hours),0)/entries.length;const avgQuality=entries.reduce((s,e)=>s+Number(e.quality),0)/entries.length;
-    document.getElementById("avgHours").textContent=avgHours.toFixed(1);document.getElementById("avgQuality").textContent=avgQuality.toFixed(1);document.getElementById("daysLogged").textContent=entries.length;document.getElementById("consistency").textContent=Math.round(entries.length/7*100)+"%";
-  }else{document.getElementById("avgHours").textContent="—";document.getElementById("avgQuality").textContent="—";document.getElementById("daysLogged").textContent="0";document.getElementById("consistency").textContent="0%";}
-  renderChart("hoursChart",data,dates,"hours");renderChart("qualityChart",data,dates,"quality");
-  document.getElementById("analyticsAvgHours").textContent=document.getElementById("avgHours").textContent;document.getElementById("analyticsAvgQuality").textContent=document.getElementById("avgQuality").textContent;document.getElementById("analyticsDaysLogged").textContent=document.getElementById("daysLogged").textContent;document.getElementById("analyticsConsistency").textContent=document.getElementById("consistency").textContent;
-  renderChart("analyticsHoursChart",data,dates,"hours");renderChart("analyticsQualityChart",data,dates,"quality");
+    const avgHours=entries.reduce((s,e)=>s+Number(e.hours),0)/entries.length;
+    const avgQuality=entries.reduce((s,e)=>s+Number(e.quality),0)/entries.length;
+    document.getElementById("avgHours").textContent=avgHours.toFixed(1);
+    document.getElementById("avgQuality").textContent=avgQuality.toFixed(1);
+    document.getElementById("daysLogged").textContent=entries.length;
+    document.getElementById("consistency").textContent=Math.round(entries.length/days*100)+"%";
+  }else{
+    document.getElementById("avgHours").textContent="—";
+    document.getElementById("avgQuality").textContent="—";
+    document.getElementById("daysLogged").textContent="0";
+    document.getElementById("consistency").textContent="0%";
+  }
+  renderChart("hoursChart",data,dates,"hours");
+  renderChart("qualityChart",data,dates,"quality");
+  document.getElementById("analyticsAvgHours").textContent=document.getElementById("avgHours").textContent;
+  document.getElementById("analyticsAvgQuality").textContent=document.getElementById("avgQuality").textContent;
+  document.getElementById("analyticsDaysLogged").textContent=document.getElementById("daysLogged").textContent;
+  document.getElementById("analyticsConsistency").textContent=document.getElementById("consistency").textContent;
+  renderChart("analyticsHoursChart",data,dates,"hours");
+  renderChart("analyticsQualityChart",data,dates,"quality");
+  updateDashRangeButtons();
 }
 function renderChart(id,data,dates,type){
-  const chart=document.getElementById(id);chart.innerHTML="";const max=type==="hours"?Math.max(10,...dates.map(d=>data[d]?Number(data[d].hours):0)):5;
-  dates.forEach(date=>{const entry=data[date];const container=document.createElement("div");container.className="bar-container";if(entry){const value=document.createElement("div");value.className="bar-value";value.textContent=type==="hours"?entry.hours+"h":qualityNames[entry.quality];const bar=document.createElement("div");bar.className="bar"+(type==="quality"?" quality-bar":"");const v=type==="hours"?Number(entry.hours):Number(entry.quality);bar.style.height=`${(v/max)*100}%`;container.appendChild(value);container.appendChild(bar);}else{const empty=document.createElement("div");empty.style.height="3px";empty.style.width="55%";empty.style.background="#30353e";empty.style.borderRadius="5px 5px 0 0";container.appendChild(empty);}const label=document.createElement("div");label.className="bar-label";label.textContent=new Date(date+"T00:00:00").toLocaleDateString(undefined,{weekday:"short"});container.appendChild(label);chart.appendChild(container);});
+  const chart=document.getElementById(id);
+  if(!chart) return;
+  chart.innerHTML="";
+  chart.classList.toggle("dense", dates.length>10);
+  const max=type==="hours"?Math.max(10,...dates.map(d=>data[d]?Number(data[d].hours):0)):5;
+  dates.forEach(date=>{
+    const entry=data[date];
+    const container=document.createElement("div");
+    container.className="bar-container";
+    if(entry){
+      const value=document.createElement("div");
+      value.className="bar-value";
+      const bandKey=entry.durationBand||bandFromHours(entry.hours);
+      const band=sleepDurationBands[bandKey];
+      value.textContent=type==="hours"?(band?band.short:entry.hours+"h"):qualityNames[entry.quality];
+      const bar=document.createElement("div");
+      bar.className="bar"+(type==="quality"?" quality-bar":" "+(band?band.bar:""));
+      const v=type==="hours"?Number(entry.hours):Number(entry.quality);
+      bar.style.height=`${(v/max)*100}%`;
+      container.appendChild(value);
+      container.appendChild(bar);
+    }else{
+      const empty=document.createElement("div");
+      empty.style.height="3px";
+      empty.style.width="55%";
+      empty.style.background="#30353e";
+      empty.style.borderRadius="5px 5px 0 0";
+      container.appendChild(empty);
+    }
+    const label=document.createElement("div");
+    label.className="bar-label";
+    const dt=new Date(date+"T00:00:00");
+    label.textContent=dates.length>10?String(dt.getDate()):dt.toLocaleDateString(undefined,{weekday:"short"});
+    container.appendChild(label);
+    chart.appendChild(container);
+  });
 }
 
 function getDateRange(days){
@@ -1619,7 +1975,7 @@ function renderEngineMetrics(metrics){
 }
 function renderBarChart(containerId, dates, getBar){
   const chart=document.createElement("div");
-  chart.className="chart";
+  chart.className="chart"+(dates.length>10?" dense":"");
   chart.id=containerId;
   dates.forEach(date=>{
     const spec=getBar(date);
@@ -1637,7 +1993,8 @@ function renderBarChart(containerId, dates, getBar){
     wrap.appendChild(bar);
     const label=document.createElement("div");
     label.className="bar-label";
-    label.textContent=shortWeekday(date);
+    const dt=new Date(date+"T00:00:00");
+    label.textContent=dates.length>10?String(dt.getDate()):shortWeekday(date);
     wrap.appendChild(label);
     chart.appendChild(wrap);
   });
@@ -1655,15 +2012,15 @@ function renderChartCard(title, chartEl){
 }
 
 async function renderEngineDashboard(systemName){
-  const dayCount=currentPage==="analytics"?14:7;
+  const dayCount=dashRangeDays;
   const dates=getDateRange(dayCount);
   const data=await getEntries(systemName,dates[0],dates[dates.length-1]);
   const logged=dates.filter(d=>!!data[d]);
   const consistency=Math.round(logged.length/dates.length*100)+"%";
-  const rangeLabel=currentPage==="analytics"?"Last 14 days":"Last 7 days";
-  document.getElementById("engineDashRange").textContent=rangeLabel+" · live data from your cloud entries";
+  const rangeLabel=dayCount===30?"Last 30 days":"Last 7 days";
   const charts=document.getElementById("engineDashCharts");
   charts.innerHTML="";
+  updateDashRangeButtons();
 
   if(systemName==="Workout"){
     const gymYes=logged.filter(d=>data[d].gym==="yes");
@@ -1685,7 +2042,7 @@ async function renderEngineDashboard(systemName){
       const entry=data[date];
       if(!entry||entry.cardio!=="yes") return {height:entry&&entry.cardio==="no"?"28%":"3px", valueText:entry&&entry.cardio==="no"?"No":"", barClass:entry&&entry.cardio==="no"?"no-bar":"empty-bar"};
       const mins=Number(entry.cardioTime||0);
-      return {valueText:mins+"m", height:`${Math.max(18,(mins/20)*100)}%`, barClass:"blue-bar"};
+      return {valueText:mins===60?"1h":mins+"m", height:`${Math.max(18,(mins/60)*100)}%`, barClass:"blue-bar"};
     })));
     return;
   }
@@ -1738,6 +2095,9 @@ async function renderEngineDashboard(systemName){
   })));
 }
 
+document.addEventListener("click",(event)=>{
+  if(!event.target.closest(".notion-select")) closeNotionSelects();
+});
 initializeApp();
 </script>
 </body>
