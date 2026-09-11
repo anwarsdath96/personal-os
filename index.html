@@ -125,10 +125,28 @@ body{
 .hub-block{padding:0}
 .hub-row{
   display:grid;
-  grid-template-columns:108px 1fr;
+  grid-template-columns:124px 1fr;
   gap:8px;
   align-items:center;
   padding:4px 0;
+}
+.row-tick{
+  width:11px;height:11px;flex:0 0 11px;
+  border:1.5px solid rgba(255,255,255,.28);
+  border-radius:3px;
+  box-sizing:border-box;
+  position:relative;
+}
+.row-tick.on{
+  background:#4fd18a;border-color:#4fd18a;
+}
+.row-tick.on::after{
+  content:"";
+  position:absolute;left:2px;top:-1px;
+  width:3px;height:7px;
+  border:solid #102016;
+  border-width:0 2px 2px 0;
+  transform:rotate(45deg);
 }
 .hub-name{display:flex;align-items:center;gap:6px;font-weight:650;font-size:12px;white-space:nowrap}
 .hub-controls,.hub-group{display:flex;flex-wrap:nowrap;gap:5px;align-items:center;min-width:0}
@@ -167,22 +185,28 @@ body{
 #entryHubPage .card-title{margin-bottom:8px;font-size:16px}
 .entry-split{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(220px,.68fr);gap:20px;align-items:start}
 .entry-pane{min-width:0}
-.outcome-row{display:grid;grid-template-columns:76px 1fr;gap:4px;align-items:center;padding:2px 0}
-.outcome-name{font-size:11px;font-weight:650;white-space:nowrap}
-.outcome-name.good{color:#6ecf97}
-.outcome-name.bad{color:#ef7a7a}
-.outcome-name.focus{color:#b39be8}
-.outcome-group{padding:2px 0 8px}
+.outcome-row{display:grid;grid-template-columns:18px 78px 1fr;gap:4px;align-items:center;padding:3px 0}
+.outcome-name{font-size:11px;font-weight:650;white-space:nowrap;color:#fff}
+.outcome-group{padding:8px 8px 6px;border-radius:10px;margin-bottom:8px}
+.outcome-group.good{background:#14261c}
+.outcome-group.bad{background:#261418}
+.outcome-group.focus{background:#1c1730}
 .score-row{display:flex;gap:3px;flex-wrap:nowrap}
-.score-btn{
-  width:18px;height:18px;padding:0;border-radius:4px;
-  border:1px solid #3a414c;background:#1a1f26;color:#c5cbd3;
-  font-size:9px;cursor:pointer;flex:0 0 18px;
+.score-swatch{
+  width:26px;height:14px;padding:0;border-radius:4px;
+  border:1px solid rgba(255,255,255,.18);
+  cursor:pointer;flex:0 0 26px;
 }
-.score-btn:hover{border-color:#687382}
-.score-btn.active.good{background:#1b5c38;border-color:#4fd18a;color:#fff}
-.score-btn.active.bad{background:#6b1520;border-color:#ef7a7a;color:#fff}
-.score-btn.active.focus{background:#3b2a6b;border-color:#b39be8;color:#fff}
+.score-swatch.lvl-red{background:#5a2a2a}
+.score-swatch.lvl-orange{background:#5c3a16}
+.score-swatch.lvl-blue{background:#24365c}
+.score-swatch.lvl-green{background:#1b3a28}
+.score-swatch.lvl-lime{background:#2a4a32}
+.score-swatch.active.lvl-red{background:#e04545}
+.score-swatch.active.lvl-orange{background:#f08a1a}
+.score-swatch.active.lvl-blue{background:#4d8dff}
+.score-swatch.active.lvl-green{background:#2db866}
+.score-swatch.active.lvl-lime{background:#8af0a6}
 .entry-dates{
   display:grid;
   grid-template-columns:minmax(0,1fr) 92px;
@@ -735,6 +759,7 @@ input:focus,select:focus{border-color:#687382}
 }
 .dash-toolbar .range-btn{padding:7px 12px;font-size:12px;border-radius:8px}
 
+.health-stack{display:flex;flex-direction:column;gap:14px}
 .health-card{
   background:#171a20;
   border:1px solid #292f38;
@@ -795,9 +820,9 @@ input:focus,select:focus{border-color:#687382}
   flex:1;
   position:relative;
   display:flex;
-  align-items:center;
+  align-items:flex-end;
   justify-content:flex-end;
-  padding-right:16px;
+  padding:0 16px 8px;
   border-bottom:1px solid rgba(255,255,255,.04);
 }
 .health-band:last-child{border-bottom:0}
@@ -807,7 +832,7 @@ input:focus,select:focus{border-color:#687382}
 .health-band.critical{background:#3a1b22}
 .health-bars{
   position:absolute;
-  inset:28px 132px 42px 18px;
+  inset:28px 132px 46px 18px;
   display:flex;
   align-items:flex-end;
   justify-content:space-around;
@@ -824,9 +849,9 @@ input:focus,select:focus{border-color:#687382}
 }
 .health-bar{
   position:relative;
-  width:46%;
-  min-width:28px;
-  max-width:64px;
+  width:42%;
+  min-width:22px;
+  max-width:52px;
   border-radius:8px 8px 2px 2px;
   min-height:4px;
 }
@@ -847,24 +872,38 @@ input:focus,select:focus{border-color:#687382}
 .health-x{
   position:absolute;
   left:18px;right:132px;bottom:0;
-  height:42px;
+  height:46px;
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   justify-content:space-around;
-  gap:8px;
+  gap:6px;
+  padding-top:8px;
 }
 .health-x span{
   flex:1;
   text-align:center;
   color:#c5ccd6;
-  font-size:13px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  font-size:10px;
+  line-height:1.15;
+  white-space:normal;
 }
-.band-label{text-align:right;line-height:1.2;pointer-events:none}
-.band-label strong{display:block;font-size:13px;font-weight:700;margin-bottom:2px}
-.band-label span{display:block;font-size:12px;color:#9aa3ae}
+.band-label{text-align:right;line-height:1.1;pointer-events:none}
+.band-label strong{display:block;font-size:11px;font-weight:650}
+.health-bar-gap,.health-x .gap{
+  flex:0 0 12px;
+  height:100%;
+  position:relative;
+}
+.health-x .gap::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:6px;
+  bottom:8px;
+  width:1px;
+  background:#6a7380;
+  transform:translateX(-50%);
+}
 .health-band.excellent .band-label strong{color:#7dff9d}
 .health-band.good .band-label strong{color:#8fa0ff}
 .health-band.attention .band-label strong{color:#f0b429}
@@ -1708,8 +1747,12 @@ function isOverviewOffDay(systemName, entry){
   if(systemName==="Workout" && entry.gym==="off" && (entry.cardio==="off"||!entry.cardio)) return true;
   return false;
 }
+function overviewSystemBlocks(layer){
+  if(layer===1) return personalGroups[0].blocks;
+  return [layerItems[layer]||[]];
+}
 async function loadLayerHealthScores(layer, days=overviewRangeDays){
-  const systems=layerItems[layer]||[];
+  const systems=overviewSystemBlocks(layer).flat();
   const dates=getDateRange(days);
   return Promise.all(systems.map(async name=>{
     const data=await getEntries(name,dates[0],dates[dates.length-1]);
@@ -1729,15 +1772,10 @@ async function setOverviewRange(days){
   overviewRangeDays=days;
   await renderEngineOverview();
 }
-async function renderEngineOverview(){
-  const rangeLabel=overviewRangeDays===30?"last 30 days":"last 7 days";
-  document.getElementById("overviewPage").innerHTML=`
-    <div class="health-card">
+function healthCardMarkup(title, barsId, labelsId){
+  return `<div class="health-card">
       <div class="health-card-head">
-        <div>
-          <div class="health-card-title">System Health Overview</div>
-          <div class="health-card-sub">Current health score for each system · ${rangeLabel}</div>
-        </div>
+        <div class="health-card-title">${title}</div>
         <div class="range-toggle">
           <button class="range-btn${overviewRangeDays===7?" active":""}" onclick="setOverviewRange(7)">Last 7 days</button>
           <button class="range-btn${overviewRangeDays===30?" active":""}" onclick="setOverviewRange(30)">Last 30 days</button>
@@ -1747,30 +1785,74 @@ async function renderEngineOverview(){
         <div class="health-y"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div>
         <div class="health-plot">
           <div class="health-bands">
-            <div class="health-band excellent"><div class="band-label"><strong>Excellent</strong><span>75–100%</span></div></div>
-            <div class="health-band good"><div class="band-label"><strong>Good</strong><span>50–75%</span></div></div>
-            <div class="health-band attention"><div class="band-label"><strong>Needs Attention</strong><span>25–50%</span></div></div>
-            <div class="health-band critical"><div class="band-label"><strong>Critical</strong><span>0–25%</span></div></div>
+            <div class="health-band excellent"><div class="band-label"><strong>Excellent</strong></div></div>
+            <div class="health-band good"><div class="band-label"><strong>Good</strong></div></div>
+            <div class="health-band attention"><div class="band-label"><strong>Needs Attention</strong></div></div>
+            <div class="health-band critical"><div class="band-label"><strong>Critical</strong></div></div>
           </div>
-          <div class="health-bars" id="healthBars"></div>
-          <div class="health-x" id="healthLabels"></div>
+          <div class="health-bars" id="${barsId}"></div>
+          <div class="health-x" id="${labelsId}"></div>
         </div>
       </div>
     </div>`;
-
-  const scores=await loadLayerHealthScores(currentLayer, overviewRangeDays);
-  const bars=document.getElementById("healthBars");
-  const labels=document.getElementById("healthLabels");
+}
+function paintHealthChart(barsId, labelsId, scores, blocks){
+  const byName=Object.fromEntries(scores.map(s=>[s.name,s]));
+  const bars=document.getElementById(barsId);
+  const labels=document.getElementById(labelsId);
   if(!bars||!labels) return;
-  bars.innerHTML=scores.map(s=>{
-    const band=healthBand(s.health);
-    return `<div class="health-bar-col">
-      <div class="health-bar ${band}" style="height:${Math.max(s.health,2)}%">
-        <span class="health-bar-value">${s.health}%</span>
-      </div>
-    </div>`;
+  bars.innerHTML=blocks.map((block,index)=>{
+    const cols=block.map(name=>{
+      const s=byName[name]||{name,health:0,logged:0};
+      const band=healthBand(s.health);
+      return `<div class="health-bar-col">
+        <div class="health-bar ${band}" style="height:${Math.max(s.health,2)}%">
+          <span class="health-bar-value">${s.health}%</span>
+        </div>
+      </div>`;
+    }).join("");
+    return (index?`<div class="health-bar-gap"></div>`:"")+cols;
   }).join("");
-  labels.innerHTML=scores.map(s=>`<span title="${s.logged} of ${overviewRangeDays} days logged">${s.name}</span>`).join("");
+  labels.innerHTML=blocks.map((block,index)=>{
+    const names=block.map(name=>{
+      const s=byName[name]||{logged:0};
+      return `<span title="${s.logged} of ${overviewRangeDays} days logged">${name}</span>`;
+    }).join("");
+    return (index?`<span class="gap"></span>`:"")+names;
+  }).join("");
+}
+async function loadOutcomeHealthScores(days=overviewRangeDays){
+  const dates=getDateRange(days);
+  const data=await getEntries("Outcomes",dates[0],dates[dates.length-1]);
+  const tone={};
+  outcomeGroups.forEach(group=>group.items.forEach(name=>tone[name]=group.tone));
+  return outcomeGroups.flatMap(group=>group.items).map(name=>{
+    let total=0, counted=0;
+    dates.forEach(date=>{
+      const raw=data[date]?.scores?.[name];
+      if(raw==null || raw==="") return;
+      const n=Number(raw);
+      if(Number.isNaN(n)) return;
+      const level=Number(normalizeOutcomeScore(n));
+      const inverted=tone[name]==="bad";
+      total+=clampScore(inverted?(6-level)*20:level*20);
+      counted+=1;
+    });
+    return {name, health:counted?Math.round(total/counted):0, logged:counted};
+  });
+}
+async function renderEngineOverview(){
+  const showOutcomes=currentLayer===1;
+  document.getElementById("overviewPage").innerHTML=`<div class="health-stack">
+    ${healthCardMarkup("System Health","healthBars","healthLabels")}
+    ${showOutcomes?healthCardMarkup("Outcome Health","outcomeBars","outcomeLabels"):""}
+  </div>`;
+  const scores=await loadLayerHealthScores(currentLayer, overviewRangeDays);
+  paintHealthChart("healthBars","healthLabels",scores,overviewSystemBlocks(currentLayer));
+  if(showOutcomes){
+    const outcomeScores=await loadOutcomeHealthScores(overviewRangeDays);
+    paintHealthChart("outcomeBars","outcomeLabels",outcomeScores,outcomeGroups.map(group=>group.items));
+  }
 }
 
 
@@ -2038,6 +2120,34 @@ async function showPage(page){
 function hubChoice(label, active, extraClass, onclick, disabled=false){
   return `<button type="button" class="choice mini${extraClass?(" "+extraClass):""}${active?" active":""}" ${disabled?"disabled":`onclick="${onclick}"`}>${label}</button>`;
 }
+function isHubSystemComplete(name, entry){
+  if(!entry) return false;
+  if(name==="Sleep") return !!(entry.quality && (entry.durationBand||entry.hours));
+  if(name==="Workout") return !!(entry.gym && entry.cardio);
+  if(name==="Meditation") return !!(entry.morning && entry.night);
+  if(name==="Reading") return !!(entry.value && (entry.value!=="yes" || entry.duration));
+  if(name==="Nofap") return !!(entry.value && (entry.value!=="no" || entry.tier));
+  return !!entry.value;
+}
+function isCurrentHubComplete(name){
+  return isHubSystemComplete(name, entryHub[name]);
+}
+function rowTick(on){
+  return `<span class="row-tick${on?" on":""}"></span>`;
+}
+function hubLabel(name){
+  return `<div class="hub-name">${rowTick(isCurrentHubComplete(name))}${sidebarIcon(name)} ${name}</div>`;
+}
+function normalizeOutcomeScore(raw){
+  const n=Number(raw);
+  if(Number.isNaN(n)||n<=0) return "";
+  if(n<=5) return String(n);
+  if(n<=2) return "1";
+  if(n<=4) return "2";
+  if(n<=6) return "3";
+  if(n<=8) return "4";
+  return "5";
+}
 function renderEntryHub(){
   const body=document.getElementById("entryHubBody");
   if(!body) return;
@@ -2054,13 +2164,13 @@ function renderEntryHub(){
   const hourOpts=Object.entries(sleepDurationBands).map(([id,opt])=>`<button type="button" class="notion-option" data-label="${opt.label}" onclick="chooseHubSleepBand('${id}')">${notionPill(opt.label,opt.pill)}</button>`).join("");
   body.innerHTML=`
     <div class="hub-block">
-      <div class="hub-row"><div class="hub-name">${sidebarIcon("Morning")} Morning</div><div class="hub-controls">${yn("Morning","",true)}</div></div>
-      <div class="hub-row"><div class="hub-name">${sidebarIcon("Night")} Night</div><div class="hub-controls">${yn("Night","",true)}</div></div>
+      <div class="hub-row">${hubLabel("Morning")}<div class="hub-controls">${yn("Morning","",true)}</div></div>
+      <div class="hub-row">${hubLabel("Night")}<div class="hub-controls">${yn("Night","",true)}</div></div>
     </div>
     <div class="divider"></div>
     <div class="hub-block">
       <div class="hub-row">
-        <div class="hub-name">${sidebarIcon("Sleep")} Sleep</div>
+        ${hubLabel("Sleep")}
         <div class="hub-controls">
           <div class="notion-select hub-select" id="hubQualitySelect">
             <button type="button" class="notion-trigger" onclick="toggleNotionSelect('hubQualitySelect')">${sleepQuality?notionPill(qualityNames[sleepQuality],qualityPills[sleepQuality]):'<span class="notion-trigger-label">Quality</span>'}<span class="notion-chevron">▾</span></button>
@@ -2072,20 +2182,20 @@ function renderEntryHub(){
           </div>
         </div>
       </div>
-      <div class="hub-row"><div class="hub-name">${sidebarIcon("Workout")} Workout</div><div class="hub-controls"><span class="hub-label">Gym</span>${yn("Workout","gym",true)}<span class="hub-label">Cardio</span>${yn("Workout","cardio",true)}</div></div>
-      <div class="hub-row"><div class="hub-name">${sidebarIcon("Meditation")} Meditation</div><div class="hub-controls"><span class="hub-label">Morning</span>${yn("Meditation","morning",false)}<span class="hub-label">Night</span>${yn("Meditation","night",false)}</div></div>
+      <div class="hub-row">${hubLabel("Workout")}<div class="hub-controls"><span class="hub-label">Gym</span>${yn("Workout","gym",true)}<span class="hub-label">Cardio</span>${yn("Workout","cardio",true)}</div></div>
+      <div class="hub-row">${hubLabel("Meditation")}<div class="hub-controls"><span class="hub-label">Morning</span>${yn("Meditation","morning",false)}<span class="hub-label">Night</span>${yn("Meditation","night",false)}</div></div>
     </div>
     <div class="divider"></div>
     <div class="hub-block">
-      <div class="hub-row"><div class="hub-name">${sidebarIcon("Diet")} Diet</div><div class="hub-controls">${yn("Diet","",true)}</div></div>
-      <div class="hub-row"><div class="hub-name">${sidebarIcon("Scrolling")} Scrolling</div><div class="hub-controls">${yn("Scrolling","",true)}</div></div>
-      <div class="hub-row"><div class="hub-name">${sidebarIcon("Journaling")} Journaling</div><div class="hub-controls">${yn("Journaling","",true)}</div></div>
+      <div class="hub-row">${hubLabel("Diet")}<div class="hub-controls">${yn("Diet","",true)}</div></div>
+      <div class="hub-row">${hubLabel("Scrolling")}<div class="hub-controls">${yn("Scrolling","",true)}</div></div>
+      <div class="hub-row">${hubLabel("Journaling")}<div class="hub-controls">${yn("Journaling","",true)}</div></div>
     </div>
     <div class="divider"></div>
     <div class="hub-block">
-      <div class="hub-row"><div class="hub-name">${sidebarIcon("Reading")} Reading</div><div class="hub-controls">${yn("Reading","",true)}<span class="hub-extra">${[[30,"30 min","read-30"],[60,"1 hour","read-60"],[120,"2 hours","read-120"],[150,"2+ hours","read-150"]].map(([v,l,cls])=>hubChoice(l,entryHub.Reading.duration===v,"tiny "+cls,`setHubReadingDuration(${v})`,entryHub.Reading.value!=="yes")).join("")}</span></div></div>
-      <div class="hub-row"><div class="hub-name">${sidebarIcon("Calisthenics")} Calisthenics</div><div class="hub-controls">${yn("Calisthenics","",true)}</div></div>
-      <div class="hub-row"><div class="hub-name">${sidebarIcon("Nofap")} Nofap</div><div class="hub-controls">${yn("Nofap","",false)}<span class="hub-extra">${hubChoice("Beta",entryHub.Nofap.tier==="beta","tiny nofap-beta",`setHubNofapTier('beta')`,entryHub.Nofap.value!=="no")}${hubChoice("Alpha",entryHub.Nofap.tier==="alpha","tiny nofap-alpha",`setHubNofapTier('alpha')`,entryHub.Nofap.value!=="no")}</span></div></div>
+      <div class="hub-row">${hubLabel("Reading")}<div class="hub-controls">${yn("Reading","",true)}<span class="hub-extra">${[[30,"30 min","read-30"],[60,"1 hour","read-60"],[120,"2 hours","read-120"],[150,"2+ hours","read-150"]].map(([v,l,cls])=>hubChoice(l,entryHub.Reading.duration===v,"tiny "+cls,`setHubReadingDuration(${v})`,entryHub.Reading.value!=="yes")).join("")}</span></div></div>
+      <div class="hub-row">${hubLabel("Calisthenics")}<div class="hub-controls">${yn("Calisthenics","",true)}</div></div>
+      <div class="hub-row">${hubLabel("Nofap")}<div class="hub-controls">${yn("Nofap","",false)}<span class="hub-extra">${hubChoice("Beta",entryHub.Nofap.tier==="beta","tiny nofap-beta",`setHubNofapTier('beta')`,entryHub.Nofap.value!=="no")}${hubChoice("Alpha",entryHub.Nofap.tier==="alpha","tiny nofap-alpha",`setHubNofapTier('alpha')`,entryHub.Nofap.value!=="no")}</span></div></div>
     </div>`;
 }
 function setHubValue(sys,value){
@@ -2144,7 +2254,7 @@ async function loadEntryHub(){
   entryOutcomes=blankOutcomes();
   if(outcomeData?.scores){
     Object.keys(entryOutcomes).forEach(key=>{
-      if(outcomeData.scores[key]!=null && outcomeData.scores[key]!=="") entryOutcomes[key]=String(outcomeData.scores[key]);
+      if(outcomeData.scores[key]!=null && outcomeData.scores[key]!=="") entryOutcomes[key]=normalizeOutcomeScore(outcomeData.scores[key]);
     });
   }
   renderEntryHub();
@@ -2153,16 +2263,18 @@ async function loadEntryHub(){
 function renderOutcomeHub(){
   const body=document.getElementById("outcomeHubBody");
   if(!body) return;
+  const levels=[["1","lvl-red"],["2","lvl-orange"],["3","lvl-blue"],["4","lvl-green"],["5","lvl-lime"]];
   body.innerHTML=outcomeGroups.map(group=>`
-    <div class="outcome-group">
+    <div class="outcome-group ${group.tone}">
       ${group.items.map(name=>`
         <div class="outcome-row">
-          <div class="outcome-name ${group.tone}">${name}</div>
-          <div class="score-row">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="score-btn ${group.tone}${String(entryOutcomes[name])===String(n)?" active":""}" onclick="setOutcomeScore('${name}',${n})">${n}</button>`).join("")}</div>
+          ${rowTick(!!entryOutcomes[name])}
+          <div class="outcome-name">${name}</div>
+          <div class="score-row">${levels.map(([v,cls])=>`<button type="button" class="score-swatch ${cls}${String(entryOutcomes[name])===v?" active":""}" onclick="setOutcomeScore('${name}',${v})"></button>`).join("")}</div>
         </div>
       `).join("")}
     </div>
-  `).join('<div class="divider"></div>');
+  `).join("");
 }
 function setOutcomeScore(name, value){
   entryOutcomes[name]=String(entryOutcomes[name])===String(value)?"":String(value);
@@ -2289,7 +2401,10 @@ async function renderDateStrip(targetId="dateStrip"){
     if(workspaceMode==="entry"){
       const names=personalGroups[0].blocks.flat();
       const packs=await Promise.all(names.map(name=>getEntries(name,start,end)));
-      packs.forEach(rows=>Object.keys(rows||{}).forEach(key=>logged[key]=true));
+      dates.forEach(date=>{
+        const key=getDateString(date);
+        logged[key]=names.every((name,i)=>isHubSystemComplete(name,(packs[i]||{})[key]));
+      });
     }else{
       const systemName=currentEntrySystem();
       if(systemName){
