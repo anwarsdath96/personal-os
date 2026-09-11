@@ -753,12 +753,23 @@ input:focus,select:focus{border-color:#687382}
 .range-note{color:#646b75;font-size:12px;margin:0}
 .dash-toolbar{
   display:flex;
-  justify-content:flex-end;
+  justify-content:space-between;
   align-items:center;
   gap:12px;
   margin-bottom:12px;
 }
 .dash-toolbar .range-btn{padding:7px 12px;font-size:12px;border-radius:8px}
+.def-btn{
+  border:1px solid #303640;background:#101217;color:#e8edf3;
+  padding:7px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:650;
+}
+.def-btn:hover{border-color:#555c68}
+.definition-note{
+  width:100%;min-height:280px;resize:vertical;
+  padding:14px 16px;border-radius:10px;
+  border:1px solid #303640;background:#101217;color:#f1f3f5;
+  font-size:15px;line-height:1.6;outline:none;
+}
 
 .focus-toggle{display:flex;gap:8px}
 .focus-btn{
@@ -1155,6 +1166,10 @@ input:focus,select:focus{border-color:#687382}
         </section>
 
         <section id="dashboardPage" style="display:none">
+          <div class="dash-toolbar">
+            <button class="def-btn" onclick="openSystemDefinition('Sleep')">System Definition</button>
+            <div></div>
+          </div>
           <div class="metrics">
             <div class="metric">
               <div class="metric-label" id="avgHoursLabel">AVG SLEEP · 7 DAYS</div>
@@ -1239,6 +1254,7 @@ input:focus,select:focus{border-color:#687382}
 
         <section id="engineDashboardPage" style="display:none">
           <div class="dash-toolbar">
+            <button class="def-btn" onclick="openSystemDefinition()">System Definition</button>
             <div class="range-toggle">
               <button class="range-btn dash-range-7 active" onclick="setDashRange(7)">Last 7 days</button>
               <button class="range-btn dash-range-30" onclick="setDashRange(30)">Last 30 days</button>
@@ -1252,6 +1268,17 @@ input:focus,select:focus{border-color:#687382}
           <strong id="placeholderTitle">System</strong>
           This system workspace is ready to be configured.
         </div>
+        <section id="systemDefinitionPage" style="display:none">
+          <div class="card">
+            <div class="card-title" id="systemDefinitionTitle">System Definition</div>
+            <textarea class="definition-note" id="systemDefinitionText" placeholder="What this system is. One point per line."></textarea>
+            <div class="save-row">
+              <button class="save-btn icon-btn" id="saveDefinitionBtn" onclick="saveSystemDefinition()" title="Save">
+                <svg viewBox="0 0 24 24"><path d="M5 21h14a1 1 0 0 0 1-1V7.5L16.5 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1z"/><path d="M15 3v5H9V3M8 21v-8h8v8"/></svg>
+              </button>
+            </div>
+          </div>
+        </section>
         <section id="entryHubPage" style="display:none">
           <div class="entry-dates" id="entryHubDateStrip"></div>
           <div class="card entry-shell">
@@ -1973,7 +2000,7 @@ async function renderEngineOverview(){
 
 
 function hideWorkspacePages(){
-  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","overviewPage","entryHubPage"].forEach(id=>{
+  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","overviewPage","entryHubPage","systemDefinitionPage"].forEach(id=>{
     const el=document.getElementById(id); if(el) el.style.display="none";
   });
 }
@@ -1999,10 +2026,14 @@ async function renderWorkspace(){
     await loadEntryHub();
     return;
   }
+  if(currentPage==="definition"){
+    await openSystemDefinition(systemName||definitionSystem);
+    return;
+  }
   const isWorkout=systemName==="Workout";
   const isMeditation=systemName==="Meditation";
   const isSimpleTracker=currentLayer===1 && systemName && !configuredTrackers.includes(systemName);
-  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage"].forEach(id=>document.getElementById(id).style.display="none");
+  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","systemDefinitionPage"].forEach(id=>document.getElementById(id).style.display="none");
   if(isSleep){
     document.getElementById("workspaceTitle").textContent="Sleep System";
     document.getElementById("workspaceSub").textContent="";
@@ -2222,6 +2253,34 @@ async function saveSimpleTracker(){
   }
 }
 
+const DEFINITION_DATE="1970-01-01";
+let definitionSystem="";
+async function openSystemDefinition(name){
+  definitionSystem=name||currentEntrySystem();
+  if(!definitionSystem) return;
+  workspaceMode="system";
+  currentPage="definition";
+  hideWorkspacePages();
+  document.getElementById("workspaceTitle").textContent=definitionSystem;
+  document.getElementById("workspaceSub").textContent="";
+  document.getElementById("systemDefinitionTitle").textContent=definitionSystem+" Definition";
+  document.getElementById("systemDefinitionPage").style.display="block";
+  const rows=await getEntries(definitionSystem,DEFINITION_DATE,DEFINITION_DATE);
+  const saved=rows[DEFINITION_DATE];
+  const text=saved?.text||(Array.isArray(saved?.bullets)?saved.bullets.join("\n"):"");
+  document.getElementById("systemDefinitionText").value=text;
+  const btn=document.getElementById("saveDefinitionBtn");
+  if(btn) btn.classList.remove("saved");
+}
+async function saveSystemDefinition(){
+  if(!definitionSystem) return;
+  const text=document.getElementById("systemDefinitionText").value;
+  const bullets=text.split(/\n/).map(line=>line.replace(/^\s*[•\-\*]\s*/,"").trim()).filter(Boolean);
+  if(await saveSystemEntry(definitionSystem,DEFINITION_DATE,{text,bullets})){
+    const btn=document.getElementById("saveDefinitionBtn");
+    if(btn) btn.classList.add("saved");
+  }
+}
 async function showPage(page){
   if(osMode)return; currentPage=page;
   if(page!=="entry"){
