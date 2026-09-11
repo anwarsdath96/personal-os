@@ -66,7 +66,7 @@ body{
   background:#14171d;
   border:1px solid #252b34;
   border-radius:12px;
-  padding:16px 12px;
+  padding:12px 10px;
   min-height:720px;
 }
 .sidebar-title{
@@ -81,16 +81,76 @@ body{
   border:0;
   background:transparent;
   color:#b8bec7;
-  padding:10px 12px;
-  border-radius:8px;
+  padding:6px 10px;
+  border-radius:7px;
   cursor:pointer;
   text-align:left;
-  font-size:13px;
-  margin-bottom:3px;
+  font-size:12px;
+  margin-bottom:1px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  line-height:1.2;
+}
+.item-icon{
+  width:14px;
+  height:14px;
+  flex:0 0 14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.item-icon svg{
+  width:14px;
+  height:14px;
+  display:block;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
 }
 .item:hover{background:#1d222a;color:#fff}
 .item.active{background:#2357b4;color:#fff}
-.divider{height:1px;background:#292f38;margin:12px 8px}
+.divider{height:1px;background:#292f38;margin:4px 8px}
+.sidebar-group{
+  color:#858c96;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:6px 8px 3px;
+}
+.item.entry-item{margin-bottom:4px}
+.hub-block{padding:0}
+.hub-row{
+  display:grid;
+  grid-template-columns:108px 1fr;
+  gap:8px;
+  align-items:center;
+  padding:4px 0;
+}
+.hub-name{display:flex;align-items:center;gap:6px;font-weight:650;font-size:12px;white-space:nowrap}
+.hub-controls,.hub-group{display:flex;flex-wrap:nowrap;gap:5px;align-items:center;min-width:0}
+.hub-label{font-size:10px;color:#858c96;margin-right:1px;white-space:nowrap}
+.hub-select{width:132px;flex:0 0 132px}
+.hub-select .notion-trigger{min-height:30px;padding:3px 8px}
+.hub-extra{display:flex;flex-wrap:nowrap;gap:4px;margin-left:8px}
+.choice.mini{padding:5px 8px;font-size:11px;min-width:38px}
+.choice.tiny{padding:4px 7px;font-size:10px;min-width:34px}
+.choice.off-choice.active{background:#3a3f49;border-color:#8a919c;color:#fff}
+.choice.active.read-30{background:#c9a227;border-color:#e8c04a;color:#1a1404}
+.choice.active.read-60{background:#c26a12;border-color:#e3923a;color:#fff}
+.choice.active.read-120{background:#0d4f2e;border-color:#1c7a48;color:#fff}
+.choice.active.read-150{background:#3d9a62;border-color:#7be0a4;color:#0d2416}
+.choice.active.nofap-beta{background:#6b1520;border-color:#a33a46;color:#fff}
+.choice.active.nofap-alpha{background:#0d4f2e;border-color:#1c7a48;color:#fff}
+.save-btn.icon-btn{
+  width:42px;height:42px;padding:0;
+  display:grid;place-items:center;
+}
+.save-btn.icon-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.off-bar{background:#8a919c}
 .main{min-width:0}
 .workspace-head{
   display:flex;
@@ -101,8 +161,28 @@ body{
 .workspace-title{font-size:27px;font-weight:700}
 .workspace-sub{font-size:13px;color:#858c96;margin-top:4px}
 .date-strip, .entry-dates{
-  margin-bottom:22px;
+  margin-bottom:14px;
 }
+#entryHubPage .card.entry-shell{padding:16px 18px 12px}
+#entryHubPage .card-title{margin-bottom:8px;font-size:16px}
+.entry-split{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(220px,.68fr);gap:20px;align-items:start}
+.entry-pane{min-width:0}
+.outcome-row{display:grid;grid-template-columns:76px 1fr;gap:4px;align-items:center;padding:2px 0}
+.outcome-name{font-size:11px;font-weight:650;white-space:nowrap}
+.outcome-name.good{color:#6ecf97}
+.outcome-name.bad{color:#ef7a7a}
+.outcome-name.focus{color:#b39be8}
+.outcome-group{padding:2px 0 8px}
+.score-row{display:flex;gap:3px;flex-wrap:nowrap}
+.score-btn{
+  width:18px;height:18px;padding:0;border-radius:4px;
+  border:1px solid #3a414c;background:#1a1f26;color:#c5cbd3;
+  font-size:9px;cursor:pointer;flex:0 0 18px;
+}
+.score-btn:hover{border-color:#687382}
+.score-btn.active.good{background:#1b5c38;border-color:#4fd18a;color:#fff}
+.score-btn.active.bad{background:#6b1520;border-color:#ef7a7a;color:#fff}
+.score-btn.active.focus{background:#3b2a6b;border-color:#b39be8;color:#fff}
 .entry-dates{
   display:grid;
   grid-template-columns:minmax(0,1fr) 92px;
@@ -112,7 +192,7 @@ body{
 .date-grid{
   display:grid;
   grid-template-columns:repeat(7,1fr);
-  gap:8px;
+  gap:6px;
 }
 .date-view-toggle{
   display:flex;
@@ -123,8 +203,8 @@ body{
   position:relative;
   background:#171a20;
   border:1px solid #292f38;
-  border-radius:10px;
-  padding:14px 8px 10px;
+  border-radius:9px;
+  padding:10px 6px 8px;
   text-align:center;
   cursor:pointer;
 }
@@ -185,7 +265,7 @@ body{
 
 .date .day{font-size:10px;color:#8d949e;margin-bottom:5px;white-space:nowrap}
 .date.selected .day{color:#555}
-.date .number{font-size:17px;font-weight:600}
+.date .number{font-size:15px;font-weight:600}
 .card,.chart-card,.metric{
   background:#171a20;
   border:1px solid #292f38;
@@ -582,7 +662,7 @@ input:focus,select:focus{border-color:#687382}
   .top-right{grid-column:1/-1}
   .layout{grid-template-columns:1fr}
   .sidebar{min-height:auto}
-  .form-grid,.status-grid,.metrics,.system-grid{grid-template-columns:1fr}
+  .form-grid,.status-grid,.metrics,.system-grid,.hub-row,.entry-split{grid-template-columns:1fr}
   .form-grid{grid-template-columns:1fr}
   .date-grid{gap:4px}
   .entry-dates{grid-template-columns:1fr}
@@ -838,7 +918,6 @@ input:focus,select:focus{border-color:#687382}
     </button>
 
     <div class="top-right">
-      <button class="small-tab active" id="entryTab" onclick="showPage('entry')">Entry</button>
       <button class="small-tab" id="dashboardTab" onclick="showPage('dashboard')">Dashboard</button>
       <button class="small-tab" id="analyticsTab" onclick="showPage('analytics')">Analytics</button>
     </div>
@@ -1113,6 +1192,26 @@ input:focus,select:focus{border-color:#687382}
           <strong id="placeholderTitle">System</strong>
           This system workspace is ready to be configured.
         </div>
+        <section id="entryHubPage" style="display:none">
+          <div class="entry-dates" id="entryHubDateStrip"></div>
+          <div class="card entry-shell">
+            <div class="entry-split">
+              <div class="entry-pane">
+                <div class="card-title">System Entry</div>
+                <div id="entryHubBody"></div>
+              </div>
+              <div class="entry-pane">
+                <div class="card-title">Outcome Entry</div>
+                <div id="outcomeHubBody"></div>
+              </div>
+            </div>
+            <div class="save-row">
+              <button class="save-btn icon-btn" onclick="saveEntryHub()" title="Save">
+                <svg viewBox="0 0 24 24"><path d="M5 21h14a1 1 0 0 0 1-1V7.5L16.5 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1z"/><path d="M15 3v5H9V3M8 21v-8h8v8"/></svg>
+              </button>
+            </div>
+          </div>
+        </section>
         <section id="overviewPage" style="display:none"></section>
       </div>
     </main>
@@ -1139,16 +1238,67 @@ const supabaseClient = (SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.inc
 
 const qualityNames = {1:"Worst",2:"Bad",3:"Okay",4:"Good",5:"Best"};
 const qualityPills = {1:"pill-worst",2:"pill-bad",3:"pill-okay",4:"pill-good",5:"pill-best"};
+const personalGroups = [
+  {title:"Systems", blocks:[["Morning","Night"],["Sleep","Workout","Meditation"],["Diet","Scrolling","Journaling"],["Reading","Calisthenics","Nofap"]]},
+  {title:"Errands", blocks:[["Wardrobe","Laundry","Groceries","Room Cleaning"]]}
+];
 const layerItems = {
-  1: ["Sleep","Workout","Meditation","Diet","Journaling","Nofap"],
+  1: personalGroups.flatMap(group=>group.blocks.flat()),
   2: ["Day","Week","Bi-week","Month","Quarter","Bi-Quarter","Year"],
   3: ["Money & Business","Health & Fitness","Dating & Game","Learning & Upskilling","Communication","Good Life"]
 };
+const configuredTrackers = ["Sleep","Workout","Meditation"];
+function simpleTrackerQuestion(name){
+  return {
+    "Morning":"Did you complete Morning today?",
+    "Night":"Did you complete Night today?",
+    "Diet":"Did you follow diet today?",
+    "Nofap":"Did you follow Nofap today?",
+    "Scrolling":"Did you stay off mindless scrolling today?",
+    "Journaling":"Did you journal today?",
+    "Reading":"Did you read today?",
+    "Calisthenics":"Did you do calisthenics today?",
+    "Grooming - Hair, spa":"Did you do grooming today?",
+    "Laundry":"Did you do laundry today?",
+    "Wardrobe":"Did you handle wardrobe today?",
+    "Groceries":"Did you do groceries today?",
+    "Room Cleaning":"Did you clean the room today?",
+    "Vehicles":"Did you handle vehicles today?"
+  }[name] || ("Did you complete "+name+" today?");
+}
 
 let currentLayer = 1;
 let currentItem = 0;
+let workspaceMode = "overview";
 let selectedDate = getDateString(new Date());
 let currentPage = "entry";
+let entryHub = blankEntryHub();
+function blankEntryHub(){
+  return {
+    Morning:{value:""},
+    Night:{value:""},
+    Sleep:{durationBand:"",quality:""},
+    Workout:{gym:"",cardio:""},
+    Meditation:{morning:"",night:""},
+    Diet:{value:""},
+    Scrolling:{value:""},
+    Journaling:{value:""},
+    Reading:{value:"",duration:null},
+    Calisthenics:{value:""},
+    Nofap:{value:"",tier:""}
+  };
+}
+const outcomeGroups = [
+  {tone:"good", items:["Energy","Attention","Calmness","Clarity","Enthusiasm"]},
+  {tone:"bad", items:["Fatigue","Mental Fog","Overwhelm","Anxiety","Depression"]},
+  {tone:"focus", items:["Time Control","Life Order"]}
+];
+function blankOutcomes(){
+  const scores={};
+  outcomeGroups.forEach(group=>group.items.forEach(name=>scores[name]=""));
+  return scores;
+}
+let entryOutcomes = blankOutcomes();
 let osMode = false;
 let authMode = "login";
 let currentUser = null;
@@ -1284,12 +1434,11 @@ async function saveSystemEntry(systemName, date, payload){
 }
 
 function selectLayer(layer){
-  osMode=false; currentLayer=layer; currentItem=0; currentPage="entry";
+  osMode=false; currentLayer=layer; currentItem=0; currentPage="entry"; workspaceMode="overview";
   document.getElementById("layer1Tab").classList.toggle("active",layer===1);
   document.getElementById("layer2Tab").classList.toggle("active",layer===2);
   document.getElementById("layer3Tab").classList.toggle("active",layer===3);
   document.querySelector(".os-tab").classList.remove("active");
-  document.getElementById("entryTab").classList.add("active");
   document.getElementById("dashboardTab").classList.remove("active");
   document.getElementById("analyticsTab").classList.remove("active");
   renderSidebar(); renderWorkspace();
@@ -1304,14 +1453,66 @@ function selectOS(){
   document.getElementById("osPage").style.display="block";
   document.getElementById("osPage").innerHTML=`<div class="placeholder"><strong>OS Health</strong>Your overall Personal OS health dashboard will live here.</div>`;
 }
+function sidebarIcon(name){
+  const paths={
+    Overview:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',
+    Entry:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+    Morning:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    Night:'<path d="M15 3.5A9 9 0 1 0 20.5 14 7 7 0 0 1 15 3.5z"/>',
+    Sleep:'<path d="M3 18V10h8v8M11 14h8a2 2 0 0 1 2 2v2M3 18h18M7 10V8"/>',
+    Workout:'<path d="M6 9v6M8 8v8M16 8v8M18 9v6M8 12h8"/>',
+    Meditation:'<path d="M12 4c1.2 1.6 2 3.4 2 5.2 0 2.2-1 4-2 4s-2-1.8-2-4c0-1.8.8-3.6 2-5.2z"/><path d="M8 20c0-3 1.8-5 4-5s4 2 4 5"/>',
+    Diet:'<path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.6-7 10-7 10z"/>',
+    Scrolling:'<path d="M8 6 4 12l4 6M16 6l4 6-4 6"/>',
+    Journaling:'<path d="M6 4h11a1 1 0 0 1 1 1v16H7a1 1 0 0 1-1-1V4z"/><path d="M9 4v16"/>',
+    Reading:'<path d="M12 6c-2-1.4-5-1.6-8-.8v13c3-.8 6-.6 8 .8 2-1.4 5-1.6 8-.8V5.2c-3-.8-6-.6-8 .8z"/>',
+    Calisthenics:'<path d="M9 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM15 11c-2 0-3 2-3 4v6M8 11h5l2 3"/>',
+    Nofap:'<path d="M12 3 5 6v6c0 5 3.2 8.2 7 9 3.8-.8 7-4 7-9V6z"/>',
+    Wardrobe:'<path d="M4 9h16M12 9V5M8 5h8"/><path d="M7 9v11M17 9v11"/>',
+    Laundry:'<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M7 6h2"/>',
+    Groceries:'<path d="M5 7h15l-1.5 9H8L5 7z"/><path d="M8 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM17 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM5 7 4 4"/>',
+    "Room Cleaning":'<path d="M6 21 12 4l2 5M12 4c3 2 6 8 7 17"/>'
+  };
+  return `<span class="item-icon"><svg viewBox="0 0 24 24">${paths[name]||'<circle cx="12" cy="12" r="3"/>'}</svg></span>`;
+}
+function addSidebarItem(container, label, active, onclick){
+  const button=document.createElement("button");
+  button.className="item"+(active?" active":"");
+  button.innerHTML=sidebarIcon(label)+`<span>${label}</span>`;
+  button.onclick=onclick;
+  container.appendChild(button);
+  return button;
+}
 function renderSidebar(){
   const container=document.getElementById("sidebarItems");
-  document.getElementById("sidebarTitle").textContent="Overview";
+  document.getElementById("sidebarTitle").textContent="OVERVIEW";
   container.innerHTML="";
   if(osMode) return;
-  const overview=document.createElement("button");
-  overview.className="item"+(currentItem===0?" active":"");
-  overview.textContent="Overview"; overview.onclick=()=>selectItem(0); container.appendChild(overview);
+  addSidebarItem(container,"Overview",workspaceMode==="overview",()=>selectItem(0));
+  const entry=addSidebarItem(container,"Entry",workspaceMode==="entry",()=>selectEntry());
+  entry.classList.add("entry-item");
+  entry.id="sidebarEntry";
+  if(currentLayer===1){
+    let offset=1;
+    personalGroups.forEach(group=>{
+      const label=document.createElement("div");
+      label.className="sidebar-group";
+      label.textContent=group.title;
+      container.appendChild(label);
+      group.blocks.forEach((block,blockIndex)=>{
+        if(blockIndex){
+          const line=document.createElement("div");
+          line.className="divider";
+          container.appendChild(line);
+        }
+        block.forEach(name=>{
+          const index=offset++;
+          addSidebarItem(container,name,workspaceMode==="system"&&index===currentItem,()=>selectItem(index));
+        });
+      });
+    });
+    return;
+  }
   const divider=document.createElement("div"); divider.className="divider"; container.appendChild(divider);
   layerItems[currentLayer].forEach((name,index)=>{
     const button=document.createElement("button");
@@ -1319,10 +1520,19 @@ function renderSidebar(){
     button.onclick=()=>selectItem(index+1); container.appendChild(button);
   });
 }
-function selectItem(item){
-  currentItem=item; currentPage="entry";
-  document.getElementById("entryTab").classList.add("active");
+function selectEntry(){
+  workspaceMode="entry";
+  currentPage="entry";
+  currentItem=0;
   document.getElementById("dashboardTab").classList.remove("active");
+  document.getElementById("analyticsTab").classList.remove("active");
+  renderSidebar(); renderWorkspace();
+}
+function selectItem(item){
+  currentItem=item;
+  workspaceMode=item===0?"overview":"system";
+  currentPage=item===0?"entry":"dashboard";
+  document.getElementById("dashboardTab").classList.toggle("active", item>0);
   document.getElementById("analyticsTab").classList.remove("active");
   renderSidebar(); renderWorkspace();
 }
@@ -1488,16 +1698,31 @@ function scoreSystemDay(systemName, entry){
     return clampScore(score);
   }
   if(entry.value==="yes") return 100;
+  if(entry.value==="off") return null;
   if(entry.value==="no") return 0;
   return 0;
+}
+function isOverviewOffDay(systemName, entry){
+  if(!entry) return false;
+  if(entry.value==="off") return true;
+  if(systemName==="Workout" && entry.gym==="off" && (entry.cardio==="off"||!entry.cardio)) return true;
+  return false;
 }
 async function loadLayerHealthScores(layer, days=overviewRangeDays){
   const systems=layerItems[layer]||[];
   const dates=getDateRange(days);
   return Promise.all(systems.map(async name=>{
     const data=await getEntries(name,dates[0],dates[dates.length-1]);
-    const total=dates.reduce((sum,date)=>sum+scoreSystemDay(name,data[date]),0);
-    return {name, health:Math.round(total/dates.length), logged:dates.filter(date=>!!data[date]).length};
+    let total=0, counted=0, logged=0;
+    dates.forEach(date=>{
+      const entry=data[date];
+      if(!entry) return;
+      logged+=1;
+      if(isOverviewOffDay(name,entry)) return;
+      total+=scoreSystemDay(name,entry)||0;
+      counted+=1;
+    });
+    return {name, health:counted?Math.round(total/counted):0, logged};
   }));
 }
 async function setOverviewRange(days){
@@ -1549,26 +1774,36 @@ async function renderEngineOverview(){
 }
 
 
+function hideWorkspacePages(){
+  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","overviewPage","entryHubPage"].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.style.display="none";
+  });
+}
 async function renderWorkspace(){
-  // Overview dashboard exists only for the Overview sidebar item. Each system has its own interface.
   if(osMode || !currentUser) return;
   document.getElementById("osPage").style.display="none";
   document.getElementById("systemPage").style.display="block";
-  const isSleep=currentLayer===1&&currentItem===1;
-  const isOverview=currentItem===0;
-  if(!isOverview) document.getElementById("overviewPage").style.display="none";
-  if(isOverview){
-    ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage"].forEach(id=>document.getElementById(id).style.display="none");
+  const systemName=currentLayer===1&&currentItem>=1?layerItems[1][currentItem-1]:null;
+  const isSleep=systemName==="Sleep";
+  hideWorkspacePages();
+  if(workspaceMode==="overview" || (workspaceMode!=="entry" && currentItem===0 && workspaceMode!=="system")){
     document.getElementById("overviewPage").style.display="block";
     document.getElementById("workspaceTitle").textContent=overviewConfig(currentLayer).title;
     document.getElementById("workspaceSub").textContent="";
     await renderEngineOverview();
     return;
   }
-  const isWorkout=currentLayer===1&&currentItem===2;
-  const isMeditation=currentLayer===1&&currentItem===3;
-  const simpleSystemMap = {4:"Diet",5:"Journaling",6:"Nofap"};
-  const isSimpleTracker=currentLayer===1 && !!simpleSystemMap[currentItem];
+  if(workspaceMode==="entry"){
+    document.getElementById("entryHubPage").style.display="block";
+    document.getElementById("workspaceTitle").textContent="Entry";
+    document.getElementById("workspaceSub").textContent="";
+    await renderDateStrip("entryHubDateStrip");
+    await loadEntryHub();
+    return;
+  }
+  const isWorkout=systemName==="Workout";
+  const isMeditation=systemName==="Meditation";
+  const isSimpleTracker=currentLayer===1 && systemName && !configuredTrackers.includes(systemName);
   ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage"].forEach(id=>document.getElementById(id).style.display="none");
   if(isSleep){
     document.getElementById("workspaceTitle").textContent="Sleep System";
@@ -1587,17 +1822,10 @@ async function renderWorkspace(){
     if(currentPage==="entry"){document.getElementById("meditationPage").style.display="block";await renderDateStrip("meditationDateStrip");await loadMeditationDate();}
     else{document.getElementById("engineDashboardPage").style.display="block";await renderEngineDashboard("Meditation");}
   }else if(isSimpleTracker){
-    const systemName=simpleSystemMap[currentItem];
-    const configs={
-      "Diet":{title:"Diet",sub:"Track your diet consistency.",description:"Record whether you followed your diet today.",question:"Did you follow diet today?"},
-      "Journaling":{title:"Journaling",sub:"Capture your thoughts and reflect.",description:"Record whether you journaled today.",question:"Did you journal today?"},
-      "Nofap":{title:"Nofap",sub:"Track your daily commitment.",description:"Record whether you followed Nofap today.",question:"Did you follow Nofap today?"}
-    };
-    const cfg=configs[systemName];
-    document.getElementById("workspaceTitle").textContent=cfg.title;
+    document.getElementById("workspaceTitle").textContent=systemName;
     document.getElementById("workspaceSub").textContent="";
     if(currentPage==="entry"){
-      document.getElementById("simpleTrackerQuestion").textContent=cfg.question;
+      document.getElementById("simpleTrackerQuestion").textContent=simpleTrackerQuestion(systemName);
       document.getElementById("simpleTrackerPage").style.display="block";
       await renderDateStrip("simpleDateStrip");
       await loadSimpleTrackerDate(systemName);
@@ -1798,10 +2026,195 @@ async function saveSimpleTracker(){
 
 async function showPage(page){
   if(osMode)return; currentPage=page;
-  document.getElementById("entryTab").classList.toggle("active",page==="entry");
+  if(page!=="entry"){
+    workspaceMode="system";
+    if(currentItem===0) currentItem=1;
+  }
   document.getElementById("dashboardTab").classList.toggle("active",page==="dashboard");
   document.getElementById("analyticsTab").classList.toggle("active",page==="analytics");
+  renderSidebar();
   await renderWorkspace();
+}
+function hubChoice(label, active, extraClass, onclick, disabled=false){
+  return `<button type="button" class="choice mini${extraClass?(" "+extraClass):""}${active?" active":""}" ${disabled?"disabled":`onclick="${onclick}"`}>${label}</button>`;
+}
+function renderEntryHub(){
+  const body=document.getElementById("entryHubBody");
+  if(!body) return;
+  const yn=(sys,field,includeOff)=>{
+    const val=field?entryHub[sys][field]:entryHub[sys].value;
+    const set=field?`setHubField('${sys}','${field}'`:`setHubValue('${sys}'`;
+    return `${hubChoice("Yes",val==="yes","",set+",'yes')")}
+      ${hubChoice("No",val==="no","no-choice",set+",'no')")}
+      ${includeOff?hubChoice("Off",val==="off","off-choice",set+",'off')"):""}`;
+  };
+  const sleepQuality=entryHub.Sleep.quality;
+  const sleepBand=entryHub.Sleep.durationBand;
+  const qualityOpts=[5,4,3,2,1].map(id=>`<button type="button" class="notion-option" data-label="${qualityNames[id]}" onclick="chooseHubSleepQuality('${id}')">${notionPill(qualityNames[id],qualityPills[id])}</button>`).join("");
+  const hourOpts=Object.entries(sleepDurationBands).map(([id,opt])=>`<button type="button" class="notion-option" data-label="${opt.label}" onclick="chooseHubSleepBand('${id}')">${notionPill(opt.label,opt.pill)}</button>`).join("");
+  body.innerHTML=`
+    <div class="hub-block">
+      <div class="hub-row"><div class="hub-name">${sidebarIcon("Morning")} Morning</div><div class="hub-controls">${yn("Morning","",true)}</div></div>
+      <div class="hub-row"><div class="hub-name">${sidebarIcon("Night")} Night</div><div class="hub-controls">${yn("Night","",true)}</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="hub-block">
+      <div class="hub-row">
+        <div class="hub-name">${sidebarIcon("Sleep")} Sleep</div>
+        <div class="hub-controls">
+          <div class="notion-select hub-select" id="hubQualitySelect">
+            <button type="button" class="notion-trigger" onclick="toggleNotionSelect('hubQualitySelect')">${sleepQuality?notionPill(qualityNames[sleepQuality],qualityPills[sleepQuality]):'<span class="notion-trigger-label">Quality</span>'}<span class="notion-chevron">▾</span></button>
+            <div class="notion-menu">${qualityOpts}</div>
+          </div>
+          <div class="notion-select hub-select" id="hubHoursSelect">
+            <button type="button" class="notion-trigger" onclick="toggleNotionSelect('hubHoursSelect')">${sleepBand?notionPill(sleepDurationBands[sleepBand].label,sleepDurationBands[sleepBand].pill):'<span class="notion-trigger-label">Hours</span>'}<span class="notion-chevron">▾</span></button>
+            <div class="notion-menu">${hourOpts}</div>
+          </div>
+        </div>
+      </div>
+      <div class="hub-row"><div class="hub-name">${sidebarIcon("Workout")} Workout</div><div class="hub-controls"><span class="hub-label">Gym</span>${yn("Workout","gym",true)}<span class="hub-label">Cardio</span>${yn("Workout","cardio",true)}</div></div>
+      <div class="hub-row"><div class="hub-name">${sidebarIcon("Meditation")} Meditation</div><div class="hub-controls"><span class="hub-label">Morning</span>${yn("Meditation","morning",false)}<span class="hub-label">Night</span>${yn("Meditation","night",false)}</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="hub-block">
+      <div class="hub-row"><div class="hub-name">${sidebarIcon("Diet")} Diet</div><div class="hub-controls">${yn("Diet","",true)}</div></div>
+      <div class="hub-row"><div class="hub-name">${sidebarIcon("Scrolling")} Scrolling</div><div class="hub-controls">${yn("Scrolling","",true)}</div></div>
+      <div class="hub-row"><div class="hub-name">${sidebarIcon("Journaling")} Journaling</div><div class="hub-controls">${yn("Journaling","",true)}</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="hub-block">
+      <div class="hub-row"><div class="hub-name">${sidebarIcon("Reading")} Reading</div><div class="hub-controls">${yn("Reading","",true)}<span class="hub-extra">${[[30,"30 min","read-30"],[60,"1 hour","read-60"],[120,"2 hours","read-120"],[150,"2+ hours","read-150"]].map(([v,l,cls])=>hubChoice(l,entryHub.Reading.duration===v,"tiny "+cls,`setHubReadingDuration(${v})`,entryHub.Reading.value!=="yes")).join("")}</span></div></div>
+      <div class="hub-row"><div class="hub-name">${sidebarIcon("Calisthenics")} Calisthenics</div><div class="hub-controls">${yn("Calisthenics","",true)}</div></div>
+      <div class="hub-row"><div class="hub-name">${sidebarIcon("Nofap")} Nofap</div><div class="hub-controls">${yn("Nofap","",false)}<span class="hub-extra">${hubChoice("Beta",entryHub.Nofap.tier==="beta","tiny nofap-beta",`setHubNofapTier('beta')`,entryHub.Nofap.value!=="no")}${hubChoice("Alpha",entryHub.Nofap.tier==="alpha","tiny nofap-alpha",`setHubNofapTier('alpha')`,entryHub.Nofap.value!=="no")}</span></div></div>
+    </div>`;
+}
+function setHubValue(sys,value){
+  entryHub[sys].value=value;
+  if(sys==="Reading" && value!=="yes") entryHub.Reading.duration=null;
+  if(sys==="Nofap" && value!=="no") entryHub.Nofap.tier="";
+  renderEntryHub();
+}
+function setHubField(sys,field,value){entryHub[sys][field]=value;renderEntryHub();}
+function setHubReadingDuration(value){entryHub.Reading.duration=value;renderEntryHub();}
+function setHubNofapTier(tier){entryHub.Nofap.tier=tier;renderEntryHub();}
+function chooseHubSleepQuality(value){entryHub.Sleep.quality=String(value);closeNotionSelects();renderEntryHub();}
+function chooseHubSleepBand(band){entryHub.Sleep.durationBand=band;closeNotionSelects();renderEntryHub();}
+async function loadEntryHub(){
+  entryHub=blankEntryHub();
+  const [morning,night,sleep,workout,meditation,diet,scrolling,journaling,reading,calisthenics,nofap]=await Promise.all([
+    getEntries("Morning",selectedDate,selectedDate),
+    getEntries("Night",selectedDate,selectedDate),
+    getEntries("Sleep",selectedDate,selectedDate),
+    getEntries("Workout",selectedDate,selectedDate),
+    getEntries("Meditation",selectedDate,selectedDate),
+    getEntries("Diet",selectedDate,selectedDate),
+    getEntries("Scrolling",selectedDate,selectedDate),
+    getEntries("Journaling",selectedDate,selectedDate),
+    getEntries("Reading",selectedDate,selectedDate),
+    getEntries("Calisthenics",selectedDate,selectedDate),
+    getEntries("Nofap",selectedDate,selectedDate)
+  ]);
+  if(morning[selectedDate]?.value) entryHub.Morning.value=morning[selectedDate].value;
+  if(night[selectedDate]?.value) entryHub.Night.value=night[selectedDate].value;
+  if(sleep[selectedDate]){
+    entryHub.Sleep.durationBand=sleep[selectedDate].durationBand||bandFromHours(sleep[selectedDate].hours)||"";
+    entryHub.Sleep.quality=sleep[selectedDate].quality?String(sleep[selectedDate].quality):"";
+  }
+  if(workout[selectedDate]){
+    entryHub.Workout.gym=workout[selectedDate].gym||"";
+    entryHub.Workout.cardio=workout[selectedDate].cardio||"";
+  }
+  if(meditation[selectedDate]){
+    entryHub.Meditation.morning=meditation[selectedDate].morning||"";
+    entryHub.Meditation.night=meditation[selectedDate].night||"";
+  }
+  if(diet[selectedDate]?.value) entryHub.Diet.value=diet[selectedDate].value;
+  if(scrolling[selectedDate]?.value) entryHub.Scrolling.value=scrolling[selectedDate].value;
+  if(journaling[selectedDate]?.value) entryHub.Journaling.value=journaling[selectedDate].value;
+  if(reading[selectedDate]){
+    entryHub.Reading.value=reading[selectedDate].value||"";
+    entryHub.Reading.duration=reading[selectedDate].duration||null;
+  }
+  if(calisthenics[selectedDate]?.value) entryHub.Calisthenics.value=calisthenics[selectedDate].value;
+  if(nofap[selectedDate]){
+    entryHub.Nofap.value=nofap[selectedDate].value||"";
+    entryHub.Nofap.tier=nofap[selectedDate].tier||"";
+  }
+  const outcomeData=(await getEntries("Outcomes",selectedDate,selectedDate))[selectedDate];
+  entryOutcomes=blankOutcomes();
+  if(outcomeData?.scores){
+    Object.keys(entryOutcomes).forEach(key=>{
+      if(outcomeData.scores[key]!=null && outcomeData.scores[key]!=="") entryOutcomes[key]=String(outcomeData.scores[key]);
+    });
+  }
+  renderEntryHub();
+  renderOutcomeHub();
+}
+function renderOutcomeHub(){
+  const body=document.getElementById("outcomeHubBody");
+  if(!body) return;
+  body.innerHTML=outcomeGroups.map(group=>`
+    <div class="outcome-group">
+      ${group.items.map(name=>`
+        <div class="outcome-row">
+          <div class="outcome-name ${group.tone}">${name}</div>
+          <div class="score-row">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="score-btn ${group.tone}${String(entryOutcomes[name])===String(n)?" active":""}" onclick="setOutcomeScore('${name}',${n})">${n}</button>`).join("")}</div>
+        </div>
+      `).join("")}
+    </div>
+  `).join('<div class="divider"></div>');
+}
+function setOutcomeScore(name, value){
+  entryOutcomes[name]=String(entryOutcomes[name])===String(value)?"":String(value);
+  renderOutcomeHub();
+}
+async function saveEntryHub(){
+  const writes=[];
+  if(entryHub.Morning.value) writes.push(saveSystemEntry("Morning",selectedDate,{value:entryHub.Morning.value}));
+  if(entryHub.Night.value) writes.push(saveSystemEntry("Night",selectedDate,{value:entryHub.Night.value}));
+  if(entryHub.Sleep.durationBand && entryHub.Sleep.quality){
+    const band=sleepDurationBands[entryHub.Sleep.durationBand];
+    writes.push(saveSystemEntry("Sleep",selectedDate,{hours:band.hours,durationBand:entryHub.Sleep.durationBand,quality:parseInt(entryHub.Sleep.quality)}));
+  }
+  if(entryHub.Workout.gym && entryHub.Workout.cardio){
+    const existing=(await getEntries("Workout",selectedDate,selectedDate))[selectedDate]||{};
+    writes.push(saveSystemEntry("Workout",selectedDate,{
+      gym:entryHub.Workout.gym,
+      gymTime:entryHub.Workout.gym==="yes"?existing.gymTime||"":"",
+      cardio:entryHub.Workout.cardio,
+      cardioTime:entryHub.Workout.cardio==="yes"?existing.cardioTime||null:null
+    }));
+  }
+  if(entryHub.Meditation.morning && entryHub.Meditation.night){
+    const existing=(await getEntries("Meditation",selectedDate,selectedDate))[selectedDate]||{};
+    writes.push(saveSystemEntry("Meditation",selectedDate,{
+      morning:entryHub.Meditation.morning,
+      morningTime:entryHub.Meditation.morning==="yes"?existing.morningTime||null:null,
+      night:entryHub.Meditation.night,
+      nightTime:entryHub.Meditation.night==="yes"?existing.nightTime||null:null
+    }));
+  }
+  ["Diet","Scrolling","Journaling","Calisthenics"].forEach(name=>{
+    if(entryHub[name].value) writes.push(saveSystemEntry(name,selectedDate,{value:entryHub[name].value}));
+  });
+  if(entryHub.Reading.value){
+    if(entryHub.Reading.value==="yes" && !entryHub.Reading.duration){alert("Please select a Reading time.");return;}
+    writes.push(saveSystemEntry("Reading",selectedDate,{value:entryHub.Reading.value,duration:entryHub.Reading.value==="yes"?entryHub.Reading.duration:null}));
+  }
+  if(entryHub.Nofap.value){
+    if(entryHub.Nofap.value==="no" && !entryHub.Nofap.tier){alert("Please select Beta or Alpha for Nofap.");return;}
+    writes.push(saveSystemEntry("Nofap",selectedDate,{value:entryHub.Nofap.value,tier:entryHub.Nofap.value==="no"?entryHub.Nofap.tier:""}));
+  }
+  const outcomeScores={};
+  let hasOutcomes=false;
+  Object.keys(entryOutcomes).forEach(key=>{
+    if(entryOutcomes[key]!==""){outcomeScores[key]=Number(entryOutcomes[key]);hasOutcomes=true;}
+  });
+  if(hasOutcomes) writes.push(saveSystemEntry("Outcomes",selectedDate,{scores:outcomeScores}));
+  if(!writes.length){alert("Select at least one system or outcome before saving.");return;}
+  await Promise.all(writes);
+  await renderDateStrip("entryHubDateStrip");
+  alert("Entry saved to the designated systems.");
 }
 function startOfWeekMonday(date){
   const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());
@@ -1815,25 +2228,27 @@ function dateToneClass(date, today){
   return a<b?" past":" future";
 }
 function currentEntrySystem(){
-  if(currentLayer===1 && currentItem>=1) return layerItems[1][currentItem-1];
+  if(currentItem>=1) return (layerItems[currentLayer]||[])[currentItem-1]||null;
   return null;
 }
 function currentDateStripId(){
-  if(currentItem===2) return "workoutDateStrip";
-  if(currentItem===3) return "meditationDateStrip";
-  if(currentItem>=4) return "simpleDateStrip";
-  return "dateStrip";
+  if(workspaceMode==="entry") return "entryHubDateStrip";
+  const name=currentEntrySystem();
+  if(name==="Workout") return "workoutDateStrip";
+  if(name==="Meditation") return "meditationDateStrip";
+  if(name==="Sleep") return "dateStrip";
+  return "simpleDateStrip";
 }
 async function onPickEntryDate(dateString, targetId){
   selectedDate=dateString;
   await renderDateStrip(targetId);
   document.getElementById("currentDateLabel").innerHTML=formatDate(selectedDate);
+  if(workspaceMode==="entry"){await loadEntryHub();return;}
   await loadSelectedDate();
   await loadWorkoutDate();
   await loadMeditationDate();
-  if(currentLayer===1&&[4,5,6].includes(currentItem)){
-    await loadSimpleTrackerDate(["","Sleep","Workout","Meditation","Diet","Journaling","Nofap"][currentItem]);
-  }
+  const name=currentEntrySystem();
+  if(name && !["Sleep","Workout","Meditation"].includes(name)) await loadSimpleTrackerDate(name);
 }
 async function setEntryDateView(view){
   entryDateView=view;
@@ -1868,11 +2283,20 @@ async function renderDateStrip(targetId="dateStrip"){
     }
   }
 
-  const systemName=currentEntrySystem();
   const logged={};
-  if(systemName && dates.length){
-    const rows=await getEntries(systemName,getDateString(dates[0]),getDateString(dates[dates.length-1]));
-    Object.keys(rows||{}).forEach(key=>logged[key]=true);
+  if(dates.length){
+    const start=getDateString(dates[0]), end=getDateString(dates[dates.length-1]);
+    if(workspaceMode==="entry"){
+      const names=personalGroups[0].blocks.flat();
+      const packs=await Promise.all(names.map(name=>getEntries(name,start,end)));
+      packs.forEach(rows=>Object.keys(rows||{}).forEach(key=>logged[key]=true));
+    }else{
+      const systemName=currentEntrySystem();
+      if(systemName){
+        const rows=await getEntries(systemName,start,end);
+        Object.keys(rows||{}).forEach(key=>logged[key]=true);
+      }
+    }
   }
 
   const grid=document.createElement("div");
@@ -1911,8 +2335,9 @@ async function setSleepDashRange(days){return setDashRange(days);}
 async function setDashRange(days){
   dashRangeDays=days;
   updateDashRangeButtons();
-  if(currentLayer===1 && currentItem===1) await renderDashboard();
-  else if(currentLayer===1 && currentItem>=2) await renderEngineDashboard(layerItems[1][currentItem-1]);
+  const name=currentEntrySystem();
+  if(name==="Sleep") await renderDashboard();
+  else if(name) await renderEngineDashboard(name);
 }
 async function renderDashboard(){
   const days=dashRangeDays;
@@ -2085,11 +2510,12 @@ async function renderEngineDashboard(systemName){
       const entry=data[date];
       if(!entry||!entry.gym) return {height:"3px", barClass:"empty-bar"};
       if(entry.gym==="yes") return {valueText:entry.gymTime||"Yes", height:"100%", barClass:"yes-bar"};
+      if(entry.gym==="off") return {valueText:"Off", height:"50%", barClass:"off-bar"};
       return {valueText:"No", height:"28%", barClass:"no-bar"};
     })));
     charts.appendChild(renderChartCard("Cardio Minutes", renderBarChart("cardioChart", dates, date=>{
       const entry=data[date];
-      if(!entry||entry.cardio!=="yes") return {height:entry&&entry.cardio==="no"?"28%":"3px", valueText:entry&&entry.cardio==="no"?"No":"", barClass:entry&&entry.cardio==="no"?"no-bar":"empty-bar"};
+      if(!entry||entry.cardio!=="yes") return {height:entry&&entry.cardio==="off"?"50%":(entry&&entry.cardio==="no"?"28%":"3px"), valueText:entry&&entry.cardio==="off"?"Off":(entry&&entry.cardio==="no"?"No":""), barClass:entry&&entry.cardio==="off"?"off-bar":(entry&&entry.cardio==="no"?"no-bar":"empty-bar")};
       const mins=Number(entry.cardioTime||0);
       return {valueText:mins===60?"1h":mins+"m", height:`${Math.max(18,(mins/60)*100)}%`, barClass:"blue-bar"};
     })));
@@ -2139,8 +2565,9 @@ async function renderEngineDashboard(systemName){
   charts.appendChild(renderChartCard(labels.chart, renderBarChart(systemName+"Chart", dates, date=>{
     const entry=data[date];
     if(!entry||!entry.value) return {height:"3px", barClass:"empty-bar"};
-    if(entry.value==="yes") return {valueText:labels.success, height:"100%", barClass:"yes-bar"};
-    return {valueText:labels.fail, height:"28%", barClass:"no-bar"};
+    if(entry.value==="yes") return {valueText:entry.duration===30?"30m":entry.duration===60?"1h":entry.duration===120?"2h":entry.duration===150?"2h+":labels.success, height:"100%", barClass:"yes-bar"};
+    if(entry.value==="off") return {valueText:"Off", height:"50%", barClass:"off-bar"};
+    return {valueText:entry.tier?entry.tier[0].toUpperCase()+entry.tier.slice(1):labels.fail, height:"28%", barClass:"no-bar"};
   })));
 }
 
