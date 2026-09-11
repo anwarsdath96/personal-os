@@ -2326,7 +2326,6 @@ async function saveEntryHub(){
   if(!writes.length){alert("Select at least one system or outcome before saving.");return;}
   await Promise.all(writes);
   await renderDateStrip("entryHubDateStrip");
-  alert("Entry saved to the designated systems.");
 }
 function startOfWeekMonday(date){
   const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());
