@@ -168,6 +168,7 @@ body{
   display:grid;place-items:center;
 }
 .save-btn.icon-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.save-btn.icon-btn.saved{background:#4fd18a;color:#102016}
 .off-bar{background:#8a919c}
 .main{min-width:0}
 .workspace-head{
@@ -759,7 +760,27 @@ input:focus,select:focus{border-color:#687382}
 }
 .dash-toolbar .range-btn{padding:7px 12px;font-size:12px;border-radius:8px}
 
-.health-stack{display:flex;flex-direction:column;gap:14px}
+.focus-toggle{display:flex;gap:8px}
+.focus-btn{
+  border:1px solid #303640;background:#101217;color:#c5ccd6;
+  padding:7px 14px;border-radius:8px;cursor:pointer;font-weight:650;font-size:14px;
+}
+.focus-btn.active{background:#2357b4;border-color:#2357b4;color:#fff}
+.chart-view-toggle{display:flex;gap:6px;margin-top:8px}
+.view-btn{
+  width:32px;height:28px;padding:0;
+  display:grid;place-items:center;
+  border:1px solid #303640;background:#101217;color:#aeb4bd;
+  border-radius:7px;cursor:pointer;
+}
+.view-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.view-btn.active{background:#2357b4;border-color:#2357b4;color:#fff}
+.outcome-line-wrap{
+  position:absolute;inset:0 132px 0 0;z-index:2;pointer-events:none;
+}
+.outcome-line-wrap svg{width:100%;height:100%;display:block;overflow:visible}
+.health-plot.line-mode .health-bars{display:none}
+.health-plot:not(.line-mode) .outcome-line-wrap{display:none}
 .health-card{
   background:#171a20;
   border:1px solid #292f38;
@@ -1245,7 +1266,7 @@ input:focus,select:focus{border-color:#687382}
               </div>
             </div>
             <div class="save-row">
-              <button class="save-btn icon-btn" onclick="saveEntryHub()" title="Save">
+              <button class="save-btn icon-btn" id="saveEntryHubBtn" onclick="saveEntryHub()" title="Save">
                 <svg viewBox="0 0 24 24"><path d="M5 21h14a1 1 0 0 0 1-1V7.5L16.5 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1z"/><path d="M15 3v5H9V3M8 21v-8h8v8"/></svg>
               </button>
             </div>
@@ -1345,6 +1366,8 @@ let workoutState = {gym:"",gymTime:"",cardio:"",cardioTime:null};
 let meditationState = {morning:"",morningTime:null,night:"",nightTime:null};
 let simpleTrackerState = {system:"",value:""};
 let overviewRangeDays = 7;
+let outcomeChartView = "bars";
+let overviewFocus = "system";
 let dashRangeDays = 7;
 let entryDateView = "week";
 let sleepDurationBand = "";
@@ -1772,10 +1795,24 @@ async function setOverviewRange(days){
   overviewRangeDays=days;
   await renderEngineOverview();
 }
-function healthCardMarkup(title, barsId, labelsId){
+function healthCardMarkup(barsId, labelsId, withViews=false){
+  const views=withViews?`<div class="chart-view-toggle">
+          <button class="view-btn${outcomeChartView==="bars"?" active":""}" onclick="setOutcomeChartView('bars')" title="Bar chart">
+            <svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
+          </button>
+          <button class="view-btn${outcomeChartView==="line"?" active":""}" onclick="setOutcomeChartView('line')" title="Line graph">
+            <svg viewBox="0 0 24 24"><path d="M4 16l5-5 4 3 7-8"/><path d="M4 20h16"/></svg>
+          </button>
+        </div>`:"";
   return `<div class="health-card">
       <div class="health-card-head">
-        <div class="health-card-title">${title}</div>
+        <div>
+          <div class="focus-toggle">
+            <button class="focus-btn${overviewFocus==="system"?" active":""}" onclick="setOverviewFocus('system')">System</button>
+            ${currentLayer===1?`<button class="focus-btn${overviewFocus==="outcome"?" active":""}" onclick="setOverviewFocus('outcome')">Outcome</button>`:""}
+          </div>
+          ${views}
+        </div>
         <div class="range-toggle">
           <button class="range-btn${overviewRangeDays===7?" active":""}" onclick="setOverviewRange(7)">Last 7 days</button>
           <button class="range-btn${overviewRangeDays===30?" active":""}" onclick="setOverviewRange(30)">Last 30 days</button>
@@ -1783,7 +1820,7 @@ function healthCardMarkup(title, barsId, labelsId){
       </div>
       <div class="health-chart">
         <div class="health-y"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div>
-        <div class="health-plot">
+        <div class="health-plot${withViews&&outcomeChartView==="line"?" line-mode":""}" id="${withViews?"outcomePlot":""}">
           <div class="health-bands">
             <div class="health-band excellent"><div class="band-label"><strong>Excellent</strong></div></div>
             <div class="health-band good"><div class="band-label"><strong>Good</strong></div></div>
@@ -1791,10 +1828,86 @@ function healthCardMarkup(title, barsId, labelsId){
             <div class="health-band critical"><div class="band-label"><strong>Critical</strong></div></div>
           </div>
           <div class="health-bars" id="${barsId}"></div>
+          ${withViews?`<div class="outcome-line-wrap"><svg id="outcomeLineSvg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg></div>`:""}
           <div class="health-x" id="${labelsId}"></div>
         </div>
       </div>
     </div>`;
+}
+function setOverviewFocus(focus){
+  overviewFocus=focus;
+  renderEngineOverview();
+}
+function setOutcomeChartView(view){
+  outcomeChartView=view;
+  renderEngineOverview();
+}
+function outcomeScoresFromEntry(entry){
+  if(!entry) return null;
+  if(entry.scores && typeof entry.scores==="object") return entry.scores;
+  return entry;
+}
+function outcomePointHealth(name, raw, tone){
+  if(raw==null || raw==="") return null;
+  const n=Number(raw);
+  if(Number.isNaN(n)) return null;
+  const level=Number(normalizeOutcomeScore(n));
+  if(!level) return null;
+  return clampScore(tone==="bad"?(6-level)*20:level*20);
+}
+function groupAverageForDay(items, scores, tone){
+  if(!scores) return null;
+  const vals=items.map(name=>outcomePointHealth(name, scores[name], tone)).filter(v=>v!=null);
+  if(!vals.length) return null;
+  return vals.reduce((a,b)=>a+b,0)/vals.length;
+}
+function lineSegments(values){
+  const n=values.length;
+  const segs=[], cur=[];
+  values.forEach((v,i)=>{
+    if(v==null){
+      if(cur.length>1) segs.push(cur.slice());
+      cur.length=0;
+      return;
+    }
+    const x=n===1?50:(i/(n-1))*100;
+    const y=100-Math.max(0,Math.min(100,v));
+    cur.push(`${x.toFixed(2)},${y.toFixed(2)}`);
+  });
+  if(cur.length>1) segs.push(cur);
+  return segs.map(seg=>`M ${seg.join(" L ")}`).join(" ");
+}
+async function renderOutcomeLineChart(){
+  const dates=getDateRange(overviewRangeDays);
+  const data=await getEntries("Outcomes",dates[0],dates[dates.length-1]);
+  const good=outcomeGroups[0].items, bad=outcomeGroups[1].items, focus=outcomeGroups[2].items;
+  const series={
+    good:dates.map(d=>groupAverageForDay(good,outcomeScoresFromEntry(data[d]),"good")),
+    bad:dates.map(d=>groupAverageForDay(bad,outcomeScoresFromEntry(data[d]),"bad")),
+    focus:dates.map(d=>groupAverageForDay(focus,outcomeScoresFromEntry(data[d]),"focus"))
+  };
+  const svg=document.getElementById("outcomeLineSvg");
+  const labels=document.getElementById("outcomeLabels");
+  if(!svg) return;
+  const dots=dates.map((date,i)=>{
+    const x=dates.length===1?50:(i/(dates.length-1))*100;
+    return [["good","#4fd18a"],["bad","#ef6973"],["focus","#b39be8"]].map(([key,color])=>{
+      const v=series[key][i];
+      if(v==null) return "";
+      return `<circle cx="${x.toFixed(2)}" cy="${(100-v).toFixed(2)}" r="1.1" fill="${color}"></circle>`;
+    }).join("");
+  }).join("");
+  svg.innerHTML=`
+    <path d="${lineSegments(series.good)}" fill="none" stroke="#4fd18a" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+    <path d="${lineSegments(series.bad)}" fill="none" stroke="#ef6973" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+    <path d="${lineSegments(series.focus)}" fill="none" stroke="#b39be8" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+    ${dots}`;
+  if(labels){
+    labels.innerHTML=dates.map(date=>{
+      const d=new Date(date+"T00:00:00");
+      return `<span>${d.getDate()}</span>`;
+    }).join("");
+  }
 }
 function paintHealthChart(barsId, labelsId, scores, blocks){
   const byName=Object.fromEntries(scores.map(s=>[s.name,s]));
@@ -1842,17 +1955,20 @@ async function loadOutcomeHealthScores(days=overviewRangeDays){
   });
 }
 async function renderEngineOverview(){
-  const showOutcomes=currentLayer===1;
+  const showOutcome=currentLayer===1 && overviewFocus==="outcome";
   document.getElementById("overviewPage").innerHTML=`<div class="health-stack">
-    ${healthCardMarkup("System Health","healthBars","healthLabels")}
-    ${showOutcomes?healthCardMarkup("Outcome Health","outcomeBars","outcomeLabels"):""}
+    ${healthCardMarkup(showOutcome?"outcomeBars":"healthBars", showOutcome?"outcomeLabels":"healthLabels", showOutcome)}
   </div>`;
+  if(showOutcome){
+    if(outcomeChartView==="line") await renderOutcomeLineChart();
+    else{
+      const outcomeScores=await loadOutcomeHealthScores(overviewRangeDays);
+      paintHealthChart("outcomeBars","outcomeLabels",outcomeScores,outcomeGroups.map(group=>group.items));
+    }
+    return;
+  }
   const scores=await loadLayerHealthScores(currentLayer, overviewRangeDays);
   paintHealthChart("healthBars","healthLabels",scores,overviewSystemBlocks(currentLayer));
-  if(showOutcomes){
-    const outcomeScores=await loadOutcomeHealthScores(overviewRangeDays);
-    paintHealthChart("outcomeBars","outcomeLabels",outcomeScores,outcomeGroups.map(group=>group.items));
-  }
 }
 
 
@@ -2198,17 +2314,22 @@ function renderEntryHub(){
       <div class="hub-row">${hubLabel("Nofap")}<div class="hub-controls">${yn("Nofap","",false)}<span class="hub-extra">${hubChoice("Beta",entryHub.Nofap.tier==="beta","tiny nofap-beta",`setHubNofapTier('beta')`,entryHub.Nofap.value!=="no")}${hubChoice("Alpha",entryHub.Nofap.tier==="alpha","tiny nofap-alpha",`setHubNofapTier('alpha')`,entryHub.Nofap.value!=="no")}</span></div></div>
     </div>`;
 }
+function setEntrySavedState(saved){
+  const btn=document.getElementById("saveEntryHubBtn");
+  if(btn) btn.classList.toggle("saved",!!saved);
+}
 function setHubValue(sys,value){
   entryHub[sys].value=value;
   if(sys==="Reading" && value!=="yes") entryHub.Reading.duration=null;
   if(sys==="Nofap" && value!=="no") entryHub.Nofap.tier="";
+  setEntrySavedState(false);
   renderEntryHub();
 }
-function setHubField(sys,field,value){entryHub[sys][field]=value;renderEntryHub();}
-function setHubReadingDuration(value){entryHub.Reading.duration=value;renderEntryHub();}
-function setHubNofapTier(tier){entryHub.Nofap.tier=tier;renderEntryHub();}
-function chooseHubSleepQuality(value){entryHub.Sleep.quality=String(value);closeNotionSelects();renderEntryHub();}
-function chooseHubSleepBand(band){entryHub.Sleep.durationBand=band;closeNotionSelects();renderEntryHub();}
+function setHubField(sys,field,value){entryHub[sys][field]=value;setEntrySavedState(false);renderEntryHub();}
+function setHubReadingDuration(value){entryHub.Reading.duration=value;setEntrySavedState(false);renderEntryHub();}
+function setHubNofapTier(tier){entryHub.Nofap.tier=tier;setEntrySavedState(false);renderEntryHub();}
+function chooseHubSleepQuality(value){entryHub.Sleep.quality=String(value);closeNotionSelects();setEntrySavedState(false);renderEntryHub();}
+function chooseHubSleepBand(band){entryHub.Sleep.durationBand=band;closeNotionSelects();setEntrySavedState(false);renderEntryHub();}
 async function loadEntryHub(){
   entryHub=blankEntryHub();
   const [morning,night,sleep,workout,meditation,diet,scrolling,journaling,reading,calisthenics,nofap]=await Promise.all([
@@ -2259,6 +2380,7 @@ async function loadEntryHub(){
   }
   renderEntryHub();
   renderOutcomeHub();
+  setEntrySavedState(false);
 }
 function renderOutcomeHub(){
   const body=document.getElementById("outcomeHubBody");
@@ -2278,6 +2400,7 @@ function renderOutcomeHub(){
 }
 function setOutcomeScore(name, value){
   entryOutcomes[name]=String(entryOutcomes[name])===String(value)?"":String(value);
+  setEntrySavedState(false);
   renderOutcomeHub();
 }
 async function saveEntryHub(){
@@ -2326,6 +2449,7 @@ async function saveEntryHub(){
   if(!writes.length){alert("Select at least one system or outcome before saving.");return;}
   await Promise.all(writes);
   await renderDateStrip("entryHubDateStrip");
+  setEntrySavedState(true);
 }
 function startOfWeekMonday(date){
   const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());
