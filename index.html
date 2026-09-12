@@ -351,6 +351,11 @@ input:focus,select:focus{border-color:#687382}
 .bar-value{font-size:11px;color:#aeb4bd;margin-bottom:5px}
 .bar-label{font-size:10px;color:#707782;margin-top:8px}
 .quality-bar{background:#aeb4bd}
+.bar.excellent{background:#8af0a6}
+.bar.good{background:#1f7a48}
+.bar.okay{background:#4d8dff}
+.bar.attention{background:#f08a1a}
+.bar.critical{background:#e04545}
 
 .system-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .simple-tracker{max-width:100%}
@@ -441,11 +446,11 @@ input:focus,select:focus{border-color:#687382}
 .pill-okay{background:#3b5c9a}
 .pill-good{background:#8a7340}
 .pill-best{background:#4d6b58}
-.bar.hours-red{background:#ff6b78}
-.bar.hours-orange{background:#f0b429}
-.bar.hours-blue{background:#5ca4f5}
-.bar.hours-green{background:#4fd18a}
-.bar.hours-purple{background:#a78bfa}
+.bar.hours-red{background:#e04545}
+.bar.hours-orange{background:#f08a1a}
+.bar.hours-blue{background:#4d8dff}
+.bar.hours-green{background:#1f7a48}
+.bar.hours-purple{background:#8af0a6}
 .choice{
   border:1px solid #454d59;
   background:#20252d;
@@ -1224,6 +1229,11 @@ input:focus,select:focus{border-color:#687382}
             <div class="chart-title">Sleep Quality</div>
             <div class="chart" id="qualityChart"></div>
           </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Wake Up Time</div>
+            <div class="chart" id="wakeChart"></div>
+          </div>
         </section>
 
 
@@ -1776,6 +1786,11 @@ function healthBand(score){
   if(score>=20) return "attention";
   return "critical";
 }
+function sleepWakeScore(wakeTime){
+  const wakeIndex=sleepWakeTimes.indexOf(wakeTime||"");
+  if(wakeIndex<0) return 0;
+  return clampScore(100-(wakeIndex/(sleepWakeTimes.length-1))*100);
+}
 function scoreSystemDay(systemName, entry){
   if(!entry) return 0;
   if(systemName==="Sleep"){
@@ -1787,7 +1802,7 @@ function scoreSystemDay(systemName, entry){
       else duration=clampScore(100-(hours-9)*15);
     }
     const quality=entry.quality? (Number(entry.quality)/5)*100 : 0;
-    return clampScore(duration*0.6 + quality*0.4);
+    return clampScore(quality*0.5 + duration*0.3 + sleepWakeScore(entry.wakeTime)*0.2);
   }
   if(systemName==="Workout"){
     let score=0;
@@ -2692,6 +2707,7 @@ async function renderDashboard(){
   }
   renderChart("hoursChart",data,dates,"hours");
   renderChart("qualityChart",data,dates,"quality");
+  renderChart("wakeChart",data,dates,"wake");
   document.getElementById("analyticsAvgHours").textContent=document.getElementById("avgHours").textContent;
   document.getElementById("analyticsAvgQuality").textContent=document.getElementById("avgQuality").textContent;
   document.getElementById("analyticsDaysLogged").textContent=document.getElementById("daysLogged").textContent;
@@ -2705,7 +2721,7 @@ function renderChart(id,data,dates,type){
   if(!chart) return;
   chart.innerHTML="";
   chart.classList.toggle("dense", dates.length>10);
-  const max=type==="hours"?Math.max(10,...dates.map(d=>data[d]?Number(data[d].hours):0)):5;
+  const max=type==="hours"?Math.max(10,...dates.map(d=>data[d]?Number(data[d].hours):0)):type==="wake"?100:5;
   dates.forEach(date=>{
     const entry=data[date];
     const container=document.createElement("div");
@@ -2715,11 +2731,13 @@ function renderChart(id,data,dates,type){
       value.className="bar-value";
       const bandKey=entry.durationBand||bandFromHours(entry.hours);
       const band=sleepDurationBands[bandKey];
-      value.textContent=type==="hours"?(band?band.short:entry.hours+"h"):qualityNames[entry.quality];
+      const wakeScore=sleepWakeScore(entry.wakeTime);
+      const qualityScore=entry.quality?(Number(entry.quality)/5)*100:0;
+      value.textContent=type==="hours"?(band?band.short:entry.hours+"h"):type==="wake"?(entry.wakeTime||"—"):qualityNames[entry.quality];
       const bar=document.createElement("div");
-      bar.className="bar"+(type==="quality"?" quality-bar":" "+(band?band.bar:""));
-      const v=type==="hours"?Number(entry.hours):Number(entry.quality);
-      bar.style.height=`${(v/max)*100}%`;
+      bar.className="bar "+(type==="hours"?(band?band.bar:"critical"):healthBand(type==="wake"?wakeScore:qualityScore));
+      const v=type==="hours"?Number(entry.hours):type==="wake"?wakeScore:Number(entry.quality);
+      bar.style.height=`${Math.max(8,(v/max)*100)}%`;
       container.appendChild(value);
       container.appendChild(bar);
     }else{
