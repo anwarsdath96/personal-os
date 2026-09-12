@@ -764,9 +764,20 @@ input:focus,select:focus{border-color:#687382}
   padding:7px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:650;
 }
 .def-btn:hover{border-color:#555c68}
+#systemDefinitionPage{
+  min-height:calc(100vh - 210px);
+  display:flex;
+}
+#systemDefinitionPage .card{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:620px;
+  padding:20px 22px 16px;
+}
 .definition-note{
-  width:100%;min-height:280px;resize:vertical;
-  padding:14px 16px;border-radius:10px;
+  width:100%;flex:1;min-height:520px;resize:vertical;
+  padding:16px 18px;border-radius:10px;
   border:1px solid #303640;background:#101217;color:#f1f3f5;
   font-size:15px;line-height:1.6;outline:none;
 }
