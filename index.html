@@ -151,8 +151,10 @@ body{
 .hub-name{display:flex;align-items:center;gap:6px;font-weight:650;font-size:12px;white-space:nowrap}
 .hub-controls,.hub-group{display:flex;flex-wrap:nowrap;gap:5px;align-items:center;min-width:0}
 .hub-label{font-size:10px;color:#858c96;margin-right:1px;white-space:nowrap}
-.hub-select{width:132px;flex:0 0 132px}
+.hub-select{width:118px;flex:0 0 118px}
 .hub-select .notion-trigger{min-height:30px;padding:3px 8px}
+.hub-sleep-controls{margin-left:14px}
+.hub-select.wake-select{width:124px;flex:0 0 124px}
 .hub-extra{display:flex;flex-wrap:nowrap;gap:4px;margin-left:8px}
 .choice.mini{padding:5px 8px;font-size:11px;min-width:38px}
 .choice.tiny{padding:4px 7px;font-size:10px;min-width:34px}
@@ -869,8 +871,9 @@ input:focus,select:focus{border-color:#687382}
   border-bottom:1px solid rgba(255,255,255,.04);
 }
 .health-band:last-child{border-bottom:0}
-.health-band.excellent{background:#16382a}
-.health-band.good{background:#173456}
+.health-band.excellent{background:#1c4a32}
+.health-band.good{background:#143024}
+.health-band.okay{background:#173456}
 .health-band.attention{background:#3c3016}
 .health-band.critical{background:#3a1b22}
 .health-bars{
@@ -908,10 +911,11 @@ input:focus,select:focus{border-color:#687382}
   color:#e8edf3;
   white-space:nowrap;
 }
-.health-bar.excellent{background:#7dff9d}
-.health-bar.good{background:#7b8cff}
-.health-bar.attention{background:#f0b429}
-.health-bar.critical{background:#ff7a7a}
+.health-bar.excellent{background:#8af0a6}
+.health-bar.good{background:#1f7a48}
+.health-bar.okay{background:#4d8dff}
+.health-bar.attention{background:#f08a1a}
+.health-bar.critical{background:#e04545}
 .health-x{
   position:absolute;
   left:18px;right:132px;bottom:0;
@@ -947,8 +951,9 @@ input:focus,select:focus{border-color:#687382}
   background:#6a7380;
   transform:translateX(-50%);
 }
-.health-band.excellent .band-label strong{color:#7dff9d}
-.health-band.good .band-label strong{color:#8fa0ff}
+.health-band.excellent .band-label strong{color:#8af0a6}
+.health-band.good .band-label strong{color:#6edc8c}
+.health-band.okay .band-label strong{color:#8fa0ff}
 .health-band.attention .band-label strong{color:#f0b429}
 .health-band.critical .band-label strong{color:#ff8a8a}
 @media(max-width:800px){
@@ -1375,7 +1380,7 @@ function blankEntryHub(){
   return {
     Morning:{value:""},
     Night:{value:""},
-    Sleep:{durationBand:"",quality:""},
+    Sleep:{durationBand:"",quality:"",wakeTime:""},
     Workout:{gym:"",cardio:""},
     Meditation:{morning:"",night:""},
     Diet:{value:""},
@@ -1410,6 +1415,7 @@ let dashRangeDays = 7;
 let entryDateView = "week";
 let sleepDurationBand = "";
 let sleepQualityValue = "";
+const sleepWakeTimes = ["5 AM","5:30 AM","6 AM","6:30 AM","7 AM","7:30 AM","8 AM","9 AM","10 AM"];
 const sleepDurationBands = {
   below4:{hours:3,label:"Below 4 hours",short:"<4h",bar:"hours-red",pill:"pill-red"},
   "4to6":{hours:5,label:"4 to 6 hours",short:"4–6h",bar:"hours-orange",pill:"pill-orange"},
@@ -1764,9 +1770,10 @@ function renderTrendSVG(values){
 }
 function clampScore(n){return Math.max(0,Math.min(100,n));}
 function healthBand(score){
-  if(score>=75) return "excellent";
-  if(score>=50) return "good";
-  if(score>=25) return "attention";
+  if(score>=80) return "excellent";
+  if(score>=60) return "good";
+  if(score>=40) return "okay";
+  if(score>=20) return "attention";
   return "critical";
 }
 function scoreSystemDay(systemName, entry){
@@ -1857,11 +1864,12 @@ function healthCardMarkup(barsId, labelsId, withViews=false){
         </div>
       </div>
       <div class="health-chart">
-        <div class="health-y"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div>
+        <div class="health-y"><span>100%</span><span>80%</span><span>60%</span><span>40%</span><span>20%</span><span>0%</span></div>
         <div class="health-plot${withViews&&outcomeChartView==="line"?" line-mode":""}" id="${withViews?"outcomePlot":""}">
           <div class="health-bands">
             <div class="health-band excellent"><div class="band-label"><strong>Excellent</strong></div></div>
             <div class="health-band good"><div class="band-label"><strong>Good</strong></div></div>
+            <div class="health-band okay"><div class="band-label"><strong>Okay</strong></div></div>
             <div class="health-band attention"><div class="band-label"><strong>Needs Attention</strong></div></div>
             <div class="health-band critical"><div class="band-label"><strong>Critical</strong></div></div>
           </div>
@@ -2346,8 +2354,10 @@ function renderEntryHub(){
   };
   const sleepQuality=entryHub.Sleep.quality;
   const sleepBand=entryHub.Sleep.durationBand;
+  const wakeOpts=sleepWakeTimes.map(t=>`<button type="button" class="notion-option" data-label="${t}" onclick="chooseHubSleepWake('${t}')">${notionPill(t,"pill-okay")}</button>`).join("");
   const qualityOpts=[5,4,3,2,1].map(id=>`<button type="button" class="notion-option" data-label="${qualityNames[id]}" onclick="chooseHubSleepQuality('${id}')">${notionPill(qualityNames[id],qualityPills[id])}</button>`).join("");
   const hourOpts=Object.entries(sleepDurationBands).map(([id,opt])=>`<button type="button" class="notion-option" data-label="${opt.label}" onclick="chooseHubSleepBand('${id}')">${notionPill(opt.label,opt.pill)}</button>`).join("");
+  const sleepWake=entryHub.Sleep.wakeTime;
   body.innerHTML=`
     <div class="hub-block">
       <div class="hub-row">${hubLabel("Morning")}<div class="hub-controls">${yn("Morning","",true)}</div></div>
@@ -2357,7 +2367,11 @@ function renderEntryHub(){
     <div class="hub-block">
       <div class="hub-row">
         ${hubLabel("Sleep")}
-        <div class="hub-controls">
+        <div class="hub-controls hub-sleep-controls">
+          <div class="notion-select hub-select wake-select" id="hubWakeSelect">
+            <button type="button" class="notion-trigger" onclick="toggleNotionSelect('hubWakeSelect')">${sleepWake?notionPill(sleepWake,"pill-okay"):'<span class="notion-trigger-label">Wake up time</span>'}<span class="notion-chevron">▾</span></button>
+            <div class="notion-menu">${wakeOpts}</div>
+          </div>
           <div class="notion-select hub-select" id="hubQualitySelect">
             <button type="button" class="notion-trigger" onclick="toggleNotionSelect('hubQualitySelect')">${sleepQuality?notionPill(qualityNames[sleepQuality],qualityPills[sleepQuality]):'<span class="notion-trigger-label">Quality</span>'}<span class="notion-chevron">▾</span></button>
             <div class="notion-menu">${qualityOpts}</div>
@@ -2400,6 +2414,7 @@ function setHubReadingDuration(value){entryHub.Reading.duration=value;setEntrySa
 function setHubNofapTier(tier){entryHub.Nofap.tier=tier;setEntrySavedState(false);renderEntryHub();}
 function chooseHubSleepQuality(value){entryHub.Sleep.quality=String(value);closeNotionSelects();setEntrySavedState(false);renderEntryHub();}
 function chooseHubSleepBand(band){entryHub.Sleep.durationBand=band;closeNotionSelects();setEntrySavedState(false);renderEntryHub();}
+function chooseHubSleepWake(time){entryHub.Sleep.wakeTime=time;closeNotionSelects();setEntrySavedState(false);renderEntryHub();}
 async function loadEntryHub(){
   entryHub=blankEntryHub();
   const [morning,night,sleep,workout,meditation,diet,scrolling,journaling,reading,calisthenics,nofap]=await Promise.all([
@@ -2420,6 +2435,7 @@ async function loadEntryHub(){
   if(sleep[selectedDate]){
     entryHub.Sleep.durationBand=sleep[selectedDate].durationBand||bandFromHours(sleep[selectedDate].hours)||"";
     entryHub.Sleep.quality=sleep[selectedDate].quality?String(sleep[selectedDate].quality):"";
+    entryHub.Sleep.wakeTime=sleep[selectedDate].wakeTime||"";
   }
   if(workout[selectedDate]){
     entryHub.Workout.gym=workout[selectedDate].gym||"";
@@ -2479,7 +2495,7 @@ async function saveEntryHub(){
   if(entryHub.Night.value) writes.push(saveSystemEntry("Night",selectedDate,{value:entryHub.Night.value}));
   if(entryHub.Sleep.durationBand && entryHub.Sleep.quality){
     const band=sleepDurationBands[entryHub.Sleep.durationBand];
-    writes.push(saveSystemEntry("Sleep",selectedDate,{hours:band.hours,durationBand:entryHub.Sleep.durationBand,quality:parseInt(entryHub.Sleep.quality)}));
+    writes.push(saveSystemEntry("Sleep",selectedDate,{hours:band.hours,durationBand:entryHub.Sleep.durationBand,quality:parseInt(entryHub.Sleep.quality),wakeTime:entryHub.Sleep.wakeTime||""}));
   }
   if(entryHub.Workout.gym && entryHub.Workout.cardio){
     const existing=(await getEntries("Workout",selectedDate,selectedDate))[selectedDate]||{};
