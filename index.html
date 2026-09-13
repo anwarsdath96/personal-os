@@ -448,6 +448,7 @@ input:focus,select:focus{border-color:#687382}
 .pill-best{background:#4d6b58}
 .bar.hours-red{background:#e04545}
 .bar.hours-orange{background:#f08a1a}
+.bar.hours-amber{background:#d9a441}
 .bar.hours-blue{background:#4d8dff}
 .bar.hours-green{background:#1f7a48}
 .bar.hours-purple{background:#8af0a6}
@@ -1427,11 +1428,12 @@ let sleepDurationBand = "";
 let sleepQualityValue = "";
 const sleepWakeTimes = ["5 AM","5:30 AM","6 AM","6:30 AM","7 AM","7:30 AM","8 AM","9 AM","10 AM"];
 const sleepDurationBands = {
-  below4:{hours:3,label:"Below 4 hours",short:"<4h",bar:"hours-red",pill:"pill-red"},
-  "4to6":{hours:5,label:"4 to 6 hours",short:"4–6h",bar:"hours-orange",pill:"pill-orange"},
-  "6to7":{hours:6.5,label:"6 to 7 hours",short:"6–7h",bar:"hours-blue",pill:"pill-blue"},
-  "7to8":{hours:7.5,label:"7–8 hours",short:"7–8h",bar:"hours-green",pill:"pill-green"},
-  "8plus":{hours:9,label:"8+ hours",short:"8h+",bar:"hours-purple",pill:"pill-purple"}
+  below4:{hours:3,label:"<4 Hours",short:"<4h",bar:"hours-red",pill:"pill-red"},
+  "4to5":{hours:4.5,label:"4–5 Hours",short:"4–5h",bar:"hours-orange",pill:"pill-orange"},
+  "5to6":{hours:5.5,label:"5–6 Hours",short:"5–6h",bar:"hours-amber",pill:"pill-orange"},
+  "6to7":{hours:6.5,label:"6–7 Hours",short:"6–7h",bar:"hours-blue",pill:"pill-blue"},
+  "7to8":{hours:7.5,label:"7–8 Hours",short:"7–8h",bar:"hours-green",pill:"pill-green"},
+  "8plus":{hours:9,label:"8+ Hours",short:"8h+",bar:"hours-purple",pill:"pill-purple"}
 };
 
 function getDateString(date){
@@ -2108,10 +2110,17 @@ function bandFromHours(hours){
   const h=Number(hours);
   if(Number.isNaN(h)) return "";
   if(h<4) return "below4";
-  if(h<6) return "4to6";
+  if(h<5) return "4to5";
+  if(h<6) return "5to6";
   if(h<7) return "6to7";
   if(h<=8) return "7to8";
   return "8plus";
+}
+function resolveSleepBand(entry){
+  const key=entry?.durationBand||"";
+  if(sleepDurationBands[key]) return key;
+  if(key==="4to6") return Number(entry?.hours)>=5.5?"5to6":"4to5";
+  return bandFromHours(entry?.hours);
 }
 function notionPill(label, pillClass){
   return `<span class="notion-pill ${pillClass}">${label}</span>`;
@@ -2729,7 +2738,7 @@ function renderChart(id,data,dates,type){
     if(entry){
       const value=document.createElement("div");
       value.className="bar-value";
-      const bandKey=entry.durationBand||bandFromHours(entry.hours);
+      const bandKey=resolveSleepBand(entry);
       const band=sleepDurationBands[bandKey];
       const wakeScore=sleepWakeScore(entry.wakeTime);
       const qualityScore=entry.quality?(Number(entry.quality)/5)*100:0;
@@ -2841,26 +2850,20 @@ async function renderEngineDashboard(systemName){
   if(systemName==="Workout"){
     const gymYes=logged.filter(d=>data[d].gym==="yes");
     const cardioYes=logged.filter(d=>data[d].cardio==="yes");
-    const cardioMins=cardioYes.map(d=>Number(data[d].cardioTime||0)).filter(v=>v>0);
     renderEngineMetrics([
       {label:`GYM DAYS · ${dayCount} DAYS`, value:String(gymYes.length), small:`of ${logged.length} logged`},
-      {label:`CARDIO DAYS · ${dayCount} DAYS`, value:String(cardioYes.length), small:cardioMins.length?`avg ${avgOrDash(cardioMins,0)} min`:"minutes when done"},
+      {label:`CARDIO DAYS · ${dayCount} DAYS`, value:String(cardioYes.length), small:`of ${logged.length} logged`},
       {label:"DAYS LOGGED", value:String(logged.length), small:`of ${dayCount}`},
       {label:"LOGGING CONSISTENCY", value:consistency, small:rangeLabel.toLowerCase()}
     ]);
-    charts.appendChild(renderChartCard("Gym Attendance", renderBarChart("gymChart", dates, date=>{
-      const entry=data[date];
-      if(!entry||!entry.gym) return {height:"3px", barClass:"empty-bar"};
-      if(entry.gym==="yes") return {valueText:entry.gymTime||"Yes", height:"100%", barClass:"yes-bar"};
-      if(entry.gym==="off") return {valueText:"Off", height:"50%", barClass:"off-bar"};
+    const ynBar=(value)=>{
+      if(!value) return {height:"3px", barClass:"empty-bar"};
+      if(value==="yes") return {valueText:"Yes", height:"100%", barClass:"yes-bar"};
+      if(value==="off") return {valueText:"Off", height:"50%", barClass:"off-bar"};
       return {valueText:"No", height:"28%", barClass:"no-bar"};
-    })));
-    charts.appendChild(renderChartCard("Cardio Minutes", renderBarChart("cardioChart", dates, date=>{
-      const entry=data[date];
-      if(!entry||entry.cardio!=="yes") return {height:entry&&entry.cardio==="off"?"50%":(entry&&entry.cardio==="no"?"28%":"3px"), valueText:entry&&entry.cardio==="off"?"Off":(entry&&entry.cardio==="no"?"No":""), barClass:entry&&entry.cardio==="off"?"off-bar":(entry&&entry.cardio==="no"?"no-bar":"empty-bar")};
-      const mins=Number(entry.cardioTime||0);
-      return {valueText:mins===60?"1h":mins+"m", height:`${Math.max(18,(mins/60)*100)}%`, barClass:"blue-bar"};
-    })));
+    };
+    charts.appendChild(renderChartCard("Gym", renderBarChart("gymChart", dates, date=>ynBar(data[date]?.gym))));
+    charts.appendChild(renderChartCard("Cardio", renderBarChart("cardioChart", dates, date=>ynBar(data[date]?.cardio))));
     return;
   }
 
@@ -2868,25 +2871,18 @@ async function renderEngineDashboard(systemName){
     const morningYes=logged.filter(d=>data[d].morning==="yes");
     const nightYes=logged.filter(d=>data[d].night==="yes");
     renderEngineMetrics([
-      {label:`MORNING SESSIONS · ${dayCount} DAYS`, value:String(morningYes.length), small:morningYes.length?`avg ${avgOrDash(morningYes.map(d=>data[d].morningTime),0)} min`:"sessions"},
-      {label:`NIGHT SESSIONS · ${dayCount} DAYS`, value:String(nightYes.length), small:nightYes.length?`avg ${avgOrDash(nightYes.map(d=>data[d].nightTime),0)} min`:"sessions"},
+      {label:`MORNING SESSIONS · ${dayCount} DAYS`, value:String(morningYes.length), small:`of ${logged.length} logged`},
+      {label:`NIGHT SESSIONS · ${dayCount} DAYS`, value:String(nightYes.length), small:`of ${logged.length} logged`},
       {label:"DAYS LOGGED", value:String(logged.length), small:`of ${dayCount}`},
       {label:"LOGGING CONSISTENCY", value:consistency, small:rangeLabel.toLowerCase()}
     ]);
-    charts.appendChild(renderChartCard("Morning Meditation", renderBarChart("morningChart", dates, date=>{
-      const entry=data[date];
-      if(!entry||!entry.morning) return {height:"3px", barClass:"empty-bar"};
-      if(entry.morning!=="yes") return {valueText:"No", height:"28%", barClass:"no-bar"};
-      const mins=Number(entry.morningTime||0);
-      return {valueText:mins+"m", height:`${Math.max(18,(mins/20)*100)}%`, barClass:"purple-bar"};
-    })));
-    charts.appendChild(renderChartCard("Night Meditation", renderBarChart("nightChart", dates, date=>{
-      const entry=data[date];
-      if(!entry||!entry.night) return {height:"3px", barClass:"empty-bar"};
-      if(entry.night!=="yes") return {valueText:"No", height:"28%", barClass:"no-bar"};
-      const mins=Number(entry.nightTime||0);
-      return {valueText:mins+"m", height:`${Math.max(18,(mins/20)*100)}%`, barClass:"blue-bar"};
-    })));
+    const medBar=(value)=>{
+      if(!value) return {height:"3px", barClass:"empty-bar"};
+      if(value==="yes") return {valueText:"Yes", height:"100%", barClass:"yes-bar"};
+      return {valueText:"No", height:"28%", barClass:"no-bar"};
+    };
+    charts.appendChild(renderChartCard("Morning Meditation", renderBarChart("morningChart", dates, date=>medBar(data[date]?.morning))));
+    charts.appendChild(renderChartCard("Night Meditation", renderBarChart("nightChart", dates, date=>medBar(data[date]?.night))));
     return;
   }
 
