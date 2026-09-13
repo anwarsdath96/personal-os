@@ -1916,7 +1916,7 @@ function outcomePointHealth(name, raw, tone){
   if(Number.isNaN(n)) return null;
   const level=Number(normalizeOutcomeScore(n));
   if(!level) return null;
-  return clampScore(tone==="bad"?(6-level)*20:level*20);
+  return clampScore(level*20);
 }
 function groupAverageForDay(items, scores, tone){
   if(!scores) return null;
@@ -2010,8 +2010,7 @@ async function loadOutcomeHealthScores(days=overviewRangeDays){
       const n=Number(raw);
       if(Number.isNaN(n)) return;
       const level=Number(normalizeOutcomeScore(n));
-      const inverted=tone[name]==="bad";
-      total+=clampScore(inverted?(6-level)*20:level*20);
+      total+=clampScore(level*20);
       counted+=1;
     });
     return {name, health:counted?Math.round(total/counted):0, logged:counted};
