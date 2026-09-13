@@ -808,7 +808,7 @@ input:focus,select:focus{border-color:#687382}
 .view-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .view-btn.active{background:#2357b4;border-color:#2357b4;color:#fff}
 .outcome-line-wrap{
-  position:absolute;inset:0 132px 0 0;z-index:2;pointer-events:none;
+  position:absolute;inset:0 0 0 0;z-index:2;pointer-events:none;
 }
 .outcome-line-wrap svg{width:100%;height:100%;display:block;overflow:visible}
 .health-plot.line-mode .health-bars{display:none}
@@ -886,7 +886,7 @@ input:focus,select:focus{border-color:#687382}
 .health-band.critical{background:#3a1b22}
 .health-bars{
   position:absolute;
-  inset:28px 132px 46px 18px;
+  inset:28px 18px 46px 18px;
   display:flex;
   align-items:flex-end;
   justify-content:space-around;
@@ -926,7 +926,7 @@ input:focus,select:focus{border-color:#687382}
 .health-bar.critical{background:#e04545}
 .health-x{
   position:absolute;
-  left:18px;right:132px;bottom:0;
+  left:18px;right:18px;bottom:0;
   height:46px;
   display:flex;
   align-items:flex-start;
@@ -942,7 +942,7 @@ input:focus,select:focus{border-color:#687382}
   line-height:1.15;
   white-space:normal;
 }
-.band-label{text-align:right;line-height:1.1;pointer-events:none}
+.band-label{display:none}
 .band-label strong{display:block;font-size:11px;font-weight:650}
 .health-bar-gap,.health-x .gap{
   flex:0 0 12px;
@@ -1922,11 +1922,11 @@ function healthCardMarkup(barsId, labelsId, withViews=false){
         <div class="health-y"><span>100%</span><span>80%</span><span>60%</span><span>40%</span><span>20%</span><span>0%</span></div>
         <div class="health-plot${withViews&&outcomeChartView==="line"?" line-mode":""}" id="${withViews?"outcomePlot":""}">
           <div class="health-bands">
-            <div class="health-band excellent"><div class="band-label"><strong>Excellent</strong></div></div>
-            <div class="health-band good"><div class="band-label"><strong>Good</strong></div></div>
-            <div class="health-band okay"><div class="band-label"><strong>Okay</strong></div></div>
-            <div class="health-band attention"><div class="band-label"><strong>Needs Attention</strong></div></div>
-            <div class="health-band critical"><div class="band-label"><strong>Critical</strong></div></div>
+            <div class="health-band excellent"></div>
+            <div class="health-band good"></div>
+            <div class="health-band okay"></div>
+            <div class="health-band attention"></div>
+            <div class="health-band critical"></div>
           </div>
           <div class="health-bars" id="${barsId}"></div>
           ${withViews?`<div class="outcome-line-wrap"><svg id="outcomeLineSvg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg></div>`:""}
