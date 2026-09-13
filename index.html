@@ -790,6 +790,8 @@ input:focus,select:focus{border-color:#687382}
   font-size:15px;line-height:1.6;outline:none;
 }
 
+.prod-scope-toggle{display:flex;gap:8px;margin-bottom:12px}
+.prod-entry-empty{color:#8b93a0;font-size:13px;padding:18px 4px}
 .focus-toggle{display:flex;gap:8px}
 .focus-btn{
   border:1px solid #303640;background:#101217;color:#c5ccd6;
@@ -1311,7 +1313,7 @@ input:focus,select:focus{border-color:#687382}
           <div class="card entry-shell">
             <div class="entry-split">
               <div class="entry-pane">
-                <div class="card-title">System Entry</div>
+                <div class="card-title" id="systemEntryTitle">System Entry</div>
                 <div id="entryHubBody"></div>
               </div>
               <div class="entry-pane">
@@ -1356,9 +1358,15 @@ const personalGroups = [
   {title:"Systems", blocks:[["Morning","Night"],["Sleep","Workout","Meditation"],["Diet","Scrolling","Journaling"],["Reading","Calisthenics","Nofap"]]},
   {title:"Errands", blocks:[["Wardrobe","Laundry","Groceries","Room Cleaning"]]}
 ];
+const productivityGroups = [
+  {blocks:[["Day","Week"]]},
+  {blocks:[["Bi-week","Month"]]},
+  {blocks:[["Quarter","Bi-quarter"]]},
+  {blocks:[["Year"]]}
+];
 const layerItems = {
   1: personalGroups.flatMap(group=>group.blocks.flat()),
-  2: ["Day","Week","Bi-week","Month","Quarter","Bi-Quarter","Year"],
+  2: ["Day","Week","Bi-week","Month","Quarter","Bi-quarter","Year"],
   3: ["Money & Business","Health & Fitness","Dating & Game","Learning & Upskilling","Communication","Good Life"]
 };
 const configuredTrackers = ["Sleep","Workout","Meditation"];
@@ -1407,12 +1415,23 @@ const outcomeGroups = [
   {tone:"bad", items:["Fatigue","Mental Fog","Overwhelm","Anxiety","Depression"]},
   {tone:"focus", items:["Time Control","Life Order"]}
 ];
+const productivityOutcomeGroups = [
+  {tone:"good", items:["Productivity","Effectiveness","Contentment"]},
+  {tone:"bad", items:["Distractions","Frustration","Disappointment"]}
+];
+function currentOutcomeGroups(){
+  return currentLayer===2?productivityOutcomeGroups:outcomeGroups;
+}
+function currentOutcomeSystem(){
+  return currentLayer===2?"Productivity Outcomes":"Outcomes";
+}
 function blankOutcomes(){
   const scores={};
-  outcomeGroups.forEach(group=>group.items.forEach(name=>scores[name]=""));
+  currentOutcomeGroups().forEach(group=>group.items.forEach(name=>scores[name]=""));
   return scores;
 }
 let entryOutcomes = blankOutcomes();
+let productivityEntryView = "daily";
 let osMode = false;
 let authMode = "login";
 let currentUser = null;
@@ -1532,6 +1551,8 @@ async function getEntries(systemName, startDate=null, endDate=null){
 }
 
 function engineForSystem(systemName){
+  if(systemName==="Outcomes") return "Personal Engine";
+  if(systemName==="Productivity Outcomes") return "Productivity Engine";
   if(layerItems[1].includes(systemName)) return "Personal Engine";
   if(layerItems[2].includes(systemName)) return "Productivity Engine";
   if(layerItems[3].includes(systemName)) return "Domain Engine";
@@ -1623,6 +1644,23 @@ function renderSidebar(){
           line.className="divider";
           container.appendChild(line);
         }
+        block.forEach(name=>{
+          const index=offset++;
+          addSidebarItem(container,name,workspaceMode==="system"&&index===currentItem,()=>selectItem(index));
+        });
+      });
+    });
+    return;
+  }
+  if(currentLayer===2){
+    let offset=1;
+    productivityGroups.forEach((group,groupIndex)=>{
+      if(groupIndex){
+        const line=document.createElement("div");
+        line.className="divider";
+        container.appendChild(line);
+      }
+      group.blocks.forEach(block=>{
         block.forEach(name=>{
           const index=offset++;
           addSidebarItem(container,name,workspaceMode==="system"&&index===currentItem,()=>selectItem(index));
@@ -1871,7 +1909,7 @@ function healthCardMarkup(barsId, labelsId, withViews=false){
         <div>
           <div class="focus-toggle">
             <button class="focus-btn${overviewFocus==="system"?" active":""}" onclick="setOverviewFocus('system')">System</button>
-            ${currentLayer===1?`<button class="focus-btn${overviewFocus==="outcome"?" active":""}" onclick="setOverviewFocus('outcome')">Outcome</button>`:""}
+            ${currentLayer===1||currentLayer===2?`<button class="focus-btn${overviewFocus==="outcome"?" active":""}" onclick="setOverviewFocus('outcome')">Outcome</button>`:""}
           </div>
           ${views}
         </div>
@@ -1942,8 +1980,9 @@ function lineSegments(values){
 }
 async function renderOutcomeLineChart(){
   const dates=getDateRange(overviewRangeDays);
-  const data=await getEntries("Outcomes",dates[0],dates[dates.length-1]);
-  const good=outcomeGroups[0].items, bad=outcomeGroups[1].items, focus=outcomeGroups[2].items;
+  const data=await getEntries(currentOutcomeSystem(),dates[0],dates[dates.length-1]);
+  const groups=currentOutcomeGroups();
+  const good=groups[0].items, bad=groups[1].items, focus=(groups[2]&&groups[2].items)||[];
   const series={
     good:dates.map(d=>groupAverageForDay(good,outcomeScoresFromEntry(data[d]),"good")),
     bad:dates.map(d=>groupAverageForDay(bad,outcomeScoresFromEntry(data[d]),"bad")),
@@ -1999,10 +2038,10 @@ function paintHealthChart(barsId, labelsId, scores, blocks){
 }
 async function loadOutcomeHealthScores(days=overviewRangeDays){
   const dates=getDateRange(days);
-  const data=await getEntries("Outcomes",dates[0],dates[dates.length-1]);
+  const data=await getEntries(currentOutcomeSystem(),dates[0],dates[dates.length-1]);
   const tone={};
-  outcomeGroups.forEach(group=>group.items.forEach(name=>tone[name]=group.tone));
-  return outcomeGroups.flatMap(group=>group.items).map(name=>{
+  currentOutcomeGroups().forEach(group=>group.items.forEach(name=>tone[name]=group.tone));
+  return currentOutcomeGroups().flatMap(group=>group.items).map(name=>{
     let total=0, counted=0;
     dates.forEach(date=>{
       const raw=data[date]?.scores?.[name];
@@ -2017,7 +2056,7 @@ async function loadOutcomeHealthScores(days=overviewRangeDays){
   });
 }
 async function renderEngineOverview(){
-  const showOutcome=currentLayer===1 && overviewFocus==="outcome";
+  const showOutcome=(currentLayer===1||currentLayer===2) && overviewFocus==="outcome";
   document.getElementById("overviewPage").innerHTML=`<div class="health-stack">
     ${healthCardMarkup(showOutcome?"outcomeBars":"healthBars", showOutcome?"outcomeLabels":"healthLabels", showOutcome)}
   </div>`;
@@ -2025,7 +2064,7 @@ async function renderEngineOverview(){
     if(outcomeChartView==="line") await renderOutcomeLineChart();
     else{
       const outcomeScores=await loadOutcomeHealthScores(overviewRangeDays);
-      paintHealthChart("outcomeBars","outcomeLabels",outcomeScores,outcomeGroups.map(group=>group.items));
+      paintHealthChart("outcomeBars","outcomeLabels",outcomeScores,currentOutcomeGroups().map(group=>group.items));
     }
     return;
   }
@@ -2365,9 +2404,25 @@ function normalizeOutcomeScore(raw){
   if(n<=8) return "4";
   return "5";
 }
+function setProductivityEntryView(view){
+  productivityEntryView=view;
+  renderEntryHub();
+}
 function renderEntryHub(){
   const body=document.getElementById("entryHubBody");
   if(!body) return;
+  const title=document.getElementById("systemEntryTitle");
+  if(currentLayer===2){
+    if(title) title.innerHTML=`<div class="prod-scope-toggle">
+      <button class="focus-btn${productivityEntryView==="daily"?" active":""}" onclick="setProductivityEntryView('daily')">Daily</button>
+      <button class="focus-btn${productivityEntryView==="weekly"?" active":""}" onclick="setProductivityEntryView('weekly')">Weekly</button>
+      <button class="focus-btn${productivityEntryView==="monthly"?" active":""}" onclick="setProductivityEntryView('monthly')">Monthly</button>
+    </div>`;
+    const label=productivityEntryView[0].toUpperCase()+productivityEntryView.slice(1);
+    body.innerHTML=`<div class="prod-entry-empty">${label} system fields will go here.</div>`;
+    return;
+  }
+  if(title) title.textContent="System Entry";
   const yn=(sys,field,includeOff)=>{
     const val=field?entryHub[sys][field]:entryHub[sys].value;
     const set=field?`setHubField('${sys}','${field}'`:`setHubValue('${sys}'`;
@@ -2439,6 +2494,19 @@ function chooseHubSleepQuality(value){entryHub.Sleep.quality=String(value);close
 function chooseHubSleepBand(band){entryHub.Sleep.durationBand=band;closeNotionSelects();setEntrySavedState(false);renderEntryHub();}
 function chooseHubSleepWake(time){entryHub.Sleep.wakeTime=time;closeNotionSelects();setEntrySavedState(false);renderEntryHub();}
 async function loadEntryHub(){
+  if(currentLayer===2){
+    entryOutcomes=blankOutcomes();
+    const outcomeData=(await getEntries(currentOutcomeSystem(),selectedDate,selectedDate))[selectedDate];
+    if(outcomeData?.scores){
+      Object.keys(entryOutcomes).forEach(key=>{
+        if(outcomeData.scores[key]!=null && outcomeData.scores[key]!=="") entryOutcomes[key]=normalizeOutcomeScore(outcomeData.scores[key]);
+      });
+    }
+    renderEntryHub();
+    renderOutcomeHub();
+    setEntrySavedState(false);
+    return;
+  }
   entryHub=blankEntryHub();
   const [morning,night,sleep,workout,meditation,diet,scrolling,journaling,reading,calisthenics,nofap]=await Promise.all([
     getEntries("Morning",selectedDate,selectedDate),
@@ -2480,7 +2548,7 @@ async function loadEntryHub(){
     entryHub.Nofap.value=nofap[selectedDate].value||"";
     entryHub.Nofap.tier=nofap[selectedDate].tier||"";
   }
-  const outcomeData=(await getEntries("Outcomes",selectedDate,selectedDate))[selectedDate];
+  const outcomeData=(await getEntries(currentOutcomeSystem(),selectedDate,selectedDate))[selectedDate];
   entryOutcomes=blankOutcomes();
   if(outcomeData?.scores){
     Object.keys(entryOutcomes).forEach(key=>{
@@ -2495,7 +2563,7 @@ function renderOutcomeHub(){
   const body=document.getElementById("outcomeHubBody");
   if(!body) return;
   const levels=[["1","lvl-red"],["2","lvl-orange"],["3","lvl-blue"],["4","lvl-green"],["5","lvl-lime"]];
-  body.innerHTML=outcomeGroups.map(group=>`
+  body.innerHTML=currentOutcomeGroups().map(group=>`
     <div class="outcome-group ${group.tone}">
       ${group.items.map(name=>`
         <div class="outcome-row">
@@ -2514,6 +2582,19 @@ function setOutcomeScore(name, value){
 }
 async function saveEntryHub(){
   const writes=[];
+  if(currentLayer===2){
+    const outcomeScores={};
+    let hasOutcomes=false;
+    Object.keys(entryOutcomes).forEach(key=>{
+      if(entryOutcomes[key]!==""){outcomeScores[key]=Number(entryOutcomes[key]);hasOutcomes=true;}
+    });
+    if(!hasOutcomes){alert("Select at least one outcome before saving.");return;}
+    writes.push(saveSystemEntry(currentOutcomeSystem(),selectedDate,{scores:outcomeScores,scope:productivityEntryView}));
+    await Promise.all(writes);
+    await renderDateStrip("entryHubDateStrip");
+    setEntrySavedState(true);
+    return;
+  }
   if(entryHub.Morning.value) writes.push(saveSystemEntry("Morning",selectedDate,{value:entryHub.Morning.value}));
   if(entryHub.Night.value) writes.push(saveSystemEntry("Night",selectedDate,{value:entryHub.Night.value}));
   if(entryHub.Sleep.durationBand && entryHub.Sleep.quality){
@@ -2631,12 +2712,22 @@ async function renderDateStrip(targetId="dateStrip"){
   if(dates.length){
     const start=getDateString(dates[0]), end=getDateString(dates[dates.length-1]);
     if(workspaceMode==="entry"){
-      const names=personalGroups[0].blocks.flat();
-      const packs=await Promise.all(names.map(name=>getEntries(name,start,end)));
-      dates.forEach(date=>{
-        const key=getDateString(date);
-        logged[key]=names.every((name,i)=>isHubSystemComplete(name,(packs[i]||{})[key]));
-      });
+      if(currentLayer===2){
+        const rows=await getEntries(currentOutcomeSystem(),start,end);
+        const names=currentOutcomeGroups().flatMap(group=>group.items);
+        dates.forEach(date=>{
+          const key=getDateString(date);
+          const scores=rows[key]?.scores||{};
+          logged[key]=names.every(name=>scores[name]!=null && scores[name]!=="");
+        });
+      }else{
+        const names=personalGroups[0].blocks.flat();
+        const packs=await Promise.all(names.map(name=>getEntries(name,start,end)));
+        dates.forEach(date=>{
+          const key=getDateString(date);
+          logged[key]=names.every((name,i)=>isHubSystemComplete(name,(packs[i]||{})[key]));
+        });
+      }
     }else{
       const systemName=currentEntrySystem();
       if(systemName){
