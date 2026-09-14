@@ -349,7 +349,7 @@ input:focus,select:focus{border-color:#687382}
 }
 .bar{width:55%;min-height:3px;border-radius:5px 5px 0 0;background:#dfe3e8}
 .bar-value{font-size:11px;color:#aeb4bd;margin-bottom:5px}
-.bar-label{font-size:10px;color:#707782;margin-top:8px}
+.bar-label{font-size:10px;color:#d7dee6;margin-top:8px;border:1px solid #343b46;background:#15181e;border-radius:7px;padding:3px 6px}
 .quality-bar{background:#aeb4bd}
 .bar.excellent{background:#8af0a6}
 .bar.good{background:#1f7a48}
@@ -937,10 +937,20 @@ input:focus,select:focus{border-color:#687382}
 .health-x span{
   flex:1;
   text-align:center;
-  color:#c5ccd6;
+  color:#d7dee6;
   font-size:10px;
   line-height:1.15;
   white-space:normal;
+  border:1px solid #343b46;
+  background:#15181e;
+  border-radius:7px;
+  padding:4px 4px 5px;
+}
+.health-x span.gap{
+  flex:0 0 10px;
+  border:0;
+  background:transparent;
+  padding:0;
 }
 .band-label{display:none}
 .band-label strong{display:block;font-size:11px;font-weight:650}
@@ -972,6 +982,57 @@ input:focus,select:focus{border-color:#687382}
   .band-label{display:none}
 }
 
+
+.mobile-header,.mobile-nav,.mobile-home,.mobile-drawer{display:none}
+@media(max-width:700px){
+  body.mobile-ui .mobile-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 6px 16px;position:sticky;top:0;z-index:20;background:#0b0d11;
+  }
+  body.mobile-ui .mobile-brand{font-size:18px;font-weight:750;letter-spacing:.02em}
+  body.mobile-ui .mobile-menu-btn{
+    width:36px;height:32px;border:1px solid #3a424c;background:#171a20;color:#e8edf3;
+    border-radius:8px;font-size:16px;cursor:pointer;
+  }
+  body.mobile-ui .topbar,.mobile-ui .sidebar,.mobile-ui .workspace-head,.mobile-ui .top-right{display:none !important}
+  body.mobile-ui .app{padding:10px 12px 84px;max-width:none}
+  body.mobile-ui .layout{grid-template-columns:1fr}
+  body.mobile-ui .mobile-home{
+    display:block;border:1px solid #3d4652;border-radius:14px;padding:22px 18px 18px;min-height:62vh;
+  }
+  body.mobile-ui.mobile-tab-home .main > #systemPage > :not(.mobile-home){display:none !important}
+  body.mobile-ui.mobile-tab-home #osPage{display:none !important}
+  body.mobile-ui .mobile-kicker{text-align:center;letter-spacing:.18em;font-size:12px;color:#c5ccd6;margin-bottom:22px}
+  body.mobile-ui .mobile-today-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 4px;font-size:16px;
+  }
+  body.mobile-ui .mobile-today-name{color:#eef2f6}
+  body.mobile-ui .mobile-today-val{color:#d7dee6;font-variant-numeric:tabular-nums}
+  body.mobile-ui .mobile-rule{height:1px;background:#4a5360;margin:16px 0 20px}
+  body.mobile-ui .mobile-health-kicker{letter-spacing:.16em;font-size:12px;color:#c5ccd6;margin-bottom:16px}
+  body.mobile-ui .mobile-health-score{font-size:34px;font-weight:700;line-height:1}
+  body.mobile-ui .mobile-health-label{margin-top:8px;letter-spacing:.12em;font-size:13px;color:#cfd6de}
+  body.mobile-ui .mobile-nav{
+    display:flex;justify-content:space-around;align-items:center;
+    position:fixed;left:12px;right:12px;bottom:10px;
+    border:1px solid #3d4652;border-radius:12px;background:#12151b;
+    padding:10px 8px;z-index:30;
+  }
+  body.mobile-ui .mobile-nav button{
+    background:none;border:0;color:#c5ccd6;font-size:14px;cursor:pointer;padding:6px 10px;
+  }
+  body.mobile-ui .mobile-nav button.active{color:#fff;font-weight:700}
+  body.mobile-ui .mobile-drawer{
+    position:fixed;inset:0;background:rgba(8,10,13,.72);z-index:40;display:none;
+  }
+  body.mobile-ui .mobile-drawer.open{display:block}
+  body.mobile-ui .mobile-drawer-panel{
+    width:min(280px,82vw);height:100%;background:#12151b;border-right:1px solid #303640;
+    padding:18px 14px;overflow:auto;
+  }
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -994,6 +1055,12 @@ input:focus,select:focus{border-color:#687382}
 </div>
 
 <div class="app">
+
+<div class="mobile-header">
+  <div class="mobile-brand">Personal OS</div>
+  <button class="mobile-menu-btn" onclick="toggleMobileDrawer(true)">☰</button>
+</div>
+
 
   <div class="topbar">
     <button class="top-tab os-tab" onclick="selectOS()">
@@ -1032,6 +1099,16 @@ input:focus,select:focus{border-color:#687382}
       <div id="osPage" style="display:none"></div>
 
       <div id="systemPage">
+
+        <section class="mobile-home" id="mobileHomePage" style="display:none">
+          <div class="mobile-kicker">TODAY</div>
+          <div id="mobileTodayList"></div>
+          <div class="mobile-rule"></div>
+          <div class="mobile-health-kicker">SYSTEM HEALTH</div>
+          <div class="mobile-health-score" id="mobileHealthScore">—</div>
+          <div class="mobile-health-label" id="mobileHealthLabel"></div>
+        </section>
+
         <div class="workspace-head">
           <div>
             <div class="workspace-title" id="workspaceTitle">Sleep System</div>
@@ -1355,7 +1432,7 @@ const supabaseClient = (SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.inc
 const qualityNames = {1:"Worst",2:"Bad",3:"Okay",4:"Good",5:"Best"};
 const qualityPills = {1:"pill-worst",2:"pill-bad",3:"pill-okay",4:"pill-good",5:"pill-best"};
 const personalGroups = [
-  {title:"Systems", blocks:[["Morning","Night"],["Sleep","Workout","Meditation"],["Diet","Scrolling","Journaling"],["Reading","Calisthenics","Nofap"]]},
+  {title:"Systems", blocks:[["Morning","Night"],["Sleep","Workout","Meditation","Diet","Nofap"],["Scrolling","Journaling","Reading","Calisthenics"]]},
   {title:"Errands", blocks:[["Wardrobe","Laundry","Groceries","Room Cleaning"]]}
 ];
 const productivityGroups = [
@@ -1516,12 +1593,94 @@ async function logout(){
   showAuth();
 }
 
+
+let mobileTab="home";
+function isMobileUI(){return window.matchMedia("(max-width:700px)").matches;}
+function toggleMobileDrawer(open){
+  const el=document.getElementById("mobileDrawer");
+  if(!el) return;
+  if(open){renderMobileDrawer();el.classList.add("open");}
+  else el.classList.remove("open");
+}
+function renderMobileDrawer(){
+  const panel=document.getElementById("mobileDrawerPanel");
+  if(!panel) return;
+  const engines=[["OS Health",()=>{toggleMobileDrawer(false);selectOS();}],["Personal Engine",()=>{toggleMobileDrawer(false);selectLayer(1);setMobileTab("home");}],["Productivity Engine",()=>{toggleMobileDrawer(false);selectLayer(2);setMobileTab("home");}],["Domain Engine",()=>{toggleMobileDrawer(false);selectLayer(3);setMobileTab("home");}]];
+  panel.innerHTML=`<div class="sidebar-title">MENU</div>`+engines.map(([label,fn],i)=>`<button class="item" id="mEngine${i}">${label}</button>`).join("")+`<div class="divider"></div>`+`<button class="item" onclick="logout()">Log out</button>`;
+  engines.forEach(([,fn],i)=>document.getElementById("mEngine"+i).onclick=fn);
+}
+async function setMobileTab(tab){
+  mobileTab=tab;
+  document.body.classList.toggle("mobile-tab-home", tab==="home");
+  ["mobileNavEntry","mobileNavHome","mobileNavStats"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.toggle("active", id.toLowerCase().includes(tab));
+  });
+  if(tab==="home"){
+    workspaceMode="overview";
+    currentItem=0;
+    hideWorkspacePages();
+    const home=document.getElementById("mobileHomePage");
+    if(home) home.style.display="block";
+    document.getElementById("systemPage").style.display="block";
+    await renderMobileHome();
+    return;
+  }
+  const home=document.getElementById("mobileHomePage");
+  if(home) home.style.display="none";
+  if(tab==="entry"){selectEntry();return;}
+  workspaceMode="overview"; currentItem=0; currentPage="entry";
+  renderSidebar();
+  await renderWorkspace();
+  syncMobileUI();
+  if(isMobileUI()) await setMobileTab(mobileTab);
+}
+async function renderMobileHome(){
+  const list=document.getElementById("mobileTodayList");
+  const scoreEl=document.getElementById("mobileHealthScore");
+  const labelEl=document.getElementById("mobileHealthLabel");
+  if(!list||!currentUser) return;
+  const today=getDateString(new Date());
+  const names=currentLayer===2?layerItems[2]:personalGroups[0].blocks.flat();
+  const packs=await Promise.all(names.map(name=>getEntries(name,today,today)));
+  const rows=[];
+  const scores=[];
+  names.forEach((name,i)=>{
+    const entry=(packs[i]||{})[today];
+    if(name==="Sleep"){
+      const q=entry?.quality?Number(entry.quality):null;
+      rows.push(`<div class="mobile-today-row"><span class="mobile-today-name">${name}</span><span class="mobile-today-val">${q? (q*2)+"/10" : (entry?"✓":"—")}</span></div>`);
+    }else{
+      const done=currentLayer===1?isHubSystemComplete(name,entry):!!entry;
+      rows.push(`<div class="mobile-today-row"><span class="mobile-today-name">${name}</span><span class="mobile-today-val">${done?"✓":"—"}</span></div>`);
+    }
+    if(entry && !isOverviewOffDay(name,entry)){
+      const s=scoreSystemDay(name,entry);
+      if(s!=null) scores.push(s);
+    }
+  });
+  list.innerHTML=rows.join("");
+  const avg=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):0;
+  scoreEl.textContent=scores.length?String(avg):"—";
+  const band=healthBand(avg);
+  labelEl.textContent=scores.length?({excellent:"EXCELLENT",good:"GOOD",okay:"OKAY",attention:"NEEDS ATTENTION",critical:"CRITICAL"}[band]||""):"";
+}
+function syncMobileUI(){
+  const on=isMobileUI() && !!currentUser;
+  document.body.classList.toggle("mobile-ui", on);
+  document.body.classList.toggle("signed-in", !!currentUser);
+  if(on && mobileTab==="home") setMobileTab("home");
+}
+window.addEventListener("resize", syncMobileUI);
+
 async function onSignedIn(user){
   currentUser=user;
   hideAuth();
   document.getElementById("userEmail").textContent=user.email||"Signed in";
   renderSidebar();
   await renderWorkspace();
+  syncMobileUI();
+  if(isMobileUI()) await setMobileTab(mobileTab);
 }
 
 async function initializeApp(){
@@ -2074,7 +2233,7 @@ async function renderEngineOverview(){
 
 
 function hideWorkspacePages(){
-  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","overviewPage","entryHubPage","systemDefinitionPage"].forEach(id=>{
+  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","overviewPage","entryHubPage","systemDefinitionPage","mobileHomePage"].forEach(id=>{
     const el=document.getElementById(id); if(el) el.style.display="none";
   });
 }
@@ -2107,7 +2266,7 @@ async function renderWorkspace(){
   const isWorkout=systemName==="Workout";
   const isMeditation=systemName==="Meditation";
   const isSimpleTracker=currentLayer===1 && systemName && !configuredTrackers.includes(systemName);
-  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","systemDefinitionPage"].forEach(id=>document.getElementById(id).style.display="none");
+  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","systemDefinitionPage","mobileHomePage"].forEach(id=>document.getElementById(id).style.display="none");
   if(isSleep){
     document.getElementById("workspaceTitle").textContent="Sleep System";
     document.getElementById("workspaceSub").textContent="";
@@ -2372,6 +2531,8 @@ async function showPage(page){
   document.getElementById("analyticsTab").classList.toggle("active",page==="analytics");
   renderSidebar();
   await renderWorkspace();
+  syncMobileUI();
+  if(isMobileUI()) await setMobileTab(mobileTab);
 }
 function hubChoice(label, active, extraClass, onclick, disabled=false){
   return `<button type="button" class="choice mini${extraClass?(" "+extraClass):""}${active?" active":""}" ${disabled?"disabled":`onclick="${onclick}"`}>${label}</button>`;
@@ -2381,7 +2542,7 @@ function isHubSystemComplete(name, entry){
   if(name==="Sleep") return !!(entry.quality && (entry.durationBand||entry.hours));
   if(name==="Workout") return !!(entry.gym && entry.cardio);
   if(name==="Meditation") return !!(entry.morning && entry.night);
-  if(name==="Reading") return !!(entry.value && (entry.value!=="yes" || entry.duration));
+  if(name==="Reading") return !!entry.value;
   if(name==="Nofap") return !!(entry.value && (entry.value!=="no" || entry.tier));
   return !!entry.value;
 }
@@ -2462,18 +2623,15 @@ function renderEntryHub(){
       </div>
       <div class="hub-row">${hubLabel("Workout")}<div class="hub-controls"><span class="hub-label">Gym</span>${yn("Workout","gym",true)}<span class="hub-label">Cardio</span>${yn("Workout","cardio",true)}</div></div>
       <div class="hub-row">${hubLabel("Meditation")}<div class="hub-controls"><span class="hub-label">Morning</span>${yn("Meditation","morning",false)}<span class="hub-label">Night</span>${yn("Meditation","night",false)}</div></div>
+      <div class="hub-row">${hubLabel("Diet")}<div class="hub-controls">${yn("Diet","",true)}</div></div>
+      <div class="hub-row">${hubLabel("Nofap")}<div class="hub-controls">${yn("Nofap","",false)}<span class="hub-extra">${hubChoice("Beta",entryHub.Nofap.tier==="beta","tiny nofap-beta",`setHubNofapTier('beta')`,entryHub.Nofap.value!=="no")}${hubChoice("Alpha",entryHub.Nofap.tier==="alpha","tiny nofap-alpha",`setHubNofapTier('alpha')`,entryHub.Nofap.value!=="no")}</span></div></div>
     </div>
     <div class="divider"></div>
     <div class="hub-block">
-      <div class="hub-row">${hubLabel("Diet")}<div class="hub-controls">${yn("Diet","",true)}</div></div>
       <div class="hub-row">${hubLabel("Scrolling")}<div class="hub-controls">${yn("Scrolling","",true)}</div></div>
       <div class="hub-row">${hubLabel("Journaling")}<div class="hub-controls">${yn("Journaling","",true)}</div></div>
-    </div>
-    <div class="divider"></div>
-    <div class="hub-block">
-      <div class="hub-row">${hubLabel("Reading")}<div class="hub-controls">${yn("Reading","",true)}<span class="hub-extra">${[[30,"30 min","read-30"],[60,"1 hour","read-60"],[120,"2 hours","read-120"],[150,"2+ hours","read-150"]].map(([v,l,cls])=>hubChoice(l,entryHub.Reading.duration===v,"tiny "+cls,`setHubReadingDuration(${v})`,entryHub.Reading.value!=="yes")).join("")}</span></div></div>
+      <div class="hub-row">${hubLabel("Reading")}<div class="hub-controls">${yn("Reading","",true)}</div></div>
       <div class="hub-row">${hubLabel("Calisthenics")}<div class="hub-controls">${yn("Calisthenics","",true)}</div></div>
-      <div class="hub-row">${hubLabel("Nofap")}<div class="hub-controls">${yn("Nofap","",false)}<span class="hub-extra">${hubChoice("Beta",entryHub.Nofap.tier==="beta","tiny nofap-beta",`setHubNofapTier('beta')`,entryHub.Nofap.value!=="no")}${hubChoice("Alpha",entryHub.Nofap.tier==="alpha","tiny nofap-alpha",`setHubNofapTier('alpha')`,entryHub.Nofap.value!=="no")}</span></div></div>
     </div>`;
 }
 function setEntrySavedState(saved){
@@ -2623,8 +2781,7 @@ async function saveEntryHub(){
     if(entryHub[name].value) writes.push(saveSystemEntry(name,selectedDate,{value:entryHub[name].value}));
   });
   if(entryHub.Reading.value){
-    if(entryHub.Reading.value==="yes" && !entryHub.Reading.duration){alert("Please select a Reading time.");return;}
-    writes.push(saveSystemEntry("Reading",selectedDate,{value:entryHub.Reading.value,duration:entryHub.Reading.value==="yes"?entryHub.Reading.duration:null}));
+    writes.push(saveSystemEntry("Reading",selectedDate,{value:entryHub.Reading.value}));
   }
   if(entryHub.Nofap.value){
     if(entryHub.Nofap.value==="no" && !entryHub.Nofap.tier){alert("Please select Beta or Alpha for Nofap.");return;}
@@ -2723,9 +2880,14 @@ async function renderDateStrip(targetId="dateStrip"){
       }else{
         const names=personalGroups[0].blocks.flat();
         const packs=await Promise.all(names.map(name=>getEntries(name,start,end)));
+        const outcomeRows=await getEntries(currentOutcomeSystem(),start,end);
+        const outcomeNames=currentOutcomeGroups().flatMap(group=>group.items);
         dates.forEach(date=>{
           const key=getDateString(date);
-          logged[key]=names.every((name,i)=>isHubSystemComplete(name,(packs[i]||{})[key]));
+          const systemsDone=names.every((name,i)=>isHubSystemComplete(name,(packs[i]||{})[key]));
+          const scores=outcomeRows[key]?.scores||{};
+          const outcomesDone=outcomeNames.every(name=>scores[name]!=null && scores[name]!=="");
+          logged[key]=systemsDone && outcomesDone;
         });
       }
     }else{
@@ -2993,7 +3155,7 @@ async function renderEngineDashboard(systemName){
   charts.appendChild(renderChartCard(labels.chart, renderBarChart(systemName+"Chart", dates, date=>{
     const entry=data[date];
     if(!entry||!entry.value) return {height:"3px", barClass:"empty-bar"};
-    if(entry.value==="yes") return {valueText:entry.duration===30?"30m":entry.duration===60?"1h":entry.duration===120?"2h":entry.duration===150?"2h+":labels.success, height:"100%", barClass:"yes-bar"};
+    if(entry.value==="yes") return {valueText:labels.success, height:"100%", barClass:"yes-bar"};
     if(entry.value==="off") return {valueText:"Off", height:"50%", barClass:"off-bar"};
     return {valueText:entry.tier?entry.tier[0].toUpperCase()+entry.tier.slice(1):labels.fail, height:"28%", barClass:"no-bar"};
   })));
@@ -3004,5 +3166,15 @@ document.addEventListener("click",(event)=>{
 });
 initializeApp();
 </script>
+
+<nav class="mobile-nav" id="mobileNav">
+  <button id="mobileNavEntry" onclick="setMobileTab('entry')">Entry</button>
+  <button id="mobileNavHome" class="active" onclick="setMobileTab('home')">Home</button>
+  <button id="mobileNavStats" onclick="setMobileTab('stats')">Stats</button>
+</nav>
+<div class="mobile-drawer" id="mobileDrawer" onclick="if(event.target.id==='mobileDrawer')toggleMobileDrawer(false)">
+  <div class="mobile-drawer-panel" id="mobileDrawerPanel"></div>
+</div>
+
 </body>
 </html>
