@@ -179,6 +179,11 @@ body{
   align-items:flex-start;
   margin:4px 4px 18px;
 }
+.workspace-head-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+#outcomeRangeToggle{display:none}
+#systemPage.outcome-fit #outcomeRangeToggle{display:flex}
+#systemPage.outcome-fit #currentDateLabel{display:none}
+#engineDashboardPage.outcome-mode .dash-toolbar{display:none}
 .workspace-title{font-size:27px;font-weight:700}
 .workspace-sub{font-size:13px;color:#858c96;margin-top:4px}
 .date-strip, .entry-dates{
@@ -319,6 +324,77 @@ input:focus,select:focus{border-color:#687382}
 .status-label{font-size:12px;color:#858c96;margin-bottom:7px}
 .status-value{font-size:21px;font-weight:600}
 .note{color:#646b75;font-size:12px;margin-top:15px}
+#engineDashboardPage.outcome-mode{
+  display:flex;
+  flex-direction:column;
+  height:calc(100vh - 248px);
+  max-height:calc(100vh - 248px);
+  min-height:0;
+  overflow:hidden;
+}
+#engineDashboardPage.outcome-mode .dash-toolbar{margin-bottom:8px;flex:0 0 auto}
+#engineDashboardPage.outcome-mode .metrics{
+  gap:6px;
+  margin-bottom:6px;
+  flex:0 0 auto;
+}
+#engineDashboardPage.outcome-mode .metric{padding:6px 10px}
+#engineDashboardPage.outcome-mode .metric-label{font-size:9px;margin-bottom:2px}
+#engineDashboardPage.outcome-mode .metric-value{font-size:16px}
+#engineDashboardPage.outcome-mode .metric-small{font-size:10px;margin-top:1px}
+#engineDashboardPage.outcome-mode #engineDashCharts{
+  flex:1;
+  min-height:0;
+  display:flex;
+}
+#systemPage.outcome-fit .workspace-head{margin:0 4px 6px}
+#systemPage.outcome-fit .workspace-title{font-size:22px}
+.outcome-dash-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:repeat(5,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:0;
+  width:100%;
+  min-height:0;
+}
+.outcome-dash-grid .chart-card{
+  margin-bottom:0;
+  padding:8px 10px 6px;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.outcome-dash-grid .chart-card.tone-good{background:#142018;border-color:#1d3326}
+.outcome-dash-grid .chart-card.tone-bad{background:#201416;border-color:#332022}
+.outcome-card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:8px;
+  margin-bottom:4px;
+  flex:0 0 auto;
+}
+.outcome-card-name{font-size:13px;font-weight:700;line-height:1.15}
+.outcome-card-sub{font-size:10px;color:#8b939c;margin-top:1px;font-weight:500}
+.outcome-card-score{font-size:16px;font-weight:750;white-space:nowrap;padding-top:0}
+.outcome-card-score span{font-size:11px;color:#8b939c;font-weight:550}
+.outcome-dash-grid .chart{flex:1;height:58px;min-height:52px;max-height:62px;gap:4px}
+.outcome-dash-grid .bar{width:58%;border-radius:4px 4px 0 0}
+.outcome-dash-grid .bar-value{font-size:9px;margin-bottom:2px}
+.outcome-dash-grid .bar-label{
+  font-size:9px;margin-top:5px;color:#9aa3ad;
+  background:#0f1218;border:1px solid #2a313b;
+  border-radius:8px;padding:1px 5px;
+}
+.bar.out-bar-1{background:#e04545}
+.bar.out-bar-2{background:#f08a1a}
+.bar.out-bar-3{background:#4d8dff}
+.bar.out-bar-4{background:#2db866}
+.bar.out-bar-5{background:#8af0a6}
+@media(max-width:560px){
+  .outcome-dash-grid{grid-template-columns:1fr}
+}
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
 .metric{padding:14px 16px}
 .metric-label{color:#858c96;font-size:11px;margin-bottom:7px}
@@ -807,6 +883,8 @@ input:focus,select:focus{border-color:#687382}
 }
 .view-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .view-btn.active{background:#2357b4;border-color:#2357b4;color:#fff}
+.view-btn.outcome-progress-btn{margin-left:2px}
+.view-btn.outcome-progress-btn svg{stroke-width:1.9}
 .outcome-line-wrap{
   position:absolute;inset:0 0 0 0;z-index:2;pointer-events:none;
 }
@@ -1114,7 +1192,13 @@ input:focus,select:focus{border-color:#687382}
             <div class="workspace-title" id="workspaceTitle">Sleep System</div>
             <div class="workspace-sub" id="workspaceSub"></div>
           </div>
-          <div class="current-date" id="currentDateLabel"></div>
+          <div class="workspace-head-right">
+            <div class="current-date" id="currentDateLabel"></div>
+            <div class="range-toggle" id="outcomeRangeToggle">
+              <button class="range-btn dash-range-7 active" onclick="setDashRange(7)">Last 7 days</button>
+              <button class="range-btn dash-range-30" onclick="setDashRange(30)">Last 30 days</button>
+            </div>
+          </div>
         </div>
 
         <section id="todayPage">
@@ -1360,7 +1444,7 @@ input:focus,select:focus{border-color:#687382}
 
         <section id="engineDashboardPage" style="display:none">
           <div class="dash-toolbar">
-            <button class="def-btn" onclick="openSystemDefinition()">System Definition</button>
+            <button class="def-btn" id="engineDefBtn" onclick="openSystemDefinition()">System Definition</button>
             <div class="range-toggle">
               <button class="range-btn dash-range-7 active" onclick="setDashRange(7)">Last 7 days</button>
               <button class="range-btn dash-range-30" onclick="setDashRange(30)">Last 30 days</button>
@@ -1799,7 +1883,9 @@ function sidebarIcon(name){
     Wardrobe:'<path d="M4 9h16M12 9V5M8 5h8"/><path d="M7 9v11M17 9v11"/>',
     Laundry:'<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M7 6h2"/>',
     Groceries:'<path d="M5 7h15l-1.5 9H8L5 7z"/><path d="M8 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM17 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM5 7 4 4"/>',
-    "Room Cleaning":'<path d="M6 21 12 4l2 5M12 4c3 2 6 8 7 17"/>'
+    "Room Cleaning":'<path d="M6 21 12 4l2 5M12 4c3 2 6 8 7 17"/>',
+    Outcome:'<circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/>',
+    Outcomes:'<circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/>'
   };
   return `<span class="item-icon"><svg viewBox="0 0 24 24">${paths[name]||'<circle cx="12" cy="12" r="3"/>'}</svg></span>`;
 }
@@ -1870,6 +1956,14 @@ function selectEntry(){
   currentPage="entry";
   currentItem=0;
   document.getElementById("dashboardTab").classList.remove("active");
+  document.getElementById("analyticsTab").classList.remove("active");
+  renderSidebar(); renderWorkspace();
+}
+function selectOutcome(){
+  workspaceMode="outcomes";
+  currentPage="dashboard";
+  currentItem=0;
+  document.getElementById("dashboardTab").classList.add("active");
   document.getElementById("analyticsTab").classList.remove("active");
   renderSidebar(); renderWorkspace();
 }
@@ -2092,6 +2186,9 @@ function healthCardMarkup(barsId, labelsId, withViews=false){
           <button class="view-btn${outcomeChartView==="line"?" active":""}" onclick="setOutcomeChartView('line')" title="Line graph">
             <svg viewBox="0 0 24 24"><path d="M4 16l5-5 4 3 7-8"/><path d="M4 20h16"/></svg>
           </button>
+          <button class="view-btn outcome-progress-btn" onclick="selectOutcome()" title="Outcome progress">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 8 8"/><path d="M12 8v4l3 2"/></svg>
+          </button>
         </div>`:"";
   return `<div class="health-card">
       <div class="health-card-head">
@@ -2269,12 +2366,16 @@ function hideWorkspacePages(){
 }
 async function renderWorkspace(){
   if(osMode || !currentUser) return;
+  const systemPage=document.getElementById("systemPage");
+  if(systemPage) systemPage.classList.toggle("outcome-fit", workspaceMode==="outcomes");
+  const enginePage=document.getElementById("engineDashboardPage");
+  if(enginePage && workspaceMode!=="outcomes") enginePage.classList.remove("outcome-mode");
   document.getElementById("osPage").style.display="none";
   document.getElementById("systemPage").style.display="block";
   const systemName=currentLayer===1&&currentItem>=1?layerItems[1][currentItem-1]:null;
   const isSleep=systemName==="Sleep";
   hideWorkspacePages();
-  if(workspaceMode==="overview" || (workspaceMode!=="entry" && currentItem===0 && workspaceMode!=="system")){
+  if(workspaceMode==="overview" || (workspaceMode!=="entry" && workspaceMode!=="outcomes" && currentItem===0 && workspaceMode!=="system")){
     document.getElementById("overviewPage").style.display="block";
     document.getElementById("workspaceTitle").textContent=overviewConfig(currentLayer).title;
     document.getElementById("workspaceSub").textContent="";
@@ -2287,6 +2388,13 @@ async function renderWorkspace(){
     document.getElementById("workspaceSub").textContent="";
     await renderDateStrip("entryHubDateStrip");
     await loadEntryHub();
+    return;
+  }
+  if(workspaceMode==="outcomes"){
+    document.getElementById("engineDashboardPage").style.display="block";
+    document.getElementById("workspaceTitle").textContent="Outcome Dashboard";
+    document.getElementById("workspaceSub").textContent="";
+    await renderOutcomeDashboard();
     return;
   }
   if(currentPage==="definition"){
@@ -2987,6 +3095,7 @@ async function setSleepDashRange(days){return setDashRange(days);}
 async function setDashRange(days){
   dashRangeDays=days;
   updateDashRangeButtons();
+  if(workspaceMode==="outcomes"){await renderOutcomeDashboard();return;}
   const name=currentEntrySystem();
   if(name==="Sleep") await renderDashboard();
   else if(name) await renderEngineDashboard(name);
@@ -3129,6 +3238,103 @@ function renderBarChart(containerId, dates, getBar){
   });
   return chart;
 }
+function outcomeLevelFromRaw(raw){
+  const n=Number(normalizeOutcomeScore(raw));
+  return n||null;
+}
+function outcomeBarSpec(level){
+  if(!level) return {height:"3px", barClass:"empty-bar"};
+  const heights={1:"10px",2:"18px",3:"28px",4:"38px",5:"48px"};
+  return {valueText:String(level), height:heights[level]||"22px", barClass:"out-bar-"+level};
+}
+function outcomeGroupTitle(group){
+  if(group.tone==="good") return currentLayer===2?"High Output":"High State";
+  if(group.tone==="bad") return currentLayer===2?"Friction":"Strain";
+  return "Focus";
+}
+async function renderOutcomeDashboard(){
+  const defBtn=document.getElementById("engineDefBtn");
+  if(defBtn) defBtn.style.display="none";
+  const page=document.getElementById("engineDashboardPage");
+  if(page) page.classList.add("outcome-mode");
+  const systemPage=document.getElementById("systemPage");
+  if(systemPage) systemPage.classList.add("outcome-fit");
+  const dayCount=dashRangeDays;
+  const dates=getDateRange(dayCount);
+  const rows=await getEntries(currentOutcomeSystem(),dates[0],dates[dates.length-1]);
+  const groups=currentOutcomeGroups();
+  const allNames=groups.flatMap(group=>group.items);
+  const logged=dates.filter(date=>{
+    const scores=outcomeScoresFromRow(rows[date]);
+    return allNames.some(name=>scores[name]!=null && scores[name]!=="");
+  });
+  const complete=dates.filter(date=>isOutcomesComplete(rows[date]));
+  const values=[];
+  logged.forEach(date=>{
+    const scores=outcomeScoresFromRow(rows[date]);
+    allNames.forEach(name=>{
+      const level=outcomeLevelFromRaw(scores[name]);
+      if(level) values.push(level);
+    });
+  });
+  const avg=values.length?(values.reduce((a,b)=>a+b,0)/values.length):null;
+  const groupAvg=group=>{
+    const vals=[];
+    logged.forEach(date=>{
+      const scores=outcomeScoresFromRow(rows[date]);
+      group.items.forEach(name=>{
+        const level=outcomeLevelFromRaw(scores[name]);
+        if(level) vals.push(level);
+      });
+    });
+    return vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length):null;
+  };
+  const high=groups[0]?groupAvg(groups[0]):null;
+  const low=groups[1]?groupAvg(groups[1]):null;
+  const consistency=Math.round(logged.length/dates.length*100)+"%";
+  const rangeLabel=dayCount===30?"Last 30 days":"Last 7 days";
+  renderEngineMetrics([
+    {label:`AVG SCORE · ${dayCount} DAYS`, value:avg==null?"—":avg.toFixed(1), small:"out of 5"},
+    {label:`${(groups[0]?outcomeGroupTitle(groups[0]):"HIGH").toUpperCase()} · ${dayCount} DAYS`, value:high==null?"—":high.toFixed(1), small:"out of 5"},
+    {label:`${(groups[1]?outcomeGroupTitle(groups[1]):"LOW").toUpperCase()} · ${dayCount} DAYS`, value:low==null?"—":low.toFixed(1), small:"out of 5"},
+    {label:"DAYS LOGGED", value:String(logged.length), small:consistency+" · "+rangeLabel.toLowerCase()}
+  ]);
+  const charts=document.getElementById("engineDashCharts");
+  charts.innerHTML="";
+  updateDashRangeButtons();
+  if(dayCount!==7) return;
+  const goodItems=(groups.find(group=>group.tone==="good")||{items:[]}).items;
+  const badItems=(groups.find(group=>group.tone==="bad")||{items:[]}).items;
+  const grid=document.createElement("div");
+  grid.className="outcome-dash-grid";
+  const addOutcomeCard=(name, tone)=>{
+    if(!name){
+      const spacer=document.createElement("div");
+      grid.appendChild(spacer);
+      return;
+    }
+    const levels=dates.map(date=>outcomeLevelFromRaw(outcomeScoresFromRow(rows[date])[name])).filter(Boolean);
+    const itemAvg=levels.length?(levels.reduce((a,b)=>a+b,0)/levels.length):null;
+    const chart=renderBarChart("outcomeItem-"+name.replace(/\s+/g,"-"), dates, date=>{
+      const scores=outcomeScoresFromRow(rows[date]);
+      return outcomeBarSpec(outcomeLevelFromRaw(scores[name]));
+    });
+    const card=document.createElement("div");
+    card.className="chart-card tone-"+tone;
+    card.innerHTML=`<div class="outcome-card-head">
+      <div class="outcome-card-name">${name}</div>
+    </div>`;
+    card.appendChild(chart);
+    grid.appendChild(card);
+  };
+  const pairCount=Math.max(goodItems.length, badItems.length);
+  for(let i=0;i<pairCount;i++){
+    addOutcomeCard(goodItems[i], "good");
+    addOutcomeCard(badItems[i], "bad");
+  }
+  charts.appendChild(grid);
+}
+
 function renderChartCard(title, chartEl){
   const card=document.createElement("div");
   card.className="chart-card";
@@ -3141,6 +3347,12 @@ function renderChartCard(title, chartEl){
 }
 
 async function renderEngineDashboard(systemName){
+  const defBtn=document.getElementById("engineDefBtn");
+  if(defBtn) defBtn.style.display="";
+  const page=document.getElementById("engineDashboardPage");
+  if(page) page.classList.remove("outcome-mode");
+  const systemPage=document.getElementById("systemPage");
+  if(systemPage) systemPage.classList.remove("outcome-fit");
   const dayCount=dashRangeDays;
   const dates=getDateRange(dayCount);
   const data=await getEntries(systemName,dates[0],dates[dates.length-1]);
