@@ -1379,7 +1379,10 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 .outcome-dash-grid{gap:7px}.outcome-dash-grid .chart-card{padding:8px 10px 6px}.outcome-dash-grid .chart-card.tone-good{background:linear-gradient(145deg,#10251b,#0b1813);border-color:rgba(74,153,110,.20)}.outcome-dash-grid .chart-card.tone-bad{background:linear-gradient(145deg,#251316,#170d0f);border-color:rgba(178,73,87,.20)}.outcome-card-name{font-size:12px}.outcome-card-sub{font-size:9px;color:#68798a}.outcome-card-score{font-size:15px}.outcome-card-score span{font-size:10px}.outcome-dash-grid .chart{height:58px}.outcome-dash-grid .bar{width:58%}.outcome-dash-grid .bar-label{font-size:8px;background:#0a1118;border-color:var(--line)}
 
 /* Definition / placeholders */
-.placeholder{padding:36px;text-align:center;color:#718093}.placeholder strong{display:block;color:#eef4f9;font-size:17px;margin-bottom:7px}
+.placeholder{padding:24px 28px 36px;text-align:center;color:#718093}
+.placeholder .dash-toolbar{text-align:left}
+.placeholder strong{display:block;color:#eef4f9;font-size:17px;margin-bottom:7px}
+.placeholder #placeholderBody{max-width:420px;margin:0 auto;line-height:1.5}
 #systemDefinitionPage{min-height:calc(100vh - 210px);display:flex}
 #systemDefinitionPage .card{flex:1;min-height:620px;padding:19px 21px 15px}
 .definition-note{width:100%;flex:1;min-height:520px;resize:vertical;padding:15px 17px;border-radius:10px;border:1px solid var(--line);background:#080e14;color:#edf3f8;font-size:14px;line-height:1.65;outline:none}
@@ -1755,8 +1758,11 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
         </section>
 
         <div id="placeholderPage" class="placeholder" style="display:none">
+          <div class="dash-toolbar" style="justify-content:flex-start;margin-bottom:18px">
+            <button class="def-btn" id="placeholderDefBtn" onclick="openSystemDefinition()">System Definition</button>
+          </div>
           <strong id="placeholderTitle">System</strong>
-          This system workspace is ready to be configured.
+          <div id="placeholderBody">This system workspace is ready to be configured. Open System Definition to describe what this system is.</div>
         </div>
         <section id="systemDefinitionPage" style="display:none">
           <div class="card">
@@ -2672,8 +2678,8 @@ async function renderWorkspace(){
   if(enginePage && workspaceMode!=="outcomes") enginePage.classList.remove("outcome-mode");
   document.getElementById("osPage").style.display="none";
   document.getElementById("systemPage").style.display="block";
-  const systemName=currentLayer===1&&currentItem>=1?layerItems[1][currentItem-1]:null;
-  const isSleep=systemName==="Sleep";
+  const systemName=currentItem>=1?(layerItems[currentLayer]||[])[currentItem-1]||null:null;
+  const isSleep=currentLayer===1 && systemName==="Sleep";
   hideWorkspacePages();
   if(workspaceMode==="overview" || (workspaceMode!=="entry" && workspaceMode!=="outcomes" && currentItem===0 && workspaceMode!=="system")){
     document.getElementById("overviewPage").style.display="block";
@@ -2698,11 +2704,11 @@ async function renderWorkspace(){
     return;
   }
   if(currentPage==="definition"){
-    await openSystemDefinition(systemName||definitionSystem);
+    await openSystemDefinition(systemName||definitionSystem||currentEntrySystem());
     return;
   }
-  const isWorkout=systemName==="Workout";
-  const isMeditation=systemName==="Meditation";
+  const isWorkout=currentLayer===1 && systemName==="Workout";
+  const isMeditation=currentLayer===1 && systemName==="Meditation";
   const isSimpleTracker=currentLayer===1 && systemName && !configuredTrackers.includes(systemName);
   ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","systemDefinitionPage","mobileHomePage"].forEach(id=>document.getElementById(id).style.display="none");
   if(isSleep){
@@ -2734,10 +2740,21 @@ async function renderWorkspace(){
       await renderEngineDashboard(systemName);
     }
   }else{
+    // Productivity Engine + Domain Engine systems (and any unconfigured systems):
+    // show workspace with System Definition access.
+    const name=systemName||(layerItems[currentLayer]||[])[currentItem-1]||"System";
     document.getElementById("placeholderPage").style.display="block";
-    document.getElementById("placeholderTitle").textContent=layerItems[currentLayer][currentItem-1];
-    document.getElementById("workspaceTitle").textContent=layerItems[currentLayer][currentItem-1];
-    document.getElementById("workspaceSub").textContent="System workspace — not configured yet.";
+    document.getElementById("placeholderTitle").textContent=name;
+    document.getElementById("workspaceTitle").textContent=name;
+    document.getElementById("workspaceSub").textContent="";
+    const body=document.getElementById("placeholderBody");
+    if(body){
+      body.textContent=currentLayer===2
+        ? "Define this productivity system, then use Entry to log outcomes."
+        : currentLayer===3
+          ? "Define this domain system. Tracking can be configured later."
+          : "This system workspace is ready to be configured. Open System Definition to describe what this system is.";
+    }
   }
 }
 
