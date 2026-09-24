@@ -888,7 +888,11 @@ input:focus,select:focus{border-color:#687382}
 .outcome-line-wrap{
   position:absolute;inset:0 0 0 0;z-index:2;pointer-events:none;
 }
-.outcome-line-wrap svg{width:100%;height:100%;display:block;overflow:visible}
+.outcome-line-wrap svg{width:100%;height:100%;display:block;overflow:visible;shape-rendering:geometricPrecision}
+.outcome-line-wrap .neon-glow{opacity:.18}
+.outcome-line-wrap .neon-core{opacity:1}
+.outcome-line-wrap .neon-dot-glow{opacity:.16}
+.outcome-line-wrap .neon-dot{filter:drop-shadow(0 0 1.5px currentColor)}
 .health-plot.line-mode .health-bars{display:none}
 .health-plot:not(.line-mode) .outcome-line-wrap{display:none}
 .health-card{
@@ -2583,18 +2587,31 @@ async function renderOutcomeLineChart(){
   const svg=document.getElementById("outcomeLineSvg");
   const labels=document.getElementById("outcomeLabels");
   if(!svg) return;
+  const palette={good:"#55e3a1",bad:"#f0707e",focus:"#9b8cff"};
   const dots=dates.map((date,i)=>{
     const x=dates.length===1?50:(i/(dates.length-1))*100;
-    return [["good","#4fd18a"],["bad","#ef6973"],["focus","#b39be8"]].map(([key,color])=>{
+    return Object.entries(palette).map(([key,color])=>{
       const v=series[key][i];
       if(v==null) return "";
-      return `<circle cx="${x.toFixed(2)}" cy="${(100-v).toFixed(2)}" r="1.1" fill="${color}"></circle>`;
+      const y=(100-v).toFixed(2);
+      return `<circle class="neon-dot-glow" cx="${x.toFixed(2)}" cy="${y}" r="1.05" fill="${color}"></circle>
+              <circle class="neon-dot" cx="${x.toFixed(2)}" cy="${y}" r="0.62" fill="${color}" color="${color}"></circle>
+              <circle class="neon-dot-highlight" cx="${x.toFixed(2)}" cy="${y}" r="0.16" fill="#ffffff" opacity=".72"></circle>`;
     }).join("");
   }).join("");
+  const seriesMarkup=Object.entries(palette).map(([key,color])=>{
+    const d=lineSegments(series[key]);
+    if(!d) return "";
+    return `<path class="neon-glow" d="${d}" fill="none" stroke="${color}" stroke-width="2.8" stroke-linecap="butt" stroke-linejoin="miter" vector-effect="non-scaling-stroke" filter="url(#neonBlur)"></path>
+            <path class="neon-core" d="${d}" fill="none" stroke="${color}" stroke-width="1.15" stroke-linecap="butt" stroke-linejoin="miter" vector-effect="non-scaling-stroke"></path>`;
+  }).join("");
   svg.innerHTML=`
-    <path d="${lineSegments(series.good)}" fill="none" stroke="#4fd18a" stroke-width="2" vector-effect="non-scaling-stroke"></path>
-    <path d="${lineSegments(series.bad)}" fill="none" stroke="#ef6973" stroke-width="2" vector-effect="non-scaling-stroke"></path>
-    <path d="${lineSegments(series.focus)}" fill="none" stroke="#b39be8" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+    <defs>
+      <filter id="neonBlur" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="0.9"></feGaussianBlur>
+      </filter>
+    </defs>
+    ${seriesMarkup}
     ${dots}`;
   if(labels){
     labels.innerHTML=dates.map(date=>{
