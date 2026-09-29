@@ -761,7 +761,7 @@ input:focus,select:focus{border-color:#687382}
 }
 .placeholder strong{display:block;color:#f1f3f5;font-size:18px;margin-bottom:8px}
 @media(max-width:1000px){
-  .topbar{grid-template-columns:190px 1fr 1fr 1fr}
+  .topbar{grid-template-columns:190px repeat(2,minmax(150px,1fr))}
   .top-right{grid-column:1/-1;justify-content:flex-end}
 }
 @media(max-width:700px){
@@ -1168,7 +1168,7 @@ button:active{transform:translateY(1px)}
 /* Top navigation */
 .topbar{
   display:grid;
-  grid-template-columns:210px repeat(3,minmax(180px,1fr)) auto;
+  grid-template-columns:210px repeat(4,minmax(155px,1fr)) auto;
   gap:8px;align-items:stretch;margin-bottom:12px;
 }
 .top-tab{
@@ -1402,7 +1402,7 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 
 /* Mobile */
 @media(max-width:1000px){
-  .topbar{grid-template-columns:190px 1fr 1fr 1fr}.top-right{grid-column:1/-1;justify-content:flex-end}
+  .topbar{grid-template-columns:190px repeat(2,minmax(150px,1fr))}.top-right{grid-column:1/-1;justify-content:flex-end}
 }
 @media(max-width:700px){
   .app{padding:10px 12px 84px;max-width:none}
@@ -1462,6 +1462,10 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 
     <button class="top-tab" id="layer3Tab" onclick="selectLayer(3)">
       <div class="top-title">Domain Engine</div>
+    </button>
+
+    <button class="top-tab" id="layer4Tab" onclick="selectLayer(4)">
+      <div class="top-title">Life Engine</div>
     </button>
 
     <div class="top-right">
@@ -1838,7 +1842,8 @@ const productivityGroups = [
 const layerItems = {
   1: personalGroups.flatMap(group=>group.blocks.flat()),
   2: ["Day","Week","Bi-week","Month","Quarter","Bi-quarter","Year"],
-  3: ["Money & Business","Health & Fitness","Dating & Game","Learning & Upskilling","Communication","Good Life"]
+  3: ["Money","Fitness","Game","Upskilling","Writing","Speaking"],
+  4: []
 };
 const configuredTrackers = ["Sleep","Workout","Meditation"];
 function simpleTrackerQuestion(name){
@@ -2018,7 +2023,7 @@ function toggleMobileDrawer(open){
 function renderMobileDrawer(){
   const panel=document.getElementById("mobileDrawerPanel");
   if(!panel) return;
-  const engines=[["OS Health",()=>{toggleMobileDrawer(false);selectOS();}],["Personal Engine",()=>{toggleMobileDrawer(false);selectLayer(1);setMobileTab("home");}],["Productivity Engine",()=>{toggleMobileDrawer(false);selectLayer(2);setMobileTab("home");}],["Domain Engine",()=>{toggleMobileDrawer(false);selectLayer(3);setMobileTab("home");}]];
+  const engines=[["OS Health",()=>{toggleMobileDrawer(false);selectOS();}],["Personal Engine",()=>{toggleMobileDrawer(false);selectLayer(1);setMobileTab("home");}],["Productivity Engine",()=>{toggleMobileDrawer(false);selectLayer(2);setMobileTab("home");}],["Domain Engine",()=>{toggleMobileDrawer(false);selectLayer(3);setMobileTab("home");}],["Life Engine",()=>{toggleMobileDrawer(false);selectLayer(4);setMobileTab("home");}]];
   panel.innerHTML=`<div class="sidebar-title">MENU</div>`+engines.map(([label,fn],i)=>`<button class="item" id="mEngine${i}">${label}</button>`).join("")+`<div class="divider"></div>`+`<button class="item" onclick="logout()">Log out</button>`;
   engines.forEach(([,fn],i)=>document.getElementById("mEngine"+i).onclick=fn);
 }
@@ -2050,6 +2055,14 @@ async function setMobileTab(tab){
 }
 async function renderMobileHome(){
   const list=document.getElementById("mobileTodayList");
+  if(currentLayer===4){
+    const scoreEl=document.getElementById("mobileHealthScore");
+    const labelEl=document.getElementById("mobileHealthLabel");
+    if(list) list.innerHTML=`<div class="mobile-today-row"><span class="mobile-today-name">Life Engine</span><span class="mobile-today-val">—</span></div>`;
+    if(scoreEl) scoreEl.textContent="—";
+    if(labelEl) labelEl.textContent="READY TO BE CONFIGURED";
+    return;
+  }
   const scoreEl=document.getElementById("mobileHealthScore");
   const labelEl=document.getElementById("mobileHealthLabel");
   if(!list||!currentUser) return;
@@ -2139,6 +2152,7 @@ function engineForSystem(systemName){
   if(layerItems[1].includes(systemName)) return "Personal Engine";
   if(layerItems[2].includes(systemName)) return "Productivity Engine";
   if(layerItems[3].includes(systemName)) return "Domain Engine";
+  if(layerItems[4].includes(systemName)) return "Life Engine";
   return "Personal Engine";
 }
 
@@ -2160,6 +2174,7 @@ function selectLayer(layer){
   document.getElementById("layer1Tab").classList.toggle("active",layer===1);
   document.getElementById("layer2Tab").classList.toggle("active",layer===2);
   document.getElementById("layer3Tab").classList.toggle("active",layer===3);
+  document.getElementById("layer4Tab").classList.toggle("active",layer===4);
   document.querySelector(".os-tab").classList.remove("active");
   document.getElementById("dashboardTab").classList.remove("active");
   document.getElementById("analyticsTab").classList.remove("active");
@@ -2213,9 +2228,11 @@ function renderSidebar(){
   container.innerHTML="";
   if(osMode) return;
   addSidebarItem(container,"Overview",workspaceMode==="overview",()=>selectItem(0));
-  const entry=addSidebarItem(container,"Entry",workspaceMode==="entry",()=>selectEntry());
-  entry.classList.add("entry-item");
-  entry.id="sidebarEntry";
+  if(currentLayer!==4){
+    const entry=addSidebarItem(container,"Entry",workspaceMode==="entry",()=>selectEntry());
+    entry.classList.add("entry-item");
+    entry.id="sidebarEntry";
+  }
   if(currentLayer===1){
     let offset=1;
     personalGroups.forEach(group=>{
@@ -2343,30 +2360,43 @@ function overviewConfig(layer){
       ]
     };
   }
+  if(layer===3){
+    return {
+      title:"Domain Engine Overview",
+      sub:"Current health score for each system",
+      systems:[
+        ["Money",71,"Stable","today","blue"],
+        ["Fitness",86,"Healthy","today","green"],
+        ["Game",64,"Needs Attention","3 days ago","yellow"],
+        ["Upskilling",79,"Healthy","today","green"],
+        ["Writing",73,"Stable","yesterday","blue"],
+        ["Speaking",91,"Excellent","today","green"]
+      ],
+      execution:79,
+      executionDelta:"+6%",
+      health:77,
+      healthDelta:"+7%",
+      trend:[61,68,66,72,70,76,84],
+      activity:[
+        ["$","Money","Weekly business review completed","Today"],
+        ["+","Fitness","Workout and walk logged","Today"],
+        ["♡","Game","2 social activities tracked","Yesterday"],
+        ["L","Upskilling","45 min learning session","Yesterday"],
+        ["W","Writing","Writing practice completed","Sep 8"],
+        ["S","Speaking","Speaking practice completed","Sep 7"]
+      ]
+    };
+  }
   return {
-    title:"Domain Engine Overview",
-    sub:"Current health score for each system",
-    systems:[
-      ["Money & Business",71,"Stable","today","blue"],
-      ["Health & Fitness",86,"Healthy","today","green"],
-      ["Dating & Game",64,"Needs Attention","3 days ago","yellow"],
-      ["Learning & Upskilling",79,"Healthy","today","green"],
-      ["Communication",73,"Stable","yesterday","blue"],
-      ["Good Life",91,"Excellent","today","green"]
-    ],
-    execution:79,
-    executionDelta:"+6%",
-    health:77,
-    healthDelta:"+7%",
-    trend:[61,68,66,72,70,76,84],
-    activity:[
-      ["$","Money & Business","Weekly business review completed","Today"],
-      ["+","Health & Fitness","Workout and walk logged","Today"],
-      ["♡","Dating & Game","2 social activities tracked","Yesterday"],
-      ["L","Learning & Upskilling","45 min learning session","Yesterday"],
-      ["C","Communication","Speaking practice completed","Sep 8"],
-      ["G","Good Life","Bachata session completed","Sep 7"]
-    ]
+    title:"Life Engine Overview",
+    sub:"Life Engine is ready to be configured",
+    systems:[],
+    execution:0,
+    executionDelta:"—",
+    health:0,
+    healthDelta:"—",
+    trend:[],
+    activity:[]
   };
 }
 
@@ -2665,6 +2695,10 @@ async function loadOutcomeHealthScores(days=overviewRangeDays){
   });
 }
 async function renderEngineOverview(){
+  if(currentLayer===4){
+    document.getElementById("overviewPage").innerHTML=`<div class="placeholder"><strong>Life Engine</strong>Life Engine is ready to be configured.</div>`;
+    return;
+  }
   const showOutcome=(currentLayer===1||currentLayer===2) && overviewFocus==="outcome";
   document.getElementById("overviewPage").innerHTML=`<div class="health-stack">
     ${healthCardMarkup(showOutcome?"outcomeBars":"healthBars", showOutcome?"outcomeLabels":"healthLabels", showOutcome)}
