@@ -163,8 +163,8 @@ body{
 .choice.active.read-60{background:#c26a12;border-color:#e3923a;color:#fff}
 .choice.active.read-120{background:#0d4f2e;border-color:#1c7a48;color:#fff}
 .choice.active.read-150{background:#3d9a62;border-color:#7be0a4;color:#0d2416}
-.choice.active.nofap-beta{background:#6b1520;border-color:#a33a46;color:#fff}
-.choice.active.nofap-alpha{background:#0d4f2e;border-color:#1c7a48;color:#fff}
+.choice.active.nopmo-beta{background:#6b1520;border-color:#a33a46;color:#fff}
+.choice.active.nopmo-alpha{background:#0d4f2e;border-color:#1c7a48;color:#fff}
 .save-btn.icon-btn{
   width:42px;height:42px;padding:0;
   display:grid;place-items:center;
@@ -1830,8 +1830,8 @@ const supabaseClient = (SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.inc
 const qualityNames = {1:"Worst",2:"Bad",3:"Okay",4:"Good",5:"Best"};
 const qualityPills = {1:"pill-worst",2:"pill-bad",3:"pill-okay",4:"pill-good",5:"pill-best"};
 const personalGroups = [
-  {title:"Systems", blocks:[["Morning","Night"],["Sleep","Workout","Meditation","Diet","Nofap"],["Scrolling","Journaling","Reading","Calisthenics"]]},
-  {title:"Errands", blocks:[["Wardrobe","Laundry","Groceries","Room Cleaning"]]}
+  {title:"Systems", blocks:[["Morning","Night"],["Sleep","Workout","Meditation","Diet","NoPMO"],["Scrolling","Journaling","Reading","Calisthenics"]]},
+  {title:"", blocks:[["Errands"]]}
 ];
 const productivityGroups = [
   {blocks:[["Day","Week"]]},
@@ -1840,18 +1840,25 @@ const productivityGroups = [
   {blocks:[["Year"]]}
 ];
 const layerItems = {
-  1: personalGroups.flatMap(group=>group.blocks.flat()),
+  1: [...personalGroups[0].blocks.flat(),"Errands"],
   2: ["Day","Week","Bi-week","Month","Quarter","Bi-quarter","Year"],
   3: ["Money","Fitness","Game","Upskilling","Writing","Speaking"],
   4: []
 };
+const errandsChildren = ["Wardrobe","Laundry","Groceries","Room Cleaning"];
+const personalSidebarItems = [...personalGroups.flatMap(group=>group.blocks.flat()).filter(name=>name!=="Errands"&&!errandsChildren.includes(name)),"Errands",...errandsChildren];
+let errandsExpanded = false;
+function personalSystemName(item){
+  if(currentLayer===1 && item>=1) return personalSidebarItems[item-1]||null;
+  return (layerItems[currentLayer]||[])[item-1]||null;
+}
 const configuredTrackers = ["Sleep","Workout","Meditation"];
 function simpleTrackerQuestion(name){
   return {
     "Morning":"Did you complete Morning today?",
     "Night":"Did you complete Night today?",
     "Diet":"Did you follow diet today?",
-    "Nofap":"Did you follow Nofap today?",
+    "NoPMO":"Did you follow NoPMO today?",
     "Scrolling":"Did you stay off mindless scrolling today?",
     "Journaling":"Did you journal today?",
     "Reading":"Did you read today?",
@@ -1883,7 +1890,7 @@ function blankEntryHub(){
     Journaling:{value:""},
     Reading:{value:"",duration:null},
     Calisthenics:{value:""},
-    Nofap:{value:"",tier:""}
+    NoPMO:{value:"",tier:""}
   };
 }
 const outcomeGroups = [
@@ -2127,6 +2134,16 @@ async function initializeApp(){
 
 async function getEntries(systemName, startDate=null, endDate=null){
   if(!currentUser) return {};
+  // NoPMO was previously stored as Nofap. Read legacy rows as a fallback so history remains visible.
+  if(systemName==="NoPMO"){
+    const current=await getEntriesExact("NoPMO",startDate,endDate);
+    if(Object.keys(current).length) return current;
+    return await getEntriesExact("Nofap",startDate,endDate);
+  }
+  return await getEntriesExact(systemName,startDate,endDate);
+}
+async function getEntriesExact(systemName, startDate=null, endDate=null){
+  if(!currentUser) return {};
   let query=supabaseClient.from("system_entries").select("entry_date,data").eq("user_id",currentUser.id).eq("system",systemName);
   if(startDate) query=query.gte("entry_date",startDate);
   if(endDate) query=query.lte("entry_date",endDate);
@@ -2204,7 +2221,8 @@ function sidebarIcon(name){
     Journaling:'<path d="M6 4h11a1 1 0 0 1 1 1v16H7a1 1 0 0 1-1-1V4z"/><path d="M9 4v16"/>',
     Reading:'<path d="M12 6c-2-1.4-5-1.6-8-.8v13c3-.8 6-.6 8 .8 2-1.4 5-1.6 8-.8V5.2c-3-.8-6-.6-8 .8z"/>',
     Calisthenics:'<path d="M9 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM15 11c-2 0-3 2-3 4v6M8 11h5l2 3"/>',
-    Nofap:'<path d="M12 3 5 6v6c0 5 3.2 8.2 7 9 3.8-.8 7-4 7-9V6z"/>',
+    NoPMO:'<path d="M12 3 5 6v6c0 5 3.2 8.2 7 9 3.8-.8 7-4 7-9V6z"/>',
+    Errands:'<path d="M3 7h18v13H3z"/><path d="M8 7V4h8v3M3 12h18"/>',
     Wardrobe:'<path d="M4 9h16M12 9V5M8 5h8"/><path d="M7 9v11M17 9v11"/>',
     Laundry:'<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M7 6h2"/>',
     Groceries:'<path d="M5 7h15l-1.5 9H8L5 7z"/><path d="M8 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM17 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM5 7 4 4"/>',
@@ -2235,20 +2253,39 @@ function renderSidebar(){
   }
   if(currentLayer===1){
     let offset=1;
-    personalGroups.forEach(group=>{
-      const label=document.createElement("div");
-      label.className="sidebar-group";
-      label.textContent=group.title;
-      container.appendChild(label);
+    personalGroups.forEach((group,groupIndex)=>{
+      if(group.title){
+        const label=document.createElement("div");
+        label.className="sidebar-group";
+        label.textContent=group.title;
+        container.appendChild(label);
+      }
       group.blocks.forEach((block,blockIndex)=>{
-        if(blockIndex){
+        if(blockIndex || groupIndex){
           const line=document.createElement("div");
           line.className="divider";
           container.appendChild(line);
         }
         block.forEach(name=>{
           const index=offset++;
-          addSidebarItem(container,name,workspaceMode==="system"&&index===currentItem,()=>selectItem(index));
+          if(name==="Errands"){
+            const parent=addSidebarItem(container,"Errands",workspaceMode==="system"&&index===currentItem,()=>{
+              errandsExpanded=!errandsExpanded;
+              selectItem(index);
+            });
+            parent.setAttribute("aria-expanded",String(errandsExpanded));
+            parent.title=errandsExpanded?"Hide Errands items":"Show Errands items";
+            if(errandsExpanded){
+              errandsChildren.forEach(childName=>{
+                const childIndex=personalSidebarItems.indexOf(childName)+1;
+                const child=addSidebarItem(container,childName,workspaceMode==="system"&&childIndex===currentItem,()=>selectItem(childIndex));
+                child.style.marginLeft="14px";
+                child.style.width="calc(100% - 14px)";
+              });
+            }
+          }else{
+            addSidebarItem(container,name,workspaceMode==="system"&&index===currentItem,()=>selectItem(index));
+          }
         });
       });
     });
@@ -2315,7 +2352,7 @@ function overviewConfig(layer){
         ["Meditation",68,"Needs Attention","2 days ago","yellow"],
         ["Diet",74,"Stable","today","blue"],
         ["Journaling",55,"Critical","3 days ago","red"],
-        ["Nofap",88,"Strong","today","green"]
+        ["NoPMO",88,"Strong","today","green"]
       ],
       execution:84,
       executionDelta:"+8%",
@@ -2328,7 +2365,7 @@ function overviewConfig(layer){
         ["◉","Diet","Tracked 2 meals","Today, 1:20 PM"],
         ["◌","Meditation","10 minutes","Yesterday, 10:12 PM"],
         ["▤","Journaling","Daily entry","Sep 7, 11:05 PM"],
-        ["∞","Nofap","Day 12","Today"]
+        ["∞","NoPMO","Day 12","Today"]
       ]
     };
   }
@@ -2729,7 +2766,7 @@ async function renderWorkspace(){
   if(enginePage && workspaceMode!=="outcomes") enginePage.classList.remove("outcome-mode");
   document.getElementById("osPage").style.display="none";
   document.getElementById("systemPage").style.display="block";
-  const systemName=currentItem>=1?(layerItems[currentLayer]||[])[currentItem-1]||null:null;
+  const systemName=currentItem>=1?personalSystemName(currentItem):null;
   const isSleep=currentLayer===1 && systemName==="Sleep";
   hideWorkspacePages();
   if(workspaceMode==="overview" || (workspaceMode!=="entry" && workspaceMode!=="outcomes" && currentItem===0 && workspaceMode!=="system")){
@@ -3049,7 +3086,7 @@ function isHubSystemComplete(name, entry){
   if(name==="Workout") return !!(coerceHubValue(entry.gym) && coerceHubValue(entry.cardio));
   if(name==="Meditation") return !!(coerceHubValue(entry.morning) && coerceHubValue(entry.night));
   if(name==="Reading") return !!coerceHubValue(entry.value);
-  if(name==="Nofap"){
+  if(name==="NoPMO"){
     const value=coerceHubValue(entry.value);
     return !!(value && (value!=="no" || entry.tier));
   }
@@ -3142,7 +3179,7 @@ function renderEntryHub(){
       <div class="hub-row">${hubLabel("Workout")}<div class="hub-controls"><span class="hub-label">Gym</span>${yn("Workout","gym",true)}<span class="hub-label">Cardio</span>${yn("Workout","cardio",true)}</div></div>
       <div class="hub-row">${hubLabel("Meditation")}<div class="hub-controls"><span class="hub-label">Morning</span>${yn("Meditation","morning",false)}<span class="hub-label">Night</span>${yn("Meditation","night",false)}</div></div>
       <div class="hub-row">${hubLabel("Diet")}<div class="hub-controls">${yn("Diet","",true)}</div></div>
-      <div class="hub-row">${hubLabel("Nofap")}<div class="hub-controls">${yn("Nofap","",false)}<span class="hub-extra">${hubChoice("Beta",entryHub.Nofap.tier==="beta","tiny nofap-beta",`setHubNofapTier('beta')`,entryHub.Nofap.value!=="no")}${hubChoice("Alpha",entryHub.Nofap.tier==="alpha","tiny nofap-alpha",`setHubNofapTier('alpha')`,entryHub.Nofap.value!=="no")}</span></div></div>
+      <div class="hub-row">${hubLabel("NoPMO")}<div class="hub-controls">${yn("NoPMO","",false)}<span class="hub-extra">${hubChoice("Beta",entryHub.NoPMO.tier==="beta","tiny nopmo-beta",`setHubNoPMOTier('beta')`,entryHub.NoPMO.value!=="no")}${hubChoice("Alpha",entryHub.NoPMO.tier==="alpha","tiny nopmo-alpha",`setHubNoPMOTier('alpha')`,entryHub.NoPMO.value!=="no")}</span></div></div>
     </div>
     <div class="divider"></div>
     <div class="hub-block">
@@ -3159,13 +3196,13 @@ function setEntrySavedState(saved){
 function setHubValue(sys,value){
   entryHub[sys].value=value;
   if(sys==="Reading" && value!=="yes") entryHub.Reading.duration=null;
-  if(sys==="Nofap" && value!=="no") entryHub.Nofap.tier="";
+  if(sys==="NoPMO" && value!=="no") entryHub.NoPMO.tier="";
   setEntrySavedState(false);
   renderEntryHub();
 }
 function setHubField(sys,field,value){entryHub[sys][field]=value;setEntrySavedState(false);renderEntryHub();}
 function setHubReadingDuration(value){entryHub.Reading.duration=value;setEntrySavedState(false);renderEntryHub();}
-function setHubNofapTier(tier){entryHub.Nofap.tier=tier;setEntrySavedState(false);renderEntryHub();}
+function setHubNoPMOTier(tier){entryHub.NoPMO.tier=tier;setEntrySavedState(false);renderEntryHub();}
 function chooseHubSleepQuality(value){entryHub.Sleep.quality=String(value);closeNotionSelects();setEntrySavedState(false);renderEntryHub();}
 function chooseHubSleepBand(band){entryHub.Sleep.durationBand=band;closeNotionSelects();setEntrySavedState(false);renderEntryHub();}
 function chooseHubSleepWake(time){entryHub.Sleep.wakeTime=time;closeNotionSelects();setEntrySavedState(false);renderEntryHub();}
@@ -3195,7 +3232,7 @@ async function loadEntryHub(){
     getEntries("Journaling",selectedDate,selectedDate),
     getEntries("Reading",selectedDate,selectedDate),
     getEntries("Calisthenics",selectedDate,selectedDate),
-    getEntries("Nofap",selectedDate,selectedDate)
+    getEntries("NoPMO",selectedDate,selectedDate)
   ]);
   if(morning[selectedDate]?.value!=null && morning[selectedDate].value!=="") entryHub.Morning.value=coerceHubValue(morning[selectedDate].value);
   if(night[selectedDate]?.value!=null && night[selectedDate].value!=="") entryHub.Night.value=coerceHubValue(night[selectedDate].value);
@@ -3221,8 +3258,8 @@ async function loadEntryHub(){
   }
   if(calisthenics[selectedDate]?.value!=null && calisthenics[selectedDate].value!=="") entryHub.Calisthenics.value=coerceHubValue(calisthenics[selectedDate].value);
   if(nofap[selectedDate]){
-    entryHub.Nofap.value=coerceHubValue(nofap[selectedDate].value);
-    entryHub.Nofap.tier=nofap[selectedDate].tier||"";
+    entryHub.NoPMO.value=coerceHubValue(nofap[selectedDate].value);
+    entryHub.NoPMO.tier=nofap[selectedDate].tier||"";
   }
   const outcomeData=(await getEntries(currentOutcomeSystem(),selectedDate,selectedDate))[selectedDate];
   entryOutcomes=blankOutcomes();
@@ -3301,9 +3338,9 @@ async function saveEntryHub(){
   if(entryHub.Reading.value){
     writes.push(saveSystemEntry("Reading",selectedDate,{value:entryHub.Reading.value}));
   }
-  if(entryHub.Nofap.value){
-    if(entryHub.Nofap.value==="no" && !entryHub.Nofap.tier){alert("Please select Beta or Alpha for Nofap.");return;}
-    writes.push(saveSystemEntry("Nofap",selectedDate,{value:entryHub.Nofap.value,tier:entryHub.Nofap.value==="no"?entryHub.Nofap.tier:""}));
+  if(entryHub.NoPMO.value){
+    if(entryHub.NoPMO.value==="no" && !entryHub.NoPMO.tier){alert("Please select Beta or Alpha for NoPMO.");return;}
+    writes.push(saveSystemEntry("NoPMO",selectedDate,{value:entryHub.NoPMO.value,tier:entryHub.NoPMO.value==="no"?entryHub.NoPMO.tier:""}));
   }
   const outcomeScores={};
   let hasOutcomes=false;
@@ -3328,7 +3365,7 @@ function dateToneClass(date, today){
   return a<b?" past":" future";
 }
 function currentEntrySystem(){
-  if(currentItem>=1) return (layerItems[currentLayer]||[])[currentItem-1]||null;
+  if(currentItem>=1) return personalSystemName(currentItem);
   return null;
 }
 function currentDateStripId(){
@@ -3774,7 +3811,7 @@ async function renderEngineDashboard(systemName){
   const labels={
     Diet:{yes:"DIET FOLLOWED", chart:"Diet Follow-through", success:"Yes", fail:"Missed"},
     Journaling:{yes:"DAYS JOURNALED", chart:"Journaling Streak View", success:"Yes", fail:"No"},
-    Nofap:{yes:"DAYS KEPT", chart:"Daily Commitment", success:"Yes", fail:"No"}
+    NoPMO:{yes:"DAYS KEPT", chart:"Daily Commitment", success:"Yes", fail:"No"}
   }[systemName]||{yes:"YES DAYS", chart:"Daily Result", success:"Yes", fail:"No"};
   const followThrough=logged.length?Math.round(yesDays.length/logged.length*100)+"%":"—";
   const streak=currentStreak(dates, d=>data[d]&&data[d].value==="yes");
