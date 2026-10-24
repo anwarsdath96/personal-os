@@ -2134,11 +2134,14 @@ async function initializeApp(){
 
 async function getEntries(systemName, startDate=null, endDate=null){
   if(!currentUser) return {};
-  // NoPMO was previously stored as Nofap. Read legacy rows as a fallback so history remains visible.
+  // NoPMO is a rename of Nofap: preserve every legacy date and payload.
+  // Merge old Nofap rows with NoPMO rows; new NoPMO rows take precedence only on matching dates.
   if(systemName==="NoPMO"){
-    const current=await getEntriesExact("NoPMO",startDate,endDate);
-    if(Object.keys(current).length) return current;
-    return await getEntriesExact("Nofap",startDate,endDate);
+    const [legacy,current]=await Promise.all([
+      getEntriesExact("Nofap",startDate,endDate),
+      getEntriesExact("NoPMO",startDate,endDate)
+    ]);
+    return {...legacy,...current};
   }
   return await getEntriesExact(systemName,startDate,endDate);
 }
