@@ -1418,6 +1418,35 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   body.mobile-ui .mobile-drawer{position:fixed;inset:0;background:rgba(3,6,9,.72);backdrop-filter:blur(6px);z-index:40;display:none}.mobile-drawer-panel{background:#0d151d;border-right:1px solid var(--line-strong)}
 }
 
+
+.domain-sections{display:flex;gap:8px;align-items:center;margin:0 0 18px;flex-wrap:wrap}
+.domain-section-btn{border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text-2);padding:9px 16px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:650}
+.domain-section-btn.active{background:#1c3b63;border-color:#528bd0;color:#fff}
+.domain-section-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(13,20,28,.94),rgba(9,15,21,.94));border-radius:14px;padding:24px;min-height:calc(100vh - 300px);display:flex;flex-direction:column}
+.domain-section-panel p{color:var(--muted);margin:10px 0 0;line-height:1.55}
+
+/* Domain Definition editor: fill the available workspace */
+#domainSectionPanel #domainDefinitionEditor{display:flex;flex:1;flex-direction:column;min-height:0;margin-top:0!important}
+#domainSectionPanel #domainDefinitionEditor label{display:none!important}
+#domainSectionPanel #domainDefinitionText{flex:1;width:100%;min-height:calc(100vh - 470px)!important;height:auto;resize:vertical}
+#domainSectionPanel .save-row{margin-top:14px}
+#domainSectionPanel #domainSectionTitle,
+#domainSectionPanel #domainSectionDescription{display:none!important}
+
+
+/* Domain Engine definition editor: use the remaining viewport height */
+/* Keep the existing outer Definition layout dimensions; expand only the text area. */
+#domainDefinitionEditor {
+  display: flex;
+  flex-direction: column;
+}
+#domainDefinitionText {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 440px;
+  height: calc(100vh - 390px);
+  resize: vertical;
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -1766,11 +1795,27 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
         </section>
 
         <div id="placeholderPage" class="placeholder" style="display:none">
-          <div class="dash-toolbar" style="justify-content:flex-start;margin-bottom:18px">
-            <button class="def-btn" id="placeholderDefBtn" onclick="openSystemDefinition()">System Definition</button>
+          <div id="domainSectionNav" class="domain-sections" style="display:none">
+            <button class="domain-section-btn" data-domain-section="entry" onclick="selectDomainSection('entry')">Entry</button>
+            <button class="domain-section-btn" data-domain-section="dashboard" onclick="selectDomainSection('dashboard')">Dashboard</button>
+            <button class="domain-section-btn" data-domain-section="definition" onclick="selectDomainSection('definition')">Definition</button>
           </div>
-          <strong id="placeholderTitle">System</strong>
-          <div id="placeholderBody">This system workspace is ready to be configured. Open System Definition to describe what this system is.</div>
+          <div id="domainSectionPanel" class="domain-section-panel" style="display:none">
+            <strong id="domainSectionTitle" style="display:none">Money</strong>
+            <p id="domainSectionDescription" style="display:none">Configure this domain system.</p>
+            <div id="domainDefinitionEditor" style="display:none;margin-top:18px;text-align:left">
+              <label for="domainDefinitionText">System definition</label>
+              <textarea class="definition-note" id="domainDefinitionText" placeholder="Describe this domain system. One point per line." style="min-height:260px;width:100%"></textarea>
+              <div class="save-row"><button class="save-btn icon-btn" id="saveDomainDefinitionBtn" onclick="saveSystemDefinition()" title="Save definition">Save</button></div>
+            </div>
+          </div>
+          <div id="genericPlaceholderContent">
+            <div class="dash-toolbar" style="justify-content:flex-start;margin-bottom:18px">
+              <button class="def-btn" id="placeholderDefBtn" onclick="openSystemDefinition()">System Definition</button>
+            </div>
+            <strong id="placeholderTitle">System</strong>
+            <div id="placeholderBody">This system workspace is ready to be configured. Open System Definition to describe what this system is.</div>
+          </div>
         </div>
         <section id="systemDefinitionPage" style="display:none">
           <div class="card">
@@ -2249,7 +2294,7 @@ function renderSidebar(){
   container.innerHTML="";
   if(osMode) return;
   addSidebarItem(container,"Overview",workspaceMode==="overview",()=>selectItem(0));
-  if(currentLayer!==4){
+  if(currentLayer!==4 && currentLayer!==3){
     const entry=addSidebarItem(container,"Entry",workspaceMode==="entry",()=>selectEntry());
     entry.classList.add("entry-item");
     entry.id="sidebarEntry";
@@ -2319,6 +2364,7 @@ function renderSidebar(){
   });
 }
 function selectEntry(){
+  if(currentLayer===3){ selectDomainSection("entry"); return; }
   workspaceMode="entry";
   currentPage="entry";
   currentItem=0;
@@ -2336,6 +2382,16 @@ function selectOutcome(){
 }
 function selectItem(item){
   currentItem=item;
+  if(currentLayer===3 && item>0){
+    domainSection="entry";
+    workspaceMode="system";
+    currentPage="entry";
+    document.getElementById("dashboardTab").classList.remove("active");
+    document.getElementById("analyticsTab").classList.remove("active");
+    renderSidebar();
+    selectDomainSection("entry");
+    return;
+  }
   workspaceMode=item===0?"overview":"system";
   currentPage=item===0?"entry":"dashboard";
   document.getElementById("dashboardTab").classList.toggle("active", item>0);
@@ -2761,6 +2817,49 @@ function hideWorkspacePages(){
     const el=document.getElementById(id); if(el) el.style.display="none";
   });
 }
+let domainSection="dashboard";
+async function selectDomainSection(section){
+  domainSection=section;
+  const isDomain = currentLayer===3 && currentItem>0;
+  document.querySelectorAll("#domainSectionNav .domain-section-btn").forEach(btn=>{
+    btn.classList.toggle("active", btn.dataset.domainSection===section);
+  });
+  if(section==="definition" && isDomain){
+    definitionSystem=(layerItems[3]||[])[currentItem-1]||"Money";
+    workspaceMode="system";
+    currentPage="definition";
+    document.getElementById("dashboardTab").classList.remove("active");
+    document.getElementById("analyticsTab").classList.remove("active");
+    hideWorkspacePages();
+    document.getElementById("placeholderPage").style.display="block";
+    document.getElementById("genericPlaceholderContent").style.display="none";
+    document.getElementById("domainSectionNav").style.display="flex";
+    document.getElementById("domainSectionPanel").style.display="block";
+    document.getElementById("domainSectionTitle").style.display="none";
+    document.getElementById("domainSectionDescription").style.display="none";
+    document.getElementById("domainDefinitionEditor").style.display="block";
+    document.getElementById("workspaceTitle").textContent=definitionSystem;
+    document.getElementById("workspaceSub").textContent="";
+    const rows=await getEntries(definitionSystem,DEFINITION_DATE,DEFINITION_DATE);
+    const saved=rows[DEFINITION_DATE];
+    document.getElementById("domainDefinitionText").value=saved?.text||(Array.isArray(saved?.bullets)?saved.bullets.join("\n"):"");
+    const btn=document.getElementById("saveDomainDefinitionBtn");
+    if(btn) btn.classList.remove("saved");
+    return;
+  }
+  const editor=document.getElementById("domainDefinitionEditor");
+  if(editor) editor.style.display="none";
+  const generic=document.getElementById("genericPlaceholderContent");
+  if(generic) generic.style.display="block";
+  document.getElementById("domainSectionTitle").style.display="block";
+  document.getElementById("domainSectionDescription").style.display="block";
+  workspaceMode="system";
+  currentPage=section;
+  document.getElementById("dashboardTab").classList.toggle("active",section==="dashboard");
+  document.getElementById("analyticsTab").classList.remove("active");
+  renderSidebar();
+  renderWorkspace();
+}
 async function renderWorkspace(){
   if(osMode || !currentUser) return;
   const systemPage=document.getElementById("systemPage");
@@ -2831,10 +2930,27 @@ async function renderWorkspace(){
       await renderEngineDashboard(systemName);
     }
   }else{
-    // Productivity Engine + Domain Engine systems (and any unconfigured systems):
-    // show workspace with System Definition access.
+    // Productivity Engine + Domain Engine systems (and any unconfigured systems).
     const name=systemName||(layerItems[currentLayer]||[])[currentItem-1]||"System";
     document.getElementById("placeholderPage").style.display="block";
+    if(currentLayer===3){
+      const nav=document.getElementById("domainSectionNav");
+      const panel=document.getElementById("domainSectionPanel");
+      const generic=document.getElementById("genericPlaceholderContent");
+      nav.style.display="flex"; panel.style.display="block"; generic.style.display="none";
+      document.querySelectorAll("[data-domain-section]").forEach(btn=>btn.classList.toggle("active",btn.dataset.domainSection===domainSection));
+      const title=document.getElementById("domainSectionTitle");
+      const description=document.getElementById("domainSectionDescription");
+      title.textContent=name+(domainSection==="definition"?" Definition":"");
+      if(domainSection==="entry") description.textContent="Entry section for "+name+". Tracking fields can be configured here.";
+      else description.textContent="Dashboard for "+name+". Tracking analytics will appear here once this domain system is configured.";
+      document.getElementById("workspaceTitle").textContent=name;
+      document.getElementById("workspaceSub").textContent="";
+      return;
+    }
+    document.getElementById("domainSectionNav").style.display="none";
+    document.getElementById("domainSectionPanel").style.display="none";
+    document.getElementById("genericPlaceholderContent").style.display="block";
     document.getElementById("placeholderTitle").textContent=name;
     document.getElementById("workspaceTitle").textContent=name;
     document.getElementById("workspaceSub").textContent="";
@@ -3060,10 +3176,12 @@ async function openSystemDefinition(name){
 }
 async function saveSystemDefinition(){
   if(!definitionSystem) return;
-  const text=document.getElementById("systemDefinitionText").value;
+  const domainEditor=document.getElementById("domainDefinitionEditor");
+  const useDomainEditor=domainEditor && domainEditor.style.display!=="none" && currentLayer===3;
+  const text=document.getElementById(useDomainEditor?"domainDefinitionText":"systemDefinitionText").value;
   const bullets=text.split(/\n/).map(line=>line.replace(/^\s*[•\-\*]\s*/,"").trim()).filter(Boolean);
   if(await saveSystemEntry(definitionSystem,DEFINITION_DATE,{text,bullets})){
-    const btn=document.getElementById("saveDefinitionBtn");
+    const btn=document.getElementById(useDomainEditor?"saveDomainDefinitionBtn":"saveDefinitionBtn");
     if(btn) btn.classList.add("saved");
   }
 }
