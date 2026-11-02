@@ -1434,17 +1434,20 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   min-height:0;
 }
 
-/* Domain panel — same card treatment as other engine layouts (natural height, no forced inner scroll) */
+/* Domain panel — fills workspace height for Entry/Dashboard/Definition */
 .domain-section-panel,
 #domainSectionPanel.domain-section-panel{
   border:1px solid var(--line);
   background:linear-gradient(180deg,rgba(13,20,28,.94),rgba(9,15,21,.94));
   border-radius:14px;
   padding:20px 22px 18px;
-  min-height:calc(100vh - 280px);
+  height:calc(100vh - 260px);
+  min-height:calc(100vh - 260px);
+  max-height:calc(100vh - 260px);
   box-sizing:border-box;
   display:flex;
   flex-direction:column;
+  overflow:hidden;
 }
 .domain-section-panel p{color:var(--muted);margin:10px 0 0;line-height:1.55}
 
@@ -1452,12 +1455,13 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 #domainSectionPanel #domainSectionTitle,
 #domainSectionPanel #domainSectionDescription{display:none!important}
 
-/* Definition editor fills the panel */
+/* Definition editor fills the full panel */
 #domainSectionPanel #domainDefinitionEditor{
   display:flex;
   flex:1 1 auto;
   flex-direction:column;
-  min-height:420px;
+  min-height:0;
+  height:100%;
   margin-top:0!important;
 }
 #domainSectionPanel #domainDefinitionEditor label{display:none!important}
@@ -1467,14 +1471,15 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   justify-content:flex-end;
 }
 
-/* Textarea fills remaining space — not user-resizable */
+/* Textarea fills all remaining space under Save — not user-resizable */
 #domainSectionPanel #domainDefinitionText,
 #domainSectionPanel .definition-note{
   display:block;
   flex:1 1 auto;
   width:100%;
-  min-height:360px!important;
-  height:auto!important;
+  min-height:0!important;
+  height:100%!important;
+  max-height:none!important;
   resize:none!important;
   box-sizing:border-box;
   overflow:auto;
