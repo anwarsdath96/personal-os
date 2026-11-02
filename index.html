@@ -1419,35 +1419,170 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 }
 
 
-.domain-sections{display:flex;gap:8px;align-items:center;margin:0 0 18px;flex-wrap:wrap}
+.domain-sections{display:flex;gap:8px;align-items:center;margin:0 0 14px;flex-wrap:wrap}
 .domain-section-btn{border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text-2);padding:9px 16px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:650}
 .domain-section-btn.active{background:#1c3b63;border-color:#528bd0;color:#fff}
-.domain-section-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(13,20,28,.94),rgba(9,15,21,.94));border-radius:14px;padding:24px;min-height:calc(100vh - 300px);display:flex;flex-direction:column}
+
+/* When Domain Engine content is active, neutralize placeholder centering/padding */
+#placeholderPage:has(#domainSectionNav[style*="flex"]),
+#placeholderPage:has(#domainSectionPanel[style*="block"]){
+  text-align:left;
+  padding:0;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  min-height:0;
+}
+
+/* Domain panel — same card treatment as other engine layouts (natural height, no forced inner scroll) */
+.domain-section-panel,
+#domainSectionPanel.domain-section-panel{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(13,20,28,.94),rgba(9,15,21,.94));
+  border-radius:14px;
+  padding:20px 22px 18px;
+  min-height:calc(100vh - 280px);
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+}
 .domain-section-panel p{color:var(--muted);margin:10px 0 0;line-height:1.55}
 
-/* Domain Definition editor: fill the available workspace */
-#domainSectionPanel #domainDefinitionEditor{display:flex;flex:1;flex-direction:column;min-height:0;margin-top:0!important}
-#domainSectionPanel #domainDefinitionEditor label{display:none!important}
-#domainSectionPanel #domainDefinitionText{flex:1;width:100%;min-height:calc(100vh - 470px)!important;height:auto;resize:vertical}
-#domainSectionPanel .save-row{margin-top:14px}
+/* Hide title/description chrome when definition editor is open */
 #domainSectionPanel #domainSectionTitle,
 #domainSectionPanel #domainSectionDescription{display:none!important}
 
-
-/* Domain Engine definition editor: use the remaining viewport height */
-/* Keep the existing outer Definition layout dimensions; expand only the text area. */
-#domainDefinitionEditor {
-  display: flex;
-  flex-direction: column;
+/* Definition editor fills the panel */
+#domainSectionPanel #domainDefinitionEditor{
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  min-height:420px;
+  margin-top:0!important;
 }
-#domainDefinitionText {
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 440px;
-  height: calc(100vh - 390px);
-  resize: vertical;
+#domainSectionPanel #domainDefinitionEditor label{display:none!important}
+#domainSectionPanel #domainDefinitionEditor .save-row{
+  margin-top:14px;
+  flex:0 0 auto;
+  justify-content:flex-end;
+}
+
+/* Textarea fills remaining space — not user-resizable */
+#domainSectionPanel #domainDefinitionText,
+#domainSectionPanel .definition-note{
+  display:block;
+  flex:1 1 auto;
+  width:100%;
+  min-height:360px!important;
+  height:auto!important;
+  resize:none!important;
+  box-sizing:border-box;
+  overflow:auto;
+}
+
+/* =========================================================
+   GAME DOMAIN — Weekly tracker (integrated)
+   ========================================================= */
+#gameDomainPage{display:none}
+#gameDomainPage .game-shell{max-width:100%}
+#gameDomainPage .game-window{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(13,20,28,.94),rgba(9,15,21,.94));
+  padding:20px 22px 18px;
+  min-height:calc(100vh - 280px);
+  box-sizing:border-box;
+}
+#gameDomainPage .game-tabs,#gameDomainPage .game-segment{display:flex;gap:8px;margin-bottom:16px}
+#gameDomainPage .game-tab,#gameDomainPage .game-subtab,#gameDomainPage .game-btn{
+  border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text-2);
+  border-radius:9px;padding:9px 16px;font-weight:650;cursor:pointer;font-size:12px
+}
+#gameDomainPage .game-tab.active,#gameDomainPage .game-subtab.active{background:#1c3b63;border-color:#528bd0;color:#fff}
+#gameDomainPage .game-view{display:none}
+#gameDomainPage .game-view.active{display:block}
+#gameDomainPage .game-card{background:linear-gradient(145deg,#111d2c,#0e1825);border:1px solid #20334a;border-radius:12px;padding:16px}
+#gameDomainPage .game-entry-head,#gameDomainPage .game-toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+#gameDomainPage h2.game-h2{font-size:17px;margin:0 0 3px;color:var(--text)}
+#gameDomainPage h3.game-h3{font-size:14px;margin:0 0 12px;color:var(--text)}
+#gameDomainPage .game-sub{color:var(--muted);font-size:12px}
+#gameDomainPage .game-date{position:relative;display:flex;align-items:center;gap:9px;border:1px solid #2b405a;border-radius:10px;padding:7px 10px;background:#101b2a}
+#gameDomainPage .game-date-trigger{display:flex;align-items:center;gap:8px;border:0;background:transparent;color:var(--text);font:inherit;cursor:pointer;padding:4px 8px;min-width:145px;justify-content:center}
+#gameDomainPage .game-date-trigger .caret{font-size:10px;color:var(--muted)}
+#gameDomainPage .game-date .game-btn{padding:7px 12px;min-width:38px}
+#gameDomainPage .game-calendar-pop{display:none;position:absolute;z-index:40;right:0;top:calc(100% + 8px);width:330px;padding:13px;background:#0c1420;border:1px solid #30445d;border-radius:12px;box-shadow:0 18px 45px #0009}
+#gameDomainPage .game-calendar-pop.open{display:block}
+#gameDomainPage .game-cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+#gameDomainPage .game-cal-month{font-weight:700}
+#gameDomainPage .game-cal-nav{display:flex;gap:6px}
+#gameDomainPage .game-cal-nav button,#gameDomainPage .game-cal-footer button{background:#111e2d;border:1px solid #30445d;color:var(--text);border-radius:7px;padding:5px 10px;cursor:pointer}
+#gameDomainPage .game-cal-grid{display:grid;grid-template-columns:34px repeat(7,1fr);gap:3px;text-align:center}
+#gameDomainPage .game-cal-label{font-size:11px;color:#9db0c7;padding:5px 0}
+#gameDomainPage .game-week-no{font-size:11px;color:#b9c8dc;display:grid;place-items:center}
+#gameDomainPage .game-cal-day{height:31px;border:1px solid transparent;border-radius:5px;background:#111d2b;color:#e6effc;cursor:pointer;font:12px inherit}
+#gameDomainPage .game-cal-day.outside{opacity:.42}
+#gameDomainPage .game-cal-day.past{background:#47232d;border-color:#743848}
+#gameDomainPage .game-cal-day.current{background:#164b3e;border-color:#2c9b7a}
+#gameDomainPage .game-cal-day.future{background:#193d6c;border-color:#326bb4}
+#gameDomainPage .game-cal-day.selected{outline:2px solid #f1f6ff;outline-offset:-2px;font-weight:800}
+#gameDomainPage .game-cal-day:hover{filter:brightness(1.25)}
+#gameDomainPage .game-cal-footer{display:flex;justify-content:space-between;margin-top:11px}
+#gameDomainPage .game-cal-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;color:#9eb0c5;font-size:10px}
+#gameDomainPage .game-cal-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}
+#gameDomainPage .game-grid{display:grid;grid-template-columns:1.25fr .72fr 1.5fr;gap:14px;margin-bottom:14px}
+#gameDomainPage .game-grid.bottom{grid-template-columns:1.25fr 1fr 1fr}
+#gameDomainPage .game-field{margin-top:12px}
+#gameDomainPage .game-field label{display:block;color:#b6c7dc;font-size:12px;margin-bottom:6px}
+#gameDomainPage .game-field input,#gameDomainPage .game-field select{width:100%;background:#0a1421;border:1px solid #2b4058;border-radius:7px;padding:10px;color:var(--text);font:inherit;outline:0}
+#gameDomainPage .game-field input:focus,#gameDomainPage .game-field select:focus{border-color:#5795fa}
+#gameDomainPage .game-rating{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+#gameDomainPage .game-rating button{background:#0b1625;border:1px solid #2b4058;border-radius:6px;color:#cbd8e8;padding:8px 0;cursor:pointer}
+#gameDomainPage .game-rating button.selected{background:var(--blue);color:white}
+#gameDomainPage .game-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+#gameDomainPage .game-primary{background:#e8f0fc;color:#08111d;border-color:#e8f0fc}
+#gameDomainPage .game-ghost{background:transparent}
+#gameDomainPage .game-activity-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+#gameDomainPage .game-activity-item{display:flex;flex-direction:column;gap:12px;justify-content:space-between;min-height:105px}
+#gameDomainPage .game-activity-item strong{font-size:13px}
+#gameDomainPage .game-yn{display:flex;gap:7px}
+#gameDomainPage .game-yn button{flex:1;border:1px solid #34465c;background:#0b1625;color:#cbd8e8;border-radius:7px;padding:7px 8px;cursor:pointer;font-weight:650}
+#gameDomainPage .game-yn button.yes.selected{background:#15513f;border-color:#2d9d79;color:#eafff7}
+#gameDomainPage .game-yn button.no.selected{background:#542632;border-color:#a74b61;color:#fff0f3}
+#gameDomainPage .game-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+#gameDomainPage .game-kpi{background:linear-gradient(145deg,#122234,#0d1927);border:1px solid #20344a;border-radius:11px;padding:14px}
+#gameDomainPage .game-kpi span{display:block;color:#a9bfd8;font-size:11px;margin-bottom:8px}
+#gameDomainPage .game-kpi strong{font-size:23px}
+#gameDomainPage .game-kpi small{display:block;color:var(--green);font-size:11px}
+#gameDomainPage .game-analytics{display:grid;grid-template-columns:1.35fr .9fr;gap:14px}
+#gameDomainPage .game-chart{width:100%;height:210px}
+#gameDomainPage .game-chart text{fill:#91a4bd;font-size:10px}
+#gameDomainPage .game-legend{display:flex;gap:16px;color:#b9c9dc;font-size:11px;flex-wrap:wrap}
+#gameDomainPage .game-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+#gameDomainPage .game-rates{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+#gameDomainPage .game-rate{border-radius:10px;padding:16px;text-align:center;background:#102b2a;border:1px solid #1c4b42}
+#gameDomainPage .game-rate.red{background:#2a1b25;border-color:#55303b}
+#gameDomainPage .game-rate strong{display:block;font-size:25px}
+#gameDomainPage .game-rate span{font-size:11px;color:#c1d0de}
+#gameDomainPage .game-muted{color:var(--muted);font-size:12px;margin-top:18px}
+#gameDomainPage .game-activity-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+#gameDomainPage .game-summary-item{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;background:#0c1724;border:1px solid #22364c;border-radius:8px;font-size:12px}
+#gameDomainPage .game-status{font-weight:700}
+#gameDomainPage .game-status.yes{color:var(--green)}
+#gameDomainPage .game-status.no{color:var(--red)}
+@media(max-width:850px){
+  #gameDomainPage .game-grid,#gameDomainPage .game-grid.bottom,#gameDomainPage .game-analytics{grid-template-columns:1fr}
+  #gameDomainPage .game-kpis{grid-template-columns:repeat(2,1fr)}
+  #gameDomainPage .game-activity-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+  #gameDomainPage .game-activity-grid{grid-template-columns:1fr}
+  #gameDomainPage .game-calendar-pop{right:-12px;width:min(330px,calc(100vw - 32px))}
+  #gameDomainPage .game-cal-day{height:29px}
+  #gameDomainPage .game-rating{gap:2px}
+  #gameDomainPage .game-rating button{font-size:11px}
 }
 </style>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -1805,7 +1940,7 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
             <p id="domainSectionDescription" style="display:none">Configure this domain system.</p>
             <div id="domainDefinitionEditor" style="display:none;margin-top:18px;text-align:left">
               <label for="domainDefinitionText">System definition</label>
-              <textarea class="definition-note" id="domainDefinitionText" placeholder="Describe this domain system. One point per line." style="min-height:260px;width:100%"></textarea>
+              <textarea class="definition-note" id="domainDefinitionText" placeholder="Describe this domain system. One point per line." style="width:100%"></textarea>
               <div class="save-row"><button class="save-btn icon-btn" id="saveDomainDefinitionBtn" onclick="saveSystemDefinition()" title="Save definition">Save</button></div>
             </div>
           </div>
@@ -1817,6 +1952,124 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
             <div id="placeholderBody">This system workspace is ready to be configured. Open System Definition to describe what this system is.</div>
           </div>
         </div>
+
+        <!-- GAME DOMAIN PAGE (integrated weekly tracker) -->
+        <section id="gameDomainPage" style="display:none">
+          <div class="game-shell">
+            <div class="game-window">
+              <section id="gameEntryView" class="game-view active">
+                <div class="game-card">
+                  <div class="game-entry-head">
+                    <div>
+                      <h2 class="game-h2">Weekly Entry</h2>
+                      <div class="game-sub">Log your Game activity and results for the week.</div>
+                    </div>
+                    <div class="game-date">
+                      <button class="game-btn game-ghost" id="gamePrevWeek" aria-label="Previous week">‹</button>
+                      <button class="game-date-trigger" id="gameCalendarTrigger" aria-expanded="false">
+                        <span id="gameWeekLabel">Week</span><span class="caret">▼</span>
+                      </button>
+                      <button class="game-btn game-ghost" id="gameNextWeek" aria-label="Next week">›</button>
+                      <div class="game-calendar-pop" id="gameCalendarPop">
+                        <div class="game-cal-head">
+                          <span class="game-cal-month" id="gameCalMonth">Month 2026</span>
+                          <div class="game-cal-nav">
+                            <button id="gamePrevMonth" aria-label="Previous month">‹</button>
+                            <button id="gameNextMonth" aria-label="Next month">›</button>
+                          </div>
+                        </div>
+                        <div class="game-cal-grid" id="gameCalendarGrid"></div>
+                        <div class="game-cal-footer">
+                          <button id="gameCalToday">This week</button>
+                          <button id="gameCalClose">Close</button>
+                        </div>
+                        <div class="game-cal-legend">
+                          <span><i style="background:#743848"></i>Past weeks</span>
+                          <span><i style="background:#2c9b7a"></i>Current week</span>
+                          <span><i style="background:#326bb4"></i>Upcoming weeks</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="game-card" style="margin-bottom:14px">
+                    <h3 class="game-h3">Weekly Activities</h3>
+                    <div class="game-sub">Mark whether each planned activity happened this week.</div>
+                    <div class="game-activity-grid" id="gameActivityGrid" style="margin-top:12px">
+                      <div class="game-card game-activity-item"><strong>Monday Office</strong><div class="game-yn" data-activity="mondayOffice"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
+                      <div class="game-card game-activity-item"><strong>Wednesday Socials</strong><div class="game-yn" data-activity="wednesdaySocials"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
+                      <div class="game-card game-activity-item"><strong>Friday Night</strong><div class="game-yn" data-activity="fridayNight"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
+                      <div class="game-card game-activity-item"><strong>Saturday Explore</strong><div class="game-yn" data-activity="saturdayExplore"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
+                      <div class="game-card game-activity-item"><strong>Sunday Zone Loop</strong><div class="game-yn" data-activity="sundayZoneLoop"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
+                    </div>
+                  </div>
+                  <div class="game-grid">
+                    <div class="game-card">
+                      <h3 class="game-h3">Going Out</h3>
+                      <div class="game-field"><label for="gameDaysOut">Days</label><input id="gameDaysOut" type="number" min="0" max="7" value="0"></div>
+                    </div>
+                    <div class="game-card">
+                      <h3 class="game-h3">Approaches</h3>
+                      <div class="game-field"><label for="gameApproaches">Total approaches</label><input id="gameApproaches" type="number" min="0" value="0"></div>
+                    </div>
+                    <div class="game-card game-stack-metrics">
+                      <h3 class="game-h3">Rejections</h3>
+                      <div class="game-field"><label for="gameRejections">Total rejections</label><input id="gameRejections" type="number" min="0" value="0"></div>
+                      <h3 class="game-h3" style="margin-top:14px">Closes</h3>
+                      <div class="game-field"><label for="gameCloses">Total closes</label><input id="gameCloses" type="number" min="0" value="0"></div>
+                    </div>
+                  </div>
+                  <div class="game-actions">
+                    <button class="game-btn game-ghost" id="gameClearBtn">Clear</button>
+                    <button class="game-btn game-primary" id="gameSaveBtn">Save Entry</button>
+                  </div>
+                </div>
+              </section>
+              <section id="gameDashboardView" class="game-view">
+                <div class="game-toolbar">
+                  <div class="game-segment">
+                    <button class="game-subtab active" data-period="weekly">Weekly</button>
+                    <button class="game-subtab" data-period="monthly">Monthly</button>
+                  </div>
+                  <div class="game-date">
+                    <button class="game-btn game-ghost" id="gamePrevPeriod">‹</button>
+                    <strong id="gamePeriodLabel">Current week</strong>
+                    <button class="game-btn game-ghost" id="gameNextPeriod">›</button>
+                  </div>
+                </div>
+                <div class="game-kpis">
+                  <div class="game-kpi"><span>DAYS OUT</span><strong id="gameKDays">0</strong><small>Days this period</small></div>
+                  <div class="game-kpi"><span>APPROACHES</span><strong id="gameKApproaches">0</strong><small>Total approaches</small></div>
+                  <div class="game-kpi"><span>REJECTIONS</span><strong id="gameKRejections">0</strong><small>Total rejections</small></div>
+                  <div class="game-kpi"><span>CLOSES</span><strong id="gameKCloses">0</strong><small>Total closes</small></div>
+                </div>
+                <div class="game-analytics">
+                  <div class="game-card">
+                    <h3 class="game-h3" id="gameTrendTitle">Weekly Activity</h3>
+                    <svg class="game-chart" id="gameActivityChart" viewBox="0 0 620 210" preserveAspectRatio="none"></svg>
+                    <div class="game-legend">
+                      <span><i class="game-dot" style="background:#3986ff"></i>Approaches</span>
+                      <span><i class="game-dot" style="background:#f16c82"></i>Rejections</span>
+                      <span><i class="game-dot" style="background:#35d6a0"></i>Closes</span>
+                    </div>
+                  </div>
+                  <div class="game-card">
+                    <h3 class="game-h3">Outcome Overview</h3>
+                    <div class="game-rates">
+                      <div class="game-rate"><strong id="gameCloseRate">0%</strong><span>Close rate<br>(closes / approaches)</span></div>
+                      <div class="game-rate red"><strong id="gameRejectRate">0%</strong><span>Rejection rate<br>(rejections / approaches)</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="game-card" style="margin-top:14px">
+                  <h3 class="game-h3">Planned Activities</h3>
+                  <div class="game-sub" id="gameActivityPeriodSub">Activity status for the selected period.</div>
+                  <div class="game-activity-summary" id="gameActivitySummary"></div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+
         <section id="systemDefinitionPage" style="display:none">
           <div class="card">
             <div class="card-title" id="systemDefinitionTitle">System Definition</div>
@@ -2813,7 +3066,7 @@ async function renderEngineOverview(){
 
 
 function hideWorkspacePages(){
-  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","overviewPage","entryHubPage","systemDefinitionPage","mobileHomePage"].forEach(id=>{
+  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","overviewPage","entryHubPage","systemDefinitionPage","mobileHomePage","gameDomainPage"].forEach(id=>{
     const el=document.getElementById(id); if(el) el.style.display="none";
   });
 }
@@ -2837,7 +3090,7 @@ async function selectDomainSection(section){
     document.getElementById("domainSectionPanel").style.display="block";
     document.getElementById("domainSectionTitle").style.display="none";
     document.getElementById("domainSectionDescription").style.display="none";
-    document.getElementById("domainDefinitionEditor").style.display="block";
+    document.getElementById("domainDefinitionEditor").style.display="flex";
     document.getElementById("workspaceTitle").textContent=definitionSystem;
     document.getElementById("workspaceSub").textContent="";
     const rows=await getEntries(definitionSystem,DEFINITION_DATE,DEFINITION_DATE);
@@ -2900,7 +3153,7 @@ async function renderWorkspace(){
   const isWorkout=currentLayer===1 && systemName==="Workout";
   const isMeditation=currentLayer===1 && systemName==="Meditation";
   const isSimpleTracker=currentLayer===1 && systemName && !configuredTrackers.includes(systemName);
-  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","systemDefinitionPage","mobileHomePage"].forEach(id=>document.getElementById(id).style.display="none");
+  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","systemDefinitionPage","mobileHomePage","gameDomainPage"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display="none";});
   if(isSleep){
     document.getElementById("workspaceTitle").textContent="Sleep System";
     document.getElementById("workspaceSub").textContent="";
@@ -3953,9 +4206,400 @@ async function renderEngineDashboard(systemName){
 
 document.addEventListener("click",(event)=>{
   if(!event.target.closest(".notion-select")) closeNotionSelects();
+  if(!event.target.closest(".game-date") && !event.target.closest("#gameCalendarPop")){
+    const pop=document.getElementById("gameCalendarPop");
+    if(pop) pop.classList.remove("open");
+    const trig=document.getElementById("gameCalendarTrigger");
+    if(trig) trig.setAttribute("aria-expanded","false");
+  }
 });
+
+/* ==============================
+   GAME DOMAIN — Weekly tracker (Supabase-backed)
+   ============================== */
+const GAME_ACTIVITIES = [
+  ["mondayOffice","Monday Office"],
+  ["wednesdaySocials","Wednesday Socials"],
+  ["fridayNight","Friday Night"],
+  ["saturdayExplore","Saturday Explore"],
+  ["sundayZoneLoop","Sunday Zone Loop"]
+];
+let gamePeriod = "weekly";
+let gameOffset = 0;
+let gameCalMonth = new Date();
+let gameSelectedWeek = null;
+let gameEntriesCache = {}; // weekKey -> data (loaded on demand)
+let gameInitialized = false;
+
+function gameWeekKey(d){
+  let x = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  x.setUTCDate(x.getUTCDate() + 4 - (x.getUTCDay() || 7));
+  let y = new Date(Date.UTC(x.getUTCFullYear(), 0, 1));
+  return `${x.getUTCFullYear()}-W${String(Math.ceil((((x - y) / 86400000) + 1) / 7)).padStart(2, "0")}`;
+}
+function gameWeekStart(k){
+  let [y, w] = k.split("-W").map(Number);
+  let d = new Date(y, 0, 4);
+  let day = d.getDay() || 7;
+  d.setDate(d.getDate() - day + 1 + (w - 1) * 7);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+function gameAddWeek(k, n){
+  let d = gameWeekStart(k);
+  d.setDate(d.getDate() + 7 * n);
+  return gameWeekKey(d);
+}
+function gameFormatWeek(k){
+  return `Week ${k.slice(-2)}, ${k.slice(0, 4)}`;
+}
+function gameCurrentWeek(){ return gameWeekKey(new Date()); }
+function gameMondayDate(k){
+  return getDateString(gameWeekStart(k));
+}
+
+function gameFormData(){
+  let a = {};
+  GAME_ACTIVITIES.forEach(([key]) => {
+    a[key] = document.querySelector(`#gameDomainPage [data-activity="${key}"] .selected`)?.dataset.value || "";
+  });
+  return {
+    daysOut: +document.getElementById("gameDaysOut").value || 0,
+    approaches: +document.getElementById("gameApproaches").value || 0,
+    rejections: +document.getElementById("gameRejections").value || 0,
+    closes: +document.getElementById("gameCloses").value || 0,
+    weekKey: gameSelectedWeek,
+    ...a
+  };
+}
+function gameFill(d = {}){
+  document.getElementById("gameDaysOut").value = d.daysOut ?? 0;
+  document.getElementById("gameApproaches").value = d.approaches ?? 0;
+  document.getElementById("gameRejections").value = d.rejections ?? 0;
+  document.getElementById("gameCloses").value = d.closes ?? 0;
+  GAME_ACTIVITIES.forEach(([key]) => {
+    document.querySelectorAll(`#gameDomainPage [data-activity="${key}"] button`).forEach(b => {
+      b.classList.toggle("selected", b.dataset.value === (d[key] || ""));
+    });
+  });
+}
+
+async function gameLoadWeek(weekKey){
+  gameSelectedWeek = weekKey;
+  document.getElementById("gameWeekLabel").textContent = gameFormatWeek(weekKey);
+  const monday = gameMondayDate(weekKey);
+  // Load from cache or cloud
+  if(gameEntriesCache[weekKey]){
+    gameFill(gameEntriesCache[weekKey]);
+  } else {
+    const rows = await getEntries("Game", monday, monday);
+    const data = rows[monday] || {};
+    gameEntriesCache[weekKey] = data;
+    gameFill(data);
+  }
+  gameRenderCalendar();
+}
+
+function gameInitEvents(){
+  if(gameInitialized) return;
+  gameInitialized = true;
+
+  document.getElementById("gamePrevWeek").onclick = () => gameLoadWeek(gameAddWeek(gameSelectedWeek, -1));
+  document.getElementById("gameNextWeek").onclick = () => gameLoadWeek(gameAddWeek(gameSelectedWeek, 1));
+
+  document.getElementById("gameCalendarTrigger").onclick = () => {
+    const p = document.getElementById("gameCalendarPop");
+    p.classList.toggle("open");
+    document.getElementById("gameCalendarTrigger").setAttribute("aria-expanded", p.classList.contains("open"));
+    if(p.classList.contains("open")){
+      const d = gameWeekStart(gameSelectedWeek);
+      gameCalMonth = new Date(d.getFullYear(), d.getMonth(), 1);
+      gameRenderCalendar();
+    }
+  };
+  document.getElementById("gamePrevMonth").onclick = () => { gameCalMonth.setMonth(gameCalMonth.getMonth() - 1); gameRenderCalendar(); };
+  document.getElementById("gameNextMonth").onclick = () => { gameCalMonth.setMonth(gameCalMonth.getMonth() + 1); gameRenderCalendar(); };
+  document.getElementById("gameCalClose").onclick = () => {
+    document.getElementById("gameCalendarPop").classList.remove("open");
+    document.getElementById("gameCalendarTrigger").setAttribute("aria-expanded", "false");
+  };
+  document.getElementById("gameCalToday").onclick = () => {
+    gameLoadWeek(gameCurrentWeek());
+    gameCalMonth = new Date();
+    document.getElementById("gameCalendarPop").classList.remove("open");
+    document.getElementById("gameCalendarTrigger").setAttribute("aria-expanded", "false");
+  };
+
+  document.querySelectorAll("#gameDomainPage .game-yn").forEach(group => {
+    group.onclick = e => {
+      const b = e.target.closest("button[data-value]");
+      if(!b) return;
+      group.querySelectorAll("button").forEach(x => x.classList.toggle("selected", x === b));
+    };
+  });
+
+  document.getElementById("gameSaveBtn").onclick = async () => {
+    if(!currentUser){ alert("Please log in first."); return; }
+    const payload = gameFormData();
+    const monday = gameMondayDate(gameSelectedWeek);
+    const ok = await saveSystemEntry("Game", monday, payload);
+    if(ok){
+      gameEntriesCache[gameSelectedWeek] = payload;
+      const btn = document.getElementById("gameSaveBtn");
+      btn.textContent = "Saved";
+      setTimeout(() => btn.textContent = "Save Entry", 900);
+    }
+  };
+  document.getElementById("gameClearBtn").onclick = () => gameFill({});
+
+  document.querySelectorAll("#gameDomainPage .game-subtab").forEach(b => {
+    b.onclick = () => {
+      gamePeriod = b.dataset.period;
+      gameOffset = 0;
+      document.querySelectorAll("#gameDomainPage .game-subtab").forEach(x => x.classList.toggle("active", x === b));
+      gameRenderDashboard();
+    };
+  });
+  document.getElementById("gamePrevPeriod").onclick = () => { gameOffset--; gameRenderDashboard(); };
+  document.getElementById("gameNextPeriod").onclick = () => { gameOffset++; gameRenderDashboard(); };
+}
+
+function gameRenderCalendar(){
+  const y = gameCalMonth.getFullYear(), m = gameCalMonth.getMonth();
+  document.getElementById("gameCalMonth").textContent = gameCalMonth.toLocaleDateString("en-US", {month: "long", year: "numeric"});
+  const first = new Date(y, m, 1);
+  const offsetMon = (first.getDay() + 6) % 7;
+  const start = new Date(y, m, 1 - offsetMon);
+  let html = '<div class="game-cal-label">Wk</div>' + ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(x => `<div class="game-cal-label">${x}</div>`).join("");
+  const todayKey = gameCurrentWeek();
+  for(let row = 0; row < 6; row++){
+    const rowStart = new Date(start);
+    rowStart.setDate(start.getDate() + row * 7);
+    const rowKey = gameWeekKey(rowStart);
+    const cls = rowKey < todayKey ? "past" : rowKey > todayKey ? "future" : "current";
+    const wk = Number(rowKey.slice(-2));
+    html += `<div class="game-week-no">${wk}</div>`;
+    for(let col = 0; col < 7; col++){
+      const d = new Date(rowStart);
+      d.setDate(rowStart.getDate() + col);
+      const outside = d.getMonth() !== m;
+      const selected = gameWeekKey(d) === gameSelectedWeek;
+      html += `<button class="game-cal-day ${cls}${outside ? " outside" : ""}${selected ? " selected" : ""}" data-date="${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}">${d.getDate()}</button>`;
+    }
+  }
+  const grid = document.getElementById("gameCalendarGrid");
+  grid.innerHTML = html;
+  grid.querySelectorAll("[data-date]").forEach(b => {
+    b.onclick = () => {
+      const d = new Date(b.dataset.date + "T12:00:00");
+      gameLoadWeek(gameWeekKey(d));
+      document.getElementById("gameCalendarPop").classList.remove("open");
+      document.getElementById("gameCalendarTrigger").setAttribute("aria-expanded", "false");
+    };
+  });
+}
+
+function gameSum(arr, k){ return arr.reduce((n, x) => n + (+x[k] || 0), 0); }
+function gameAvg(arr, k){
+  const v = arr.filter(x => x[k] > 0);
+  return v.length ? (v.reduce((n, x) => n + x[k], 0) / v.length).toFixed(1) : "—";
+}
+
+async function gameSelectedEntries(){
+  if(gamePeriod === "weekly"){
+    const key = gameAddWeek(gameCurrentWeek(), gameOffset);
+    // ensure loaded
+    if(!gameEntriesCache[key]){
+      const monday = gameMondayDate(key);
+      const rows = await getEntries("Game", monday, monday);
+      gameEntriesCache[key] = rows[monday] || {};
+    }
+    const data = gameEntriesCache[key];
+    const has = data && (data.approaches != null || data.daysOut != null || data.rejections != null || data.closes != null || data.mondayOffice || data.wednesdaySocials);
+    return { arr: has ? [data] : [], keys: has ? [key] : [], label: gameFormatWeek(key) };
+  }
+  // monthly
+  const d = new Date();
+  d.setMonth(d.getMonth() + gameOffset);
+  d.setDate(1);
+  const mk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+  // load a reasonable range of weeks for the month
+  const monthStart = new Date(d.getFullYear(), d.getMonth(), 1);
+  const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+  const startKey = gameWeekKey(monthStart);
+  const endKey = gameWeekKey(monthEnd);
+  // load all Mondays in range
+  let k = startKey;
+  const found = [];
+  while(true){
+    if(!gameEntriesCache[k]){
+      const monday = gameMondayDate(k);
+      const rows = await getEntries("Game", monday, monday);
+      gameEntriesCache[k] = rows[monday] || {};
+    }
+    const data = gameEntriesCache[k];
+    if(data && (data.approaches != null || data.daysOut != null || data.rejections != null || data.closes != null || data.mondayOffice || data.wednesdaySocials)){
+      found.push({ key: k, data });
+    }
+    if(k === endKey) break;
+    k = gameAddWeek(k, 1);
+    if(k > endKey && k.slice(0,4) !== endKey.slice(0,4)) break; // safety
+  }
+  return {
+    arr: found.map(x => x.data),
+    keys: found.map(x => x.key),
+    label: d.toLocaleDateString("en-US", {month: "long", year: "numeric"})
+  };
+}
+
+async function gameRenderDashboard(){
+  const { arr, keys, label } = await gameSelectedEntries();
+  document.getElementById("gamePeriodLabel").textContent = label;
+  document.getElementById("gameTrendTitle").textContent = gamePeriod === "weekly" ? "Weekly Activity" : "Monthly Activity";
+  const days = gameSum(arr, "daysOut");
+  const a = gameSum(arr, "approaches");
+  const r = gameSum(arr, "rejections");
+  const c = gameSum(arr, "closes");
+  document.getElementById("gameKDays").textContent = days;
+  document.getElementById("gameKApproaches").textContent = a;
+  document.getElementById("gameKRejections").textContent = r;
+  document.getElementById("gameKCloses").textContent = c;
+  document.getElementById("gameCloseRate").textContent = a ? `${(c / a * 100).toFixed(1)}%` : "0%";
+  document.getElementById("gameRejectRate").textContent = a ? `${(r / a * 100).toFixed(1)}%` : "0%";
+  gameDrawChart(arr, keys);
+  gameRenderActivitySummary(arr);
+}
+
+function gameDrawChart(data, keys){
+  let s = "", base = 174, top = 15;
+  const max = Math.max(5, ...data.flatMap(x => [x.approaches || 0, x.rejections || 0, x.closes || 0]));
+  for(let i = 0; i < 5; i++){
+    const y = base - (base - top) * i / 4;
+    s += `<line x1="38" y1="${y}" x2="605" y2="${y}" stroke="#23364b"/><text x="28" y="${y + 4}" text-anchor="end">${Math.round(max * i / 4)}</text>`;
+  }
+  if(data.length){
+    const group = 550 / data.length;
+    data.forEach((d, i) => {
+      [["approaches","#3986ff"],["rejections","#f16c82"],["closes","#35d6a0"]].forEach(([k, col], j) => {
+        const v = +d[k] || 0;
+        const h = (base - top) * v / max;
+        const x = 48 + i * group + group * .18 + j * group * .19;
+        s += `<rect x="${x}" y="${base - h}" width="${Math.max(8, group * .15)}" height="${h}" rx="3" fill="${col}"/>`;
+      });
+      const k = keys[i] || "";
+      s += `<text x="${48 + i * group + group * .48}" y="197" text-anchor="middle">${gamePeriod === "weekly" ? "Week" : k.slice(-2)}</text>`;
+    });
+  } else {
+    s += '<text x="310" y="100" text-anchor="middle">Save a weekly entry to see your activity</text>';
+  }
+  document.getElementById("gameActivityChart").innerHTML = s;
+}
+
+function gameRenderActivitySummary(arr){
+  document.getElementById("gameActivityPeriodSub").textContent = gamePeriod === "weekly"
+    ? "Activity status for the selected week."
+    : "Activity completion across the selected month.";
+  document.getElementById("gameActivitySummary").innerHTML = GAME_ACTIVITIES.map(([key, name]) => {
+    const vals = arr.map(x => x[key]).filter(Boolean);
+    const yes = vals.filter(x => x === "Yes").length;
+    const no = vals.filter(x => x === "No").length;
+    let content = gamePeriod === "weekly" ? (vals[0] || "Not recorded") : `${yes} Yes · ${no} No`;
+    let cls = content === "Yes" ? "yes" : content === "No" ? "no" : "";
+    return `<div class="game-summary-item"><span>${name}</span><span class="game-status ${cls}">${content}</span></div>`;
+  }).join("");
+}
+
+async function showGameDomain(section){
+  hideWorkspacePages();
+  // Show placeholderPage only for the domain nav bar; hide its panel/content
+  const ph = document.getElementById("placeholderPage");
+  ph.style.display = "block";
+  ph.style.textAlign = "left";
+  ph.style.padding = "0";
+  ph.style.background = "transparent";
+  ph.style.border = "0";
+  ph.style.boxShadow = "none";
+  ph.style.minHeight = "0";
+  document.getElementById("domainSectionNav").style.display = "flex";
+  document.getElementById("domainSectionPanel").style.display = "none";
+  document.getElementById("genericPlaceholderContent").style.display = "none";
+  document.getElementById("gameDomainPage").style.display = "block";
+  document.getElementById("workspaceTitle").textContent = "Game";
+  document.getElementById("workspaceSub").textContent = "";
+  document.querySelectorAll("#domainSectionNav .domain-section-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.domainSection === section);
+  });
+  gameInitEvents();
+  if(!gameSelectedWeek) gameSelectedWeek = gameCurrentWeek();
+  if(section === "entry"){
+    document.getElementById("gameEntryView").classList.add("active");
+    document.getElementById("gameDashboardView").classList.remove("active");
+    await gameLoadWeek(gameSelectedWeek);
+  } else if(section === "dashboard"){
+    document.getElementById("gameEntryView").classList.remove("active");
+    document.getElementById("gameDashboardView").classList.add("active");
+    await gameRenderDashboard();
+  }
+}
+
+
+function resetPlaceholderStyles(){
+  const ph = document.getElementById("placeholderPage");
+  if(!ph) return;
+  ph.style.textAlign = "";
+  ph.style.padding = "";
+  ph.style.background = "";
+  ph.style.border = "";
+  ph.style.boxShadow = "";
+  ph.style.minHeight = "";
+}
+
+// Patch selectDomainSection and renderWorkspace for Game
+const originalSelectDomainSection = selectDomainSection;
+selectDomainSection = async function(section){
+  domainSection = section;
+  const isDomain = currentLayer === 3 && currentItem > 0;
+  const name = (layerItems[3] || [])[currentItem - 1] || "";
+  if(isDomain && name === "Game" && (section === "entry" || section === "dashboard")){
+    document.getElementById("dashboardTab").classList.toggle("active", section === "dashboard");
+    document.getElementById("analyticsTab").classList.remove("active");
+    await showGameDomain(section);
+    return;
+  }
+  // hide game page for definition / other systems
+  const gamePage = document.getElementById("gameDomainPage");
+  if(gamePage) gamePage.style.display = "none";
+  resetPlaceholderStyles();
+  return originalSelectDomainSection(section);
+};
+
+const originalRenderWorkspace = renderWorkspace;
+renderWorkspace = async function(){
+  if(osMode || !currentUser) return;
+  const systemName = currentItem >= 1 ? personalSystemName(currentItem) : null;
+  const name = systemName || (layerItems[currentLayer] || [])[currentItem - 1] || "";
+  if(currentLayer === 3 && name === "Game" && workspaceMode === "system"){
+    // Prefer domainSection; fall back to currentPage for top Dashboard/Analytics tabs
+    let section = domainSection;
+    if(currentPage === "dashboard" || currentPage === "analytics") section = "dashboard";
+    if(currentPage === "entry") section = "entry";
+    if(section === "definition"){
+      // fall through to original for definition
+    } else if(section === "entry" || section === "dashboard"){
+      await showGameDomain(section);
+      return;
+    }
+  }
+  const gamePage = document.getElementById("gameDomainPage");
+  if(gamePage) gamePage.style.display = "none";
+  resetPlaceholderStyles();
+  return originalRenderWorkspace();
+};
+
+
 initializeApp();
 </script>
+
 
 <nav class="mobile-nav" id="mobileNav">
   <button id="mobileNavEntry" onclick="setMobileTab('entry')">Entry</button>
