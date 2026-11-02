@@ -1564,8 +1564,17 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 #gameDomainPage .game-rate strong{display:block;font-size:25px}
 #gameDomainPage .game-rate span{font-size:11px;color:#c1d0de}
 #gameDomainPage .game-muted{color:var(--muted);font-size:12px;margin-top:18px}
-#gameDomainPage .game-activity-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
-#gameDomainPage .game-summary-item{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;background:#0c1724;border:1px solid #22364c;border-radius:8px;font-size:12px}
+#gameDomainPage .game-activity-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:12px}
+#gameDomainPage .game-summary-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;background:#0c1724;border:1px solid #22364c;border-radius:8px;font-size:12px;min-width:0}
+#gameDomainPage .game-summary-item span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#gameDomainPage .game-pie-wrap{display:flex;align-items:center;gap:18px;margin-top:12px;flex-wrap:wrap}
+#gameDomainPage .game-pie{width:140px;height:140px;flex:0 0 140px}
+#gameDomainPage .game-pie-legend{display:flex;flex-direction:column;gap:10px}
+#gameDomainPage .game-pie-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#c1d0de}
+#gameDomainPage .game-pie-item strong{margin-left:auto;font-size:14px;color:var(--txt)}
+@media(max-width:850px){
+  #gameDomainPage .game-activity-summary{grid-template-columns:repeat(2,1fr)}
+}
 #gameDomainPage .game-status{font-weight:700}
 #gameDomainPage .game-status.yes{color:var(--green)}
 #gameDomainPage .game-status.no{color:var(--red)}
@@ -1962,7 +1971,6 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
                   <div class="game-entry-head">
                     <div>
                       <h2 class="game-h2">Weekly Entry</h2>
-                      <div class="game-sub">Log your Game activity and results for the week.</div>
                     </div>
                     <div class="game-date">
                       <button class="game-btn game-ghost" id="gamePrevWeek" aria-label="Previous week">‹</button>
@@ -1993,7 +2001,6 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
                   </div>
                   <div class="game-card" style="margin-bottom:14px">
                     <h3 class="game-h3">Weekly Activities</h3>
-                    <div class="game-sub">Mark whether each planned activity happened this week.</div>
                     <div class="game-activity-grid" id="gameActivityGrid" style="margin-top:12px">
                       <div class="game-card game-activity-item"><strong>Monday Office</strong><div class="game-yn" data-activity="mondayOffice"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
                       <div class="game-card game-activity-item"><strong>Wednesday Socials</strong><div class="game-yn" data-activity="wednesdaySocials"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
@@ -2005,17 +2012,17 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
                   <div class="game-grid">
                     <div class="game-card">
                       <h3 class="game-h3">Going Out</h3>
-                      <div class="game-field"><label for="gameDaysOut">Days</label><input id="gameDaysOut" type="number" min="0" max="7" value="0"></div>
+                      <div class="game-field"><input id="gameDaysOut" type="number" min="0" max="7" value="0"></div>
                     </div>
                     <div class="game-card">
                       <h3 class="game-h3">Approaches</h3>
-                      <div class="game-field"><label for="gameApproaches">Total approaches</label><input id="gameApproaches" type="number" min="0" value="0"></div>
+                      <div class="game-field"><input id="gameApproaches" type="number" min="0" value="0"></div>
                     </div>
                     <div class="game-card game-stack-metrics">
                       <h3 class="game-h3">Rejections</h3>
-                      <div class="game-field"><label for="gameRejections">Total rejections</label><input id="gameRejections" type="number" min="0" value="0"></div>
+                      <div class="game-field"><input id="gameRejections" type="number" min="0" value="0"></div>
                       <h3 class="game-h3" style="margin-top:14px">Closes</h3>
-                      <div class="game-field"><label for="gameCloses">Total closes</label><input id="gameCloses" type="number" min="0" value="0"></div>
+                      <div class="game-field"><input id="gameCloses" type="number" min="0" value="0"></div>
                     </div>
                   </div>
                   <div class="game-actions">
@@ -2047,6 +2054,7 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
                     <h3 class="game-h3" id="gameTrendTitle">Weekly Activity</h3>
                     <svg class="game-chart" id="gameActivityChart" viewBox="0 0 620 210" preserveAspectRatio="none"></svg>
                     <div class="game-legend">
+                      <span><i class="game-dot" style="background:#f3c969"></i>Days Out</span>
                       <span><i class="game-dot" style="background:#3986ff"></i>Approaches</span>
                       <span><i class="game-dot" style="background:#f16c82"></i>Rejections</span>
                       <span><i class="game-dot" style="background:#35d6a0"></i>Closes</span>
@@ -2054,15 +2062,17 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
                   </div>
                   <div class="game-card">
                     <h3 class="game-h3">Outcome Overview</h3>
-                    <div class="game-rates">
-                      <div class="game-rate"><strong id="gameCloseRate">0%</strong><span>Close rate<br>(closes / approaches)</span></div>
-                      <div class="game-rate red"><strong id="gameRejectRate">0%</strong><span>Rejection rate<br>(rejections / approaches)</span></div>
+                    <div class="game-pie-wrap">
+                      <svg class="game-pie" id="gameOutcomePie" viewBox="0 0 120 120"></svg>
+                      <div class="game-pie-legend">
+                        <div class="game-pie-item"><i class="game-dot" style="background:#35d6a0"></i><span>Closes</span><strong id="gameCloseRate">0%</strong></div>
+                        <div class="game-pie-item"><i class="game-dot" style="background:#f16c82"></i><span>Rejections</span><strong id="gameRejectRate">0%</strong></div>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div class="game-card" style="margin-top:14px">
                   <h3 class="game-h3">Planned Activities</h3>
-                  <div class="game-sub" id="gameActivityPeriodSub">Activity status for the selected period.</div>
                   <div class="game-activity-summary" id="gameActivitySummary"></div>
                 </div>
               </section>
@@ -4464,15 +4474,43 @@ async function gameRenderDashboard(){
   document.getElementById("gameKApproaches").textContent = a;
   document.getElementById("gameKRejections").textContent = r;
   document.getElementById("gameKCloses").textContent = c;
-  document.getElementById("gameCloseRate").textContent = a ? `${(c / a * 100).toFixed(1)}%` : "0%";
-  document.getElementById("gameRejectRate").textContent = a ? `${(r / a * 100).toFixed(1)}%` : "0%";
+  const closePct = a ? (c / a * 100) : 0;
+  const rejectPct = a ? (r / a * 100) : 0;
+  document.getElementById("gameCloseRate").textContent = a ? `${closePct.toFixed(1)}%` : "0%";
+  document.getElementById("gameRejectRate").textContent = a ? `${rejectPct.toFixed(1)}%` : "0%";
+  gameDrawPie(c, r);
   gameDrawChart(arr, keys);
   gameRenderActivitySummary(arr);
 }
 
+function gameDrawPie(closes, rejections){
+  const svg = document.getElementById("gameOutcomePie");
+  if(!svg) return;
+  const total = closes + rejections;
+  if(!total){
+    svg.innerHTML = `<circle cx="60" cy="60" r="48" fill="#1a2636" stroke="#2a3b50" stroke-width="1"/><text x="60" y="64" text-anchor="middle" fill="#91a4bd" font-size="11">No data</text>`;
+    return;
+  }
+  const cAng = (closes / total) * 360;
+  const rAng = (rejections / total) * 360;
+  function arc(startDeg, sweepDeg, color){
+    if(sweepDeg <= 0) return "";
+    if(sweepDeg >= 359.9) return `<circle cx="60" cy="60" r="48" fill="${color}"/>`;
+    const r = 48, cx = 60, cy = 60;
+    const start = (startDeg - 90) * Math.PI / 180;
+    const end = (startDeg + sweepDeg - 90) * Math.PI / 180;
+    const x1 = cx + r * Math.cos(start), y1 = cy + r * Math.sin(start);
+    const x2 = cx + r * Math.cos(end), y2 = cy + r * Math.sin(end);
+    const large = sweepDeg > 180 ? 1 : 0;
+    return `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z" fill="${color}"/>`;
+  }
+  svg.innerHTML = arc(0, cAng, "#35d6a0") + arc(cAng, rAng, "#f16c82") + `<circle cx="60" cy="60" r="26" fill="#0e1825"/>`;
+}
+
 function gameDrawChart(data, keys){
   let s = "", base = 174, top = 15;
-  const max = Math.max(5, ...data.flatMap(x => [x.approaches || 0, x.rejections || 0, x.closes || 0]));
+  const series = [["daysOut","#f3c969"],["approaches","#3986ff"],["rejections","#f16c82"],["closes","#35d6a0"]];
+  const max = Math.max(5, ...data.flatMap(x => series.map(([k]) => +x[k] || 0)));
   for(let i = 0; i < 5; i++){
     const y = base - (base - top) * i / 4;
     s += `<line x1="38" y1="${y}" x2="605" y2="${y}" stroke="#23364b"/><text x="28" y="${y + 4}" text-anchor="end">${Math.round(max * i / 4)}</text>`;
@@ -4480,11 +4518,11 @@ function gameDrawChart(data, keys){
   if(data.length){
     const group = 550 / data.length;
     data.forEach((d, i) => {
-      [["approaches","#3986ff"],["rejections","#f16c82"],["closes","#35d6a0"]].forEach(([k, col], j) => {
+      series.forEach(([k, col], j) => {
         const v = +d[k] || 0;
         const h = (base - top) * v / max;
-        const x = 48 + i * group + group * .18 + j * group * .19;
-        s += `<rect x="${x}" y="${base - h}" width="${Math.max(8, group * .15)}" height="${h}" rx="3" fill="${col}"/>`;
+        const x = 48 + i * group + group * .12 + j * group * .18;
+        s += `<rect x="${x}" y="${base - h}" width="${Math.max(6, group * .14)}" height="${h}" rx="3" fill="${col}"/>`;
       });
       const k = keys[i] || "";
       s += `<text x="${48 + i * group + group * .48}" y="197" text-anchor="middle">${gamePeriod === "weekly" ? "Week" : k.slice(-2)}</text>`;
@@ -4496,9 +4534,6 @@ function gameDrawChart(data, keys){
 }
 
 function gameRenderActivitySummary(arr){
-  document.getElementById("gameActivityPeriodSub").textContent = gamePeriod === "weekly"
-    ? "Activity status for the selected week."
-    : "Activity completion across the selected month.";
   document.getElementById("gameActivitySummary").innerHTML = GAME_ACTIVITIES.map(([key, name]) => {
     const vals = arr.map(x => x[key]).filter(Boolean);
     const yes = vals.filter(x => x === "Yes").length;
