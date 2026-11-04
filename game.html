@@ -1,0 +1,117 @@
+<!-- Game module fragment. Loaded by index.html into #domainModuleContent. -->
+<section id="gameDomainPage" style="display:block">
+          <div class="game-shell">
+            <div class="game-window">
+              <section id="gameEntryView" class="game-view active">
+                <div class="game-card">
+                  <div class="game-entry-head">
+                    <div>
+                      <h2 class="game-h2">Weekly Entry</h2>
+                    </div>
+                    <div class="game-date">
+                      <button class="game-btn game-ghost" id="gamePrevWeek" aria-label="Previous week">‹</button>
+                      <button class="game-date-trigger" id="gameCalendarTrigger" aria-expanded="false">
+                        <span id="gameWeekLabel">Week</span><span class="caret">▼</span>
+                      </button>
+                      <button class="game-btn game-ghost" id="gameNextWeek" aria-label="Next week">›</button>
+                      <div class="game-calendar-pop" id="gameCalendarPop">
+                        <div class="game-cal-head">
+                          <span class="game-cal-month" id="gameCalMonth">Month 2026</span>
+                          <div class="game-cal-nav">
+                            <button id="gamePrevMonth" aria-label="Previous month">‹</button>
+                            <button id="gameNextMonth" aria-label="Next month">›</button>
+                          </div>
+                        </div>
+                        <div class="game-cal-grid" id="gameCalendarGrid"></div>
+                        <div class="game-cal-footer">
+                          <button id="gameCalToday">This week</button>
+                          <button id="gameCalClose">Close</button>
+                        </div>
+                        <div class="game-cal-legend">
+                          <span><i style="background:#743848"></i>Past weeks</span>
+                          <span><i style="background:#2c9b7a"></i>Current week</span>
+                          <span><i style="background:#326bb4"></i>Upcoming weeks</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="game-card" style="margin-bottom:14px">
+                    <h3 class="game-h3">Weekly Activities</h3>
+                    <div class="game-activity-grid" id="gameActivityGrid" style="margin-top:12px">
+                      <div class="game-card game-activity-item"><strong>Monday Office</strong><div class="game-yn" data-activity="mondayOffice"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
+                      <div class="game-card game-activity-item"><strong>Wednesday Socials</strong><div class="game-yn" data-activity="wednesdaySocials"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
+                      <div class="game-card game-activity-item"><strong>Friday Night</strong><div class="game-yn" data-activity="fridayNight"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
+                      <div class="game-card game-activity-item"><strong>Saturday Explore</strong><div class="game-yn" data-activity="saturdayExplore"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
+                      <div class="game-card game-activity-item"><strong>Sunday Zone Loop</strong><div class="game-yn" data-activity="sundayZoneLoop"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
+                    </div>
+                  </div>
+                  <div class="game-grid">
+                    <div class="game-card">
+                      <h3 class="game-h3">Going Out</h3>
+                      <div class="game-field"><input id="gameDaysOut" type="number" min="0" max="7" value="0"></div>
+                    </div>
+                    <div class="game-card">
+                      <h3 class="game-h3">Approaches</h3>
+                      <div class="game-field"><input id="gameApproaches" type="number" min="0" value="0"></div>
+                    </div>
+                    <div class="game-card game-stack-metrics">
+                      <h3 class="game-h3">Rejections</h3>
+                      <div class="game-field"><input id="gameRejections" type="number" min="0" value="0"></div>
+                      <h3 class="game-h3" style="margin-top:14px">Closes</h3>
+                      <div class="game-field"><input id="gameCloses" type="number" min="0" value="0"></div>
+                    </div>
+                  </div>
+                  <div class="game-actions">
+                    <button class="game-btn game-ghost" id="gameClearBtn">Clear</button>
+                    <button class="game-btn game-primary" id="gameSaveBtn">Save Entry</button>
+                  </div>
+                </div>
+              </section>
+              <section id="gameDashboardView" class="game-view">
+                <div class="game-toolbar">
+                  <div class="game-segment">
+                    <button class="game-subtab active" data-period="weekly">Weekly</button>
+                    <button class="game-subtab" data-period="monthly">Monthly</button>
+                  </div>
+                  <div class="game-date">
+                    <button class="game-btn game-ghost" id="gamePrevPeriod">‹</button>
+                    <strong id="gamePeriodLabel">Current week</strong>
+                    <button class="game-btn game-ghost" id="gameNextPeriod">›</button>
+                  </div>
+                </div>
+                <div class="game-kpis">
+                  <div class="game-kpi"><span>DAYS OUT</span><strong id="gameKDays">0</strong><small>Days this period</small></div>
+                  <div class="game-kpi"><span>APPROACHES</span><strong id="gameKApproaches">0</strong><small>Total approaches</small></div>
+                  <div class="game-kpi"><span>REJECTIONS</span><strong id="gameKRejections">0</strong><small>Total rejections</small></div>
+                  <div class="game-kpi"><span>CLOSES</span><strong id="gameKCloses">0</strong><small>Total closes</small></div>
+                </div>
+                <div class="game-analytics">
+                  <div class="game-card">
+                    <h3 class="game-h3" id="gameTrendTitle">Weekly Activity</h3>
+                    <svg class="game-chart" id="gameActivityChart" viewBox="0 0 620 210" preserveAspectRatio="none"></svg>
+                    <div class="game-legend">
+                      <span><i class="game-dot" style="background:#f3c969"></i>Days Out</span>
+                      <span><i class="game-dot" style="background:#3986ff"></i>Approaches</span>
+                      <span><i class="game-dot" style="background:#f16c82"></i>Rejections</span>
+                      <span><i class="game-dot" style="background:#35d6a0"></i>Closes</span>
+                    </div>
+                  </div>
+                  <div class="game-card">
+                    <h3 class="game-h3">Outcome Overview</h3>
+                    <div class="game-pie-wrap">
+                      <svg class="game-pie" id="gameOutcomePie" viewBox="0 0 120 120"></svg>
+                      <div class="game-pie-legend">
+                        <div class="game-pie-item"><i class="game-dot" style="background:#35d6a0"></i><span>Closes</span><strong id="gameCloseRate">0%</strong></div>
+                        <div class="game-pie-item"><i class="game-dot" style="background:#f16c82"></i><span>Rejections</span><strong id="gameRejectRate">0%</strong></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="game-card" style="margin-top:14px">
+                  <h3 class="game-h3">Planned Activities</h3>
+                  <div class="game-activity-summary" id="gameActivitySummary"></div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
