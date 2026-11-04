@@ -1595,6 +1595,86 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   #gameDomainPage .game-rating{gap:2px}
   #gameDomainPage .game-rating button{font-size:11px}
 }
+
+
+/* Domain Engine: one continuous workspace containing title, tabs and content */
+#domainWorkspaceShell.domain-workspace-shell.is-domain-active{
+  min-width:0;
+  min-height:calc(100vh - 150px);
+  padding:12px 12px 14px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:linear-gradient(180deg,rgba(10,16,23,.82),rgba(8,14,20,.92));
+  box-shadow:0 16px 42px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.025);
+}
+#domainWorkspaceShell.is-domain-active .workspace-head{
+  margin:0 2px 14px;
+  min-height:34px;
+}
+#domainWorkspaceShell.is-domain-active .workspace-head:before{display:none}
+#domainWorkspaceShell.is-domain-active .workspace-title{font-size:27px}
+#domainWorkspaceShell.is-domain-active .domain-sections{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:0 0 14px;
+  padding:0 0 0 0;
+}
+#domainWorkspaceShell.is-domain-active .domain-section-btn{
+  border:1px solid var(--line-strong);
+  background:#111a24;
+  color:#c7d0db;
+  border-radius:9px;
+  padding:9px 16px;
+  font-size:12px;
+  font-weight:650;
+  cursor:pointer;
+}
+#domainWorkspaceShell.is-domain-active .domain-section-btn:hover{border-color:rgba(101,169,255,.55);color:#fff}
+#domainWorkspaceShell.is-domain-active .domain-section-btn.active{
+  background:#1c3b63;
+  border-color:#528bd0;
+  color:#fff;
+}
+#domainWorkspaceShell.is-domain-active #placeholderPage{
+  padding:0!important;
+  margin:0;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+  text-align:left;
+}
+#domainWorkspaceShell.is-domain-active #domainSectionPanel.domain-section-panel{
+  height:calc(100vh - 260px);
+  min-height:440px;
+  max-height:none;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  overflow:visible;
+}
+#domainWorkspaceShell.is-domain-active #gameDomainPage .game-window{
+  min-height:0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+}
+#domainWorkspaceShell.is-domain-active #gameDomainPage .game-tabs{margin-top:0}
+#domainWorkspaceShell.is-domain-active #systemDefinitionPage{min-height:0}
+#domainWorkspaceShell.is-domain-active #systemDefinitionPage .card{min-height:440px}
+@media(max-width:700px){
+  #domainWorkspaceShell.domain-workspace-shell{min-height:0;padding:12px 10px;border-radius:12px}
+  #domainWorkspaceShell.is-domain-active .workspace-head{margin-bottom:12px}
+  #domainWorkspaceShell.is-domain-active .workspace-title{font-size:23px}
+  #domainWorkspaceShell.is-domain-active .domain-sections{gap:6px;flex-wrap:wrap}
+  #domainWorkspaceShell.is-domain-active .domain-section-btn{padding:8px 12px}
+  #domainWorkspaceShell.is-domain-active #domainSectionPanel.domain-section-panel{height:auto;min-height:0}
+  #domainWorkspaceShell.is-domain-active #systemDefinitionPage .card{min-height:420px}
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -3138,6 +3218,8 @@ async function selectDomainSection(section){
 async function renderWorkspace(){
   if(osMode || !currentUser) return;
   const systemPage=document.getElementById("systemPage");
+  const domainShell=document.getElementById("domainWorkspaceShell");
+  if(domainShell) domainShell.classList.toggle("is-domain-active", currentLayer===3);
   if(systemPage) systemPage.classList.toggle("outcome-fit", workspaceMode==="outcomes");
   const enginePage=document.getElementById("engineDashboardPage");
   if(enginePage && workspaceMode!=="outcomes") enginePage.classList.remove("outcome-mode");
@@ -4557,6 +4639,8 @@ function gameRenderActivitySummary(arr){
 }
 
 async function showGameDomain(section){
+  const domainShell=document.getElementById("domainWorkspaceShell");
+  if(domainShell) domainShell.classList.add("is-domain-active");
   hideWorkspacePages();
   // Show placeholderPage only for the domain nav bar; hide its panel/content
   const ph = document.getElementById("placeholderPage");
@@ -4643,6 +4727,28 @@ renderWorkspace = async function(){
   return originalRenderWorkspace();
 };
 
+
+
+// Domain Engine workspace shell: group the system title, section tabs and active content
+// into one continuous panel without changing the underlying page or tracker logic.
+(function buildDomainWorkspaceShell(){
+  const systemPage = document.getElementById("systemPage");
+  if(!systemPage || document.getElementById("domainWorkspaceShell")) return;
+  const mobileHome = document.getElementById("mobileHomePage");
+  const shell = document.createElement("div");
+  shell.id = "domainWorkspaceShell";
+  shell.className = "domain-workspace-shell";
+  if(mobileHome && mobileHome.parentNode === systemPage) systemPage.insertBefore(shell, mobileHome.nextSibling);
+  else systemPage.appendChild(shell);
+
+  const head = systemPage.querySelector(":scope > .workspace-head");
+  const nav = document.getElementById("domainSectionNav");
+  if(head) shell.appendChild(head);
+  if(nav) shell.appendChild(nav);
+  Array.from(systemPage.children).forEach(child => {
+    if(child !== mobileHome && child !== shell) shell.appendChild(child);
+  });
+})();
 
 initializeApp();
 </script>
