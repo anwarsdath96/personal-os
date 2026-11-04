@@ -1423,6 +1423,47 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 .domain-section-btn{border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text-2);padding:9px 16px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:650}
 .domain-section-btn.active{background:#1c3b63;border-color:#528bd0;color:#fff}
 
+/* =========================================================
+   DOMAIN MODULE SHELL — each Domain Area owns its full workspace
+   ========================================================= */
+#systemPage.domain-mode .workspace-head{display:none!important}
+.domain-module-host{width:100%;min-width:0}
+.domain-module-root{
+  width:100%;min-height:calc(100vh - 112px);box-sizing:border-box;
+  border:1px solid var(--line);border-radius:14px;
+  background:linear-gradient(180deg,rgba(13,20,28,.96),rgba(9,15,21,.96));
+  padding:20px 22px 18px;display:flex;flex-direction:column;gap:16px;
+}
+.domain-module-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;min-width:0}
+.domain-module-title{font-size:27px;line-height:1.2;font-weight:750;margin:0;color:var(--txt)}
+.domain-module-date{font-size:13px;color:var(--text-2);text-align:right;white-space:nowrap}
+.domain-module-date small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.domain-module-tabs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0}
+.domain-module-tab{border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text-2);padding:9px 16px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:650}
+.domain-module-tab.active{background:#1c3b63;border-color:#528bd0;color:#fff}
+.domain-module-panel{flex:1 1 auto;min-height:calc(100vh - 285px);min-width:0;border:1px solid var(--line);border-radius:13px;background:linear-gradient(180deg,rgba(13,20,28,.94),rgba(9,15,21,.94));padding:20px 22px 18px;box-sizing:border-box;overflow:auto}
+.domain-module-view{display:none;min-width:0}
+.domain-module-view.active{display:block}
+.domain-module-placeholder{color:var(--muted);font-size:13px;line-height:1.6;padding:4px 2px}
+.domain-definition-view{height:100%;min-height:calc(100vh - 340px);display:none;flex-direction:column;gap:12px}
+.domain-definition-view.active{display:flex}
+.domain-definition-view label{font-size:13px;font-weight:650;color:var(--text-2)}
+.domain-definition-view textarea{flex:1 1 auto;width:100%;min-height:220px;resize:vertical;box-sizing:border-box}
+.domain-definition-view .save-row{display:flex;justify-content:flex-end;margin-top:0}
+.domain-module-loading,.domain-module-error{padding:24px;color:var(--muted)}
+.domain-module-error{color:#ff9ba8}
+/* Game's existing card becomes content inside the shared module panel. */
+.domain-module-root #gameDomainPage .game-window{border:0;background:transparent;border-radius:0;padding:0;min-height:0}
+.domain-module-root #gameDomainPage .game-shell{max-width:100%}
+@media(max-width:700px){
+  .domain-module-root{padding:15px 13px 14px;gap:13px;min-height:calc(100vh - 100px)}
+  .domain-module-title{font-size:22px}
+  .domain-module-panel{padding:14px 12px;min-height:calc(100vh - 260px)}
+  .domain-module-tabs{gap:6px}
+  .domain-module-tab{padding:8px 12px;font-size:11px}
+  .domain-definition-view{min-height:calc(100vh - 300px)}
+}
+
 /* When Domain Engine content is active, neutralize placeholder centering/padding */
 #placeholderPage:has(#domainSectionNav[style*="flex"]),
 #placeholderPage:has(#domainSectionPanel[style*="block"]){
@@ -1596,85 +1637,177 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   #gameDomainPage .game-rating button{font-size:11px}
 }
 
-
-/* Domain Engine: one continuous workspace containing title, tabs and content */
-#domainWorkspaceShell.domain-workspace-shell.is-domain-active{
-  min-width:0;
-  min-height:calc(100vh - 150px);
-  padding:12px 12px 14px;
-  border:1px solid var(--line);
-  border-radius:15px;
-  background:linear-gradient(180deg,rgba(10,16,23,.82),rgba(8,14,20,.92));
-  box-shadow:0 16px 42px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.025);
-}
-#domainWorkspaceShell.is-domain-active .workspace-head{
-  margin:0 2px 14px;
-  min-height:34px;
-}
-#domainWorkspaceShell.is-domain-active .workspace-head:before{display:none}
-#domainWorkspaceShell.is-domain-active .workspace-title{font-size:27px}
-#domainWorkspaceShell.is-domain-active .domain-sections{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin:0 0 14px;
-  padding:0 0 0 0;
-}
-#domainWorkspaceShell.is-domain-active .domain-section-btn{
-  border:1px solid var(--line-strong);
-  background:#111a24;
-  color:#c7d0db;
-  border-radius:9px;
-  padding:9px 16px;
-  font-size:12px;
-  font-weight:650;
-  cursor:pointer;
-}
-#domainWorkspaceShell.is-domain-active .domain-section-btn:hover{border-color:rgba(101,169,255,.55);color:#fff}
-#domainWorkspaceShell.is-domain-active .domain-section-btn.active{
-  background:#1c3b63;
-  border-color:#528bd0;
-  color:#fff;
-}
-#domainWorkspaceShell.is-domain-active #placeholderPage{
-  padding:0!important;
-  margin:0;
-  background:transparent!important;
-  border:0!important;
-  box-shadow:none!important;
-  min-height:0!important;
-  text-align:left;
-}
-#domainWorkspaceShell.is-domain-active #domainSectionPanel.domain-section-panel{
-  height:calc(100vh - 260px);
-  min-height:440px;
-  max-height:none;
-  padding:0;
-  border:0;
-  border-radius:0;
-  background:transparent;
-  overflow:visible;
-}
-#domainWorkspaceShell.is-domain-active #gameDomainPage .game-window{
-  min-height:0;
-  padding:0;
-  border:0;
-  border-radius:0;
-  background:transparent;
-}
-#domainWorkspaceShell.is-domain-active #gameDomainPage .game-tabs{margin-top:0}
-#domainWorkspaceShell.is-domain-active #systemDefinitionPage{min-height:0}
-#domainWorkspaceShell.is-domain-active #systemDefinitionPage .card{min-height:440px}
+/* =========================================================
+   MOBILE POLISH — all engines, views, dashboards
+   ========================================================= */
 @media(max-width:700px){
-  #domainWorkspaceShell.domain-workspace-shell{min-height:0;padding:12px 10px;border-radius:12px}
-  #domainWorkspaceShell.is-domain-active .workspace-head{margin-bottom:12px}
-  #domainWorkspaceShell.is-domain-active .workspace-title{font-size:23px}
-  #domainWorkspaceShell.is-domain-active .domain-sections{gap:6px;flex-wrap:wrap}
-  #domainWorkspaceShell.is-domain-active .domain-section-btn{padding:8px 12px}
-  #domainWorkspaceShell.is-domain-active #domainSectionPanel.domain-section-panel{height:auto;min-height:0}
-  #domainWorkspaceShell.is-domain-active #systemDefinitionPage .card{min-height:420px}
+  /* Shell */
+  body.mobile-ui .app{padding:10px 12px 96px;max-width:none;overflow-x:hidden}
+  body.mobile-ui .layout{display:block}
+  body.mobile-ui .main{min-width:0;width:100%}
+  body.mobile-ui .workspace-title{font-size:20px}
+  body.mobile-ui .workspace-sub{font-size:12px}
+
+  /* Domain section tabs */
+  body.mobile-ui .domain-sections{
+    gap:6px;margin:0 0 12px;flex-wrap:wrap;
+  }
+  body.mobile-ui .domain-section-btn{
+    padding:8px 12px;font-size:12px;border-radius:8px;
+  }
+
+  /* Domain panel / definition — drop fixed desktop height */
+  body.mobile-ui .domain-section-panel,
+  body.mobile-ui #domainSectionPanel.domain-section-panel{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    padding:14px 14px 16px;
+    overflow:visible;
+  }
+  body.mobile-ui #domainSectionPanel #domainDefinitionEditor{
+    min-height:280px;
+    height:auto;
+  }
+  body.mobile-ui #domainSectionPanel #domainDefinitionText,
+  body.mobile-ui #domainSectionPanel .definition-note{
+    min-height:240px!important;
+    height:auto!important;
+    max-height:none!important;
+    font-size:14px;
+  }
+
+  /* Game Domain */
+  body.mobile-ui #gameDomainPage .game-window{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    padding:14px;
+    overflow:visible;
+  }
+  body.mobile-ui #gameDomainPage .game-shell{height:auto!important}
+  body.mobile-ui #gameDomainPage .game-entry-head,
+  body.mobile-ui #gameDomainPage .game-toolbar{
+    flex-direction:column;align-items:stretch;gap:10px;
+  }
+  body.mobile-ui #gameDomainPage .game-date{
+    width:100%;justify-content:space-between;
+  }
+  body.mobile-ui #gameDomainPage .game-grid,
+  body.mobile-ui #gameDomainPage .game-grid.bottom,
+  body.mobile-ui #gameDomainPage .game-analytics{
+    grid-template-columns:1fr!important;
+  }
+  body.mobile-ui #gameDomainPage .game-kpis{
+    grid-template-columns:repeat(2,1fr)!important;
+  }
+  body.mobile-ui #gameDomainPage .game-activity-grid{
+    grid-template-columns:1fr 1fr!important;
+  }
+  body.mobile-ui #gameDomainPage .game-activity-summary{
+    grid-template-columns:1fr!important;
+  }
+  body.mobile-ui #gameDomainPage .game-pie-wrap{
+    flex-direction:column;align-items:center;
+  }
+  body.mobile-ui #gameDomainPage .game-actions{
+    flex-wrap:wrap;justify-content:stretch;
+  }
+  body.mobile-ui #gameDomainPage .game-actions .game-btn{
+    flex:1 1 auto;
+  }
+  body.mobile-ui #gameDomainPage .game-calendar-pop{
+    left:0;right:0;width:auto;max-width:100%;
+  }
+  body.mobile-ui #gameDomainPage .game-chart{
+    width:100%;height:auto;
+  }
+
+  /* Overview / health cards */
+  body.mobile-ui .health-card,
+  body.mobile-ui .health-stack,
+  body.mobile-ui #overviewPage .health-card{
+    min-height:0!important;
+    padding:14px!important;
+  }
+  body.mobile-ui .health-card-head{
+    flex-direction:column;align-items:flex-start;gap:10px;
+  }
+  body.mobile-ui .health-bars,
+  body.mobile-ui .bar-chart,
+  body.mobile-ui .health-chart{
+    overflow-x:auto;-webkit-overflow-scrolling:touch;
+  }
+
+  /* Generic cards / grids */
+  body.mobile-ui .card,
+  body.mobile-ui .chart-card,
+  body.mobile-ui .placeholder{
+    padding:14px!important;
+    min-height:0!important;
+  }
+  body.mobile-ui .metrics,
+  body.mobile-ui .metric-grid,
+  body.mobile-ui .kpi-row{
+    grid-template-columns:1fr 1fr!important;
+    gap:10px!important;
+  }
+
+  /* Entry hub / personal trackers */
+  body.mobile-ui .entry-hub,
+  body.mobile-ui .hub-block,
+  body.mobile-ui .tracker-grid,
+  body.mobile-ui .date-strip-wrap{
+    overflow-x:auto;-webkit-overflow-scrolling:touch;
+  }
+  body.mobile-ui .hub-row,
+  body.mobile-ui .entry-row{
+    flex-wrap:wrap;gap:8px;
+  }
+  body.mobile-ui .choice-btn,
+  body.mobile-ui .yn-btn{
+    min-height:36px;
+  }
+  body.mobile-ui input,
+  body.mobile-ui select,
+  body.mobile-ui textarea{
+    font-size:16px!important; /* prevent iOS zoom */
+  }
+
+  /* System definition page */
+  body.mobile-ui #systemDefinitionPage .definition-note{
+    min-height:220px!important;
+  }
+
+  /* Drawer */
+  body.mobile-ui .mobile-drawer-panel{
+    width:min(300px,86vw);
+    padding:16px 12px 24px;
+  }
+  body.mobile-ui .mobile-drawer-panel .item{
+    width:100%;
+    text-align:left;
+  }
+
+  /* Bottom nav safe area */
+  body.mobile-ui .mobile-nav{
+    padding-bottom:max(9px, env(safe-area-inset-bottom));
+    bottom:max(8px, env(safe-area-inset-bottom));
+  }
+
+  /* Auth card on small screens */
+  body.mobile-ui .auth-card{padding:22px 18px}
 }
 
+@media(max-width:420px){
+  body.mobile-ui #gameDomainPage .game-activity-grid{
+    grid-template-columns:1fr!important;
+  }
+  body.mobile-ui #gameDomainPage .game-kpis{
+    grid-template-columns:1fr 1fr!important;
+  }
+  body.mobile-ui .domain-section-btn{padding:8px 10px;font-size:11px}
+}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -2024,20 +2157,6 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
         </section>
 
         <div id="placeholderPage" class="placeholder" style="display:none">
-          <div id="domainSectionNav" class="domain-sections" style="display:none">
-            <button class="domain-section-btn" data-domain-section="entry" onclick="selectDomainSection('entry')">Entry</button>
-            <button class="domain-section-btn" data-domain-section="dashboard" onclick="selectDomainSection('dashboard')">Dashboard</button>
-            <button class="domain-section-btn" data-domain-section="definition" onclick="selectDomainSection('definition')">Definition</button>
-          </div>
-          <div id="domainSectionPanel" class="domain-section-panel" style="display:none">
-            <strong id="domainSectionTitle" style="display:none">Money</strong>
-            <p id="domainSectionDescription" style="display:none">Configure this domain system.</p>
-            <div id="domainDefinitionEditor" style="display:none;margin-top:18px;text-align:left">
-              <label for="domainDefinitionText">System definition</label>
-              <textarea class="definition-note" id="domainDefinitionText" placeholder="Describe this domain system. One point per line." style="width:100%"></textarea>
-              <div class="save-row"><button class="save-btn icon-btn" id="saveDomainDefinitionBtn" onclick="saveSystemDefinition()" title="Save definition">Save</button></div>
-            </div>
-          </div>
           <div id="genericPlaceholderContent">
             <div class="dash-toolbar" style="justify-content:flex-start;margin-bottom:18px">
               <button class="def-btn" id="placeholderDefBtn" onclick="openSystemDefinition()">System Definition</button>
@@ -2047,123 +2166,9 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
           </div>
         </div>
 
-        <!-- GAME DOMAIN PAGE (integrated weekly tracker) -->
-        <section id="gameDomainPage" style="display:none">
-          <div class="game-shell">
-            <div class="game-window">
-              <section id="gameEntryView" class="game-view active">
-                <div class="game-card">
-                  <div class="game-entry-head">
-                    <div>
-                      <h2 class="game-h2">Weekly Entry</h2>
-                    </div>
-                    <div class="game-date">
-                      <button class="game-btn game-ghost" id="gamePrevWeek" aria-label="Previous week">‹</button>
-                      <button class="game-date-trigger" id="gameCalendarTrigger" aria-expanded="false">
-                        <span id="gameWeekLabel">Week</span><span class="caret">▼</span>
-                      </button>
-                      <button class="game-btn game-ghost" id="gameNextWeek" aria-label="Next week">›</button>
-                      <div class="game-calendar-pop" id="gameCalendarPop">
-                        <div class="game-cal-head">
-                          <span class="game-cal-month" id="gameCalMonth">Month 2026</span>
-                          <div class="game-cal-nav">
-                            <button id="gamePrevMonth" aria-label="Previous month">‹</button>
-                            <button id="gameNextMonth" aria-label="Next month">›</button>
-                          </div>
-                        </div>
-                        <div class="game-cal-grid" id="gameCalendarGrid"></div>
-                        <div class="game-cal-footer">
-                          <button id="gameCalToday">This week</button>
-                          <button id="gameCalClose">Close</button>
-                        </div>
-                        <div class="game-cal-legend">
-                          <span><i style="background:#743848"></i>Past weeks</span>
-                          <span><i style="background:#2c9b7a"></i>Current week</span>
-                          <span><i style="background:#326bb4"></i>Upcoming weeks</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="game-card" style="margin-bottom:14px">
-                    <h3 class="game-h3">Weekly Activities</h3>
-                    <div class="game-activity-grid" id="gameActivityGrid" style="margin-top:12px">
-                      <div class="game-card game-activity-item"><strong>Monday Office</strong><div class="game-yn" data-activity="mondayOffice"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
-                      <div class="game-card game-activity-item"><strong>Wednesday Socials</strong><div class="game-yn" data-activity="wednesdaySocials"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
-                      <div class="game-card game-activity-item"><strong>Friday Night</strong><div class="game-yn" data-activity="fridayNight"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
-                      <div class="game-card game-activity-item"><strong>Saturday Explore</strong><div class="game-yn" data-activity="saturdayExplore"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
-                      <div class="game-card game-activity-item"><strong>Sunday Zone Loop</strong><div class="game-yn" data-activity="sundayZoneLoop"><button class="yes" data-value="Yes">Yes</button><button class="no" data-value="No">No</button></div></div>
-                    </div>
-                  </div>
-                  <div class="game-grid">
-                    <div class="game-card">
-                      <h3 class="game-h3">Going Out</h3>
-                      <div class="game-field"><input id="gameDaysOut" type="number" min="0" max="7" value="0"></div>
-                    </div>
-                    <div class="game-card">
-                      <h3 class="game-h3">Approaches</h3>
-                      <div class="game-field"><input id="gameApproaches" type="number" min="0" value="0"></div>
-                    </div>
-                    <div class="game-card game-stack-metrics">
-                      <h3 class="game-h3">Rejections</h3>
-                      <div class="game-field"><input id="gameRejections" type="number" min="0" value="0"></div>
-                      <h3 class="game-h3" style="margin-top:14px">Closes</h3>
-                      <div class="game-field"><input id="gameCloses" type="number" min="0" value="0"></div>
-                    </div>
-                  </div>
-                  <div class="game-actions">
-                    <button class="game-btn game-ghost" id="gameClearBtn">Clear</button>
-                    <button class="game-btn game-primary" id="gameSaveBtn">Save Entry</button>
-                  </div>
-                </div>
-              </section>
-              <section id="gameDashboardView" class="game-view">
-                <div class="game-toolbar">
-                  <div class="game-segment">
-                    <button class="game-subtab active" data-period="weekly">Weekly</button>
-                    <button class="game-subtab" data-period="monthly">Monthly</button>
-                  </div>
-                  <div class="game-date">
-                    <button class="game-btn game-ghost" id="gamePrevPeriod">‹</button>
-                    <strong id="gamePeriodLabel">Current week</strong>
-                    <button class="game-btn game-ghost" id="gameNextPeriod">›</button>
-                  </div>
-                </div>
-                <div class="game-kpis">
-                  <div class="game-kpi"><span>DAYS OUT</span><strong id="gameKDays">0</strong><small>Days this period</small></div>
-                  <div class="game-kpi"><span>APPROACHES</span><strong id="gameKApproaches">0</strong><small>Total approaches</small></div>
-                  <div class="game-kpi"><span>REJECTIONS</span><strong id="gameKRejections">0</strong><small>Total rejections</small></div>
-                  <div class="game-kpi"><span>CLOSES</span><strong id="gameKCloses">0</strong><small>Total closes</small></div>
-                </div>
-                <div class="game-analytics">
-                  <div class="game-card">
-                    <h3 class="game-h3" id="gameTrendTitle">Weekly Activity</h3>
-                    <svg class="game-chart" id="gameActivityChart" viewBox="0 0 620 210" preserveAspectRatio="none"></svg>
-                    <div class="game-legend">
-                      <span><i class="game-dot" style="background:#f3c969"></i>Days Out</span>
-                      <span><i class="game-dot" style="background:#3986ff"></i>Approaches</span>
-                      <span><i class="game-dot" style="background:#f16c82"></i>Rejections</span>
-                      <span><i class="game-dot" style="background:#35d6a0"></i>Closes</span>
-                    </div>
-                  </div>
-                  <div class="game-card">
-                    <h3 class="game-h3">Outcome Overview</h3>
-                    <div class="game-pie-wrap">
-                      <svg class="game-pie" id="gameOutcomePie" viewBox="0 0 120 120"></svg>
-                      <div class="game-pie-legend">
-                        <div class="game-pie-item"><i class="game-dot" style="background:#35d6a0"></i><span>Closes</span><strong id="gameCloseRate">0%</strong></div>
-                        <div class="game-pie-item"><i class="game-dot" style="background:#f16c82"></i><span>Rejections</span><strong id="gameRejectRate">0%</strong></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="game-card" style="margin-top:14px">
-                  <h3 class="game-h3">Planned Activities</h3>
-                  <div class="game-activity-summary" id="gameActivitySummary"></div>
-                </div>
-              </section>
-            </div>
-          </div>
-        </section>
+        <!-- The complete Domain Area workspace (title, tabs and content) is loaded here. -->
+        <div id="domainModuleHost" class="domain-module-host" style="display:none"></div>
+
 
         <section id="systemDefinitionPage" style="display:none">
           <div class="card">
@@ -3168,7 +3173,7 @@ async function renderEngineOverview(){
 
 
 function hideWorkspacePages(){
-  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","overviewPage","entryHubPage","systemDefinitionPage","mobileHomePage","gameDomainPage"].forEach(id=>{
+  ["todayPage","dashboardPage","analyticsPage","workoutPage","meditationPage","simpleTrackerPage","engineDashboardPage","placeholderPage","overviewPage","entryHubPage","systemDefinitionPage","mobileHomePage","domainModuleHost"].forEach(id=>{
     const el=document.getElementById(id); if(el) el.style.display="none";
   });
 }
@@ -3190,6 +3195,8 @@ async function selectDomainSection(section){
     document.getElementById("genericPlaceholderContent").style.display="none";
     document.getElementById("domainSectionNav").style.display="flex";
     document.getElementById("domainSectionPanel").style.display="block";
+    const moduleHost=document.getElementById("domainModuleContent");
+    if(moduleHost) moduleHost.style.display="none";
     document.getElementById("domainSectionTitle").style.display="none";
     document.getElementById("domainSectionDescription").style.display="none";
     document.getElementById("domainDefinitionEditor").style.display="flex";
@@ -3218,8 +3225,6 @@ async function selectDomainSection(section){
 async function renderWorkspace(){
   if(osMode || !currentUser) return;
   const systemPage=document.getElementById("systemPage");
-  const domainShell=document.getElementById("domainWorkspaceShell");
-  if(domainShell) domainShell.classList.toggle("is-domain-active", currentLayer===3);
   if(systemPage) systemPage.classList.toggle("outcome-fit", workspaceMode==="outcomes");
   const enginePage=document.getElementById("engineDashboardPage");
   if(enginePage && workspaceMode!=="outcomes") enginePage.classList.remove("outcome-mode");
@@ -3303,6 +3308,9 @@ async function renderWorkspace(){
       else description.textContent="Dashboard for "+name+". Tracking analytics will appear here once this domain system is configured.";
       document.getElementById("workspaceTitle").textContent=name;
       document.getElementById("workspaceSub").textContent="";
+      const moduleHost=document.getElementById("domainModuleContent");
+      if(moduleHost) moduleHost.style.display="block";
+      await loadDomainModule(name);
       return;
     }
     document.getElementById("domainSectionNav").style.display="none";
@@ -3533,8 +3541,8 @@ async function openSystemDefinition(name){
 }
 async function saveSystemDefinition(){
   if(!definitionSystem) return;
-  const domainEditor=document.getElementById("domainDefinitionEditor");
-  const useDomainEditor=domainEditor && domainEditor.style.display!=="none" && currentLayer===3;
+  const domainEditor=document.getElementById("domainDefinitionText");
+  const useDomainEditor=!!domainEditor && currentLayer===3;
   const text=document.getElementById(useDomainEditor?"domainDefinitionText":"systemDefinitionText").value;
   const bullets=text.split(/\n/).map(line=>line.replace(/^\s*[•\-\*]\s*/,"").trim()).filter(Boolean);
   if(await saveSystemEntry(definitionSystem,DEFINITION_DATE,{text,bullets})){
@@ -4318,6 +4326,135 @@ document.addEventListener("click",(event)=>{
   }
 });
 
+/* =========================================================
+   DOMAIN MODULE LOADER
+   Each Domain Area lives in its own HTML fragment under /domain.
+   The shared application shell and authentication remain in index.html.
+   ========================================================= */
+let activeDomainModule = "";
+let domainModuleRequestId = 0;
+
+async function loadDomainModule(areaName){
+  const slug = String(areaName || "").toLowerCase().replace(/[^a-z0-9-]/g, "");
+  const host = document.getElementById("domainModuleHost");
+  if(!host || !slug) return false;
+
+  host.style.display = "block";
+
+  // Reuse the currently loaded module if the user is still viewing it.
+  if(activeDomainModule === slug && host.dataset.loaded === "true") return true;
+
+  const requestId = ++domainModuleRequestId;
+  host.dataset.loaded = "false";
+  host.innerHTML = '<div class="domain-module-loading">Loading ' + areaName + '…</div>';
+
+  try{
+    // fetch() requires HTTP/HTTPS. Opening index.html directly as file://
+    // will be blocked by the browser, even when the folder structure is correct.
+    if(window.location.protocol === "file:"){
+      throw new Error("This page is opened directly from your computer. Run it through a local web server, or open the deployed GitHub Pages website.");
+    }
+
+    // Resolve from the location of index.html. This also works when the
+    // repository is deployed under a GitHub Pages project path, e.g. /repo/.
+    const moduleUrl = new URL("./domain/" + slug + ".html", document.baseURI);
+    const response = await fetch(moduleUrl.href, {
+      method: "GET",
+      cache: "no-cache",
+      headers: { "Accept": "text/html" }
+    });
+
+    if(!response.ok){
+      throw new Error("Could not load domain/" + slug + ".html (HTTP " + response.status + "). Check that the file exists in the domain folder and was committed to GitHub.");
+    }
+
+    const markup = await response.text();
+
+    // Ignore an older request if the user clicked another Domain Area
+    // while this module was still downloading.
+    if(requestId !== domainModuleRequestId) return false;
+
+    if(!markup.trim()){
+      throw new Error("domain/" + slug + ".html is empty.");
+    }
+
+    host.innerHTML = markup;
+    host.dataset.loaded = "true";
+    activeDomainModule = slug;
+
+    const dateEl = host.querySelector("#domainModuleDate");
+    if(dateEl){
+      const now = new Date();
+      dateEl.innerHTML =
+        now.toLocaleDateString("en-GB",{day:"2-digit",month:"long"}) +
+        '<small>' +
+        now.toLocaleDateString("en-US",{weekday:"long"}) +
+        '</small>';
+    }
+
+    // The Game module's interface is loaded above; its existing application
+    // logic and Supabase operations remain in index.html for now.
+    if(slug === "game"){
+      gameInitialized = false;
+      gameInitEvents();
+    }
+
+    return true;
+  }catch(error){
+    // Do not let a failed older request overwrite the module selected later.
+    if(requestId !== domainModuleRequestId) return false;
+
+    host.dataset.loaded = "false";
+    activeDomainModule = "";
+    host.innerHTML =
+      '<div class="domain-module-error">' +
+      error.message +
+      '<br><small>Expected location: domain/' + slug + '.html</small>' +
+      '</div>';
+
+    console.error("Domain module load failed:", error);
+    return false;
+  }
+}
+
+async function showDomainSectionView(section){
+  domainSection = section;
+  const host = document.getElementById("domainModuleHost");
+  if(!host || !host.querySelector("[data-domain-module-root]")) return;
+
+  host.querySelectorAll("[data-domain-section]").forEach(btn=>{
+    btn.classList.toggle("active",btn.dataset.domainSection===section);
+  });
+
+  host.querySelectorAll("[data-domain-view]").forEach(view=>{
+    const active = view.dataset.domainView === section;
+    view.classList.toggle("active",active);
+    if(view.classList.contains("domain-module-view")){
+      view.style.display = active ? "block" : "none";
+    }
+  });
+
+  workspaceMode = "system";
+  currentPage = section;
+
+  if(section === "definition"){
+    definitionSystem = (layerItems[3] || [])[currentItem-1] || "Money";
+    const rows = await getEntries(definitionSystem,DEFINITION_DATE,DEFINITION_DATE);
+    const saved = rows[DEFINITION_DATE];
+    const editor = host.querySelector("#domainDefinitionText");
+    if(editor){
+      editor.value = saved?.text ||
+        (Array.isArray(saved?.bullets) ? saved.bullets.join("\n") : "");
+    }
+    const save = host.querySelector("#saveDomainDefinitionBtn");
+    if(save) save.classList.remove("saved");
+  }else if(activeDomainModule === "game"){
+    if(!gameSelectedWeek) gameSelectedWeek = gameCurrentWeek();
+    if(section === "entry") await gameLoadWeek(gameSelectedWeek);
+    if(section === "dashboard") await gameRenderDashboard();
+  }
+}
+
 /* ==============================
    GAME DOMAIN — Weekly tracker (Supabase-backed)
    ============================== */
@@ -4638,117 +4775,45 @@ function gameRenderActivitySummary(arr){
   }).join("");
 }
 
-async function showGameDomain(section){
-  const domainShell=document.getElementById("domainWorkspaceShell");
-  if(domainShell) domainShell.classList.add("is-domain-active");
+async function showDomainWorkspace(section){
   hideWorkspacePages();
-  // Show placeholderPage only for the domain nav bar; hide its panel/content
-  const ph = document.getElementById("placeholderPage");
-  ph.style.display = "block";
-  ph.style.textAlign = "left";
-  ph.style.padding = "0";
-  ph.style.background = "transparent";
-  ph.style.border = "0";
-  ph.style.boxShadow = "none";
-  ph.style.minHeight = "0";
-  document.getElementById("domainSectionNav").style.display = "flex";
-  document.getElementById("domainSectionPanel").style.display = "none";
-  document.getElementById("genericPlaceholderContent").style.display = "none";
-  document.getElementById("gameDomainPage").style.display = "block";
-  document.getElementById("workspaceTitle").textContent = "Game";
-  document.getElementById("workspaceSub").textContent = "";
-  document.querySelectorAll("#domainSectionNav .domain-section-btn").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.domainSection === section);
-  });
-  gameInitEvents();
-  if(!gameSelectedWeek) gameSelectedWeek = gameCurrentWeek();
-  if(section === "entry"){
-    document.getElementById("gameEntryView").classList.add("active");
-    document.getElementById("gameDashboardView").classList.remove("active");
-    await gameLoadWeek(gameSelectedWeek);
-  } else if(section === "dashboard"){
-    document.getElementById("gameEntryView").classList.remove("active");
-    document.getElementById("gameDashboardView").classList.add("active");
-    await gameRenderDashboard();
-  }
+  const systemPage=document.getElementById("systemPage");
+  if(systemPage) systemPage.classList.add("domain-mode");
+  const host=document.getElementById("domainModuleHost");
+  host.style.display="block";
+  const name=(layerItems[3]||[])[currentItem-1]||"Money";
+  const loaded=await loadDomainModule(name);
+  if(!loaded) return;
+  await showDomainSectionView(section);
 }
 
-
-function resetPlaceholderStyles(){
-  const ph = document.getElementById("placeholderPage");
-  if(!ph) return;
-  ph.style.textAlign = "";
-  ph.style.padding = "";
-  ph.style.background = "";
-  ph.style.border = "";
-  ph.style.boxShadow = "";
-  ph.style.minHeight = "";
+async function selectDomainSection(section){
+  const isDomain=currentLayer===3 && currentItem>0;
+  if(!isDomain) return;
+  document.getElementById("dashboardTab").classList.remove("active");
+  document.getElementById("analyticsTab").classList.remove("active");
+  await showDomainWorkspace(section);
 }
-
-// Patch selectDomainSection and renderWorkspace for Game
-const originalSelectDomainSection = selectDomainSection;
-selectDomainSection = async function(section){
-  domainSection = section;
-  const isDomain = currentLayer === 3 && currentItem > 0;
-  const name = (layerItems[3] || [])[currentItem - 1] || "";
-  if(isDomain && name === "Game" && (section === "entry" || section === "dashboard")){
-    document.getElementById("dashboardTab").classList.toggle("active", section === "dashboard");
-    document.getElementById("analyticsTab").classList.remove("active");
-    await showGameDomain(section);
-    return;
-  }
-  // hide game page for definition / other systems
-  const gamePage = document.getElementById("gameDomainPage");
-  if(gamePage) gamePage.style.display = "none";
-  resetPlaceholderStyles();
-  return originalSelectDomainSection(section);
-};
 
 const originalRenderWorkspace = renderWorkspace;
 renderWorkspace = async function(){
   if(osMode || !currentUser) return;
-  const systemName = currentItem >= 1 ? personalSystemName(currentItem) : null;
-  const name = systemName || (layerItems[currentLayer] || [])[currentItem - 1] || "";
-  if(currentLayer === 3 && name === "Game" && workspaceMode === "system"){
-    // Prefer domainSection; fall back to currentPage for top Dashboard/Analytics tabs
-    let section = domainSection;
-    if(currentPage === "dashboard" || currentPage === "analytics") section = "dashboard";
-    if(currentPage === "entry") section = "entry";
-    if(section === "definition"){
-      // fall through to original for definition
-    } else if(section === "entry" || section === "dashboard"){
-      await showGameDomain(section);
-      return;
-    }
+  const systemPage=document.getElementById("systemPage");
+  const isDomainArea=currentLayer===3 && currentItem>0 && workspaceMode==="system";
+  if(systemPage) systemPage.classList.toggle("domain-mode",isDomainArea);
+  if(isDomainArea){
+    let section=domainSection;
+    if(currentPage==="dashboard" || currentPage==="analytics") section="dashboard";
+    if(currentPage==="entry") section="entry";
+    if(currentPage==="definition") section="definition";
+    await showDomainWorkspace(section);
+    return;
   }
-  const gamePage = document.getElementById("gameDomainPage");
-  if(gamePage) gamePage.style.display = "none";
-  resetPlaceholderStyles();
+  const host=document.getElementById("domainModuleHost");
+  if(host) host.style.display="none";
   return originalRenderWorkspace();
 };
 
-
-
-// Domain Engine workspace shell: group the system title, section tabs and active content
-// into one continuous panel without changing the underlying page or tracker logic.
-(function buildDomainWorkspaceShell(){
-  const systemPage = document.getElementById("systemPage");
-  if(!systemPage || document.getElementById("domainWorkspaceShell")) return;
-  const mobileHome = document.getElementById("mobileHomePage");
-  const shell = document.createElement("div");
-  shell.id = "domainWorkspaceShell";
-  shell.className = "domain-workspace-shell";
-  if(mobileHome && mobileHome.parentNode === systemPage) systemPage.insertBefore(shell, mobileHome.nextSibling);
-  else systemPage.appendChild(shell);
-
-  const head = systemPage.querySelector(":scope > .workspace-head");
-  const nav = document.getElementById("domainSectionNav");
-  if(head) shell.appendChild(head);
-  if(nav) shell.appendChild(nav);
-  Array.from(systemPage.children).forEach(child => {
-    if(child !== mobileHome && child !== shell) shell.appendChild(child);
-  });
-})();
 
 initializeApp();
 </script>
