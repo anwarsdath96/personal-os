@@ -2693,6 +2693,7 @@ async function setMobileTab(tab){
   workspaceMode="overview"; currentItem=0; currentPage="entry";
   renderSidebar();
   await renderWorkspace();
+  if(window.initWritingWorkspace) await window.initWritingWorkspace();
   syncMobileUI();
   if(isMobileUI()) await setMobileTab(mobileTab);
 }
@@ -4995,9 +4996,10 @@ renderWorkspace = async function(){
 
 
 (function(){
-const STORAGE_KEY = "personalOS_writingEntries_v1";
 const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+let entries = {};
+let entriesLoadedForUser = null;
+let loadPromise = null;
 const $ = id => document.getElementById(id);
 function getDateString(d){
   const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,"0"), day=String(d.getDate()).padStart(2,"0");
@@ -5017,12 +5019,49 @@ function weekStart(k){
   d.setHours(0, 0, 0, 0);
   return d;
 }
+function weekDate(k){ return getDateString(weekStart(k)); }
 function addWeek(k,n){let d=weekStart(k);d.setDate(d.getDate()+7*n);return weekKey(d);}
 function formatWeek(k){return `Week ${k.slice(-2)}, ${k.slice(0,4)}`;}
 function currentWeek(){return weekKey(new Date());}
 function currentMonthKey(offset=0){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+offset);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;}
 let selectedWeek=currentWeek(), calMonth=new Date(), dashboardPeriod="weekly", periodOffset=0;
 
+function normalizeWritingRecord(date, payload){
+  const key = payload?.weekKey || weekKey(new Date(date+"T12:00:00"));
+  return {...(payload||{}), weekKey:key};
+}
+async function loadWritingEntries(){
+  if(!currentUser) return false;
+  if(entriesLoadedForUser===currentUser.id) return true;
+  if(loadPromise) return loadPromise;
+  loadPromise=(async()=>{
+    // Read the canonical Writing records from the same Supabase table used by every
+    // other Personal OS workspace.
+    const dbEntries=await getEntries("Writing");
+    const loaded={};
+    Object.entries(dbEntries||{}).forEach(([date,payload])=>{
+      const normalized=normalizeWritingRecord(date,payload);
+      loaded[normalized.weekKey]=normalized;
+    });
+
+    // One-time recovery/migration of entries created by the earlier browser-only build.
+    // Existing Supabase rows always win; local-only weeks are copied to Supabase.
+    let legacy={};
+    try { legacy=JSON.parse(localStorage.getItem("personalOS_writingEntries_v1")||"{}")||{}; }
+    catch(e){ console.warn("Could not parse legacy local Writing entries",e); }
+    let migrated=false;
+    for(const [key,payload] of Object.entries(legacy)){
+      if(!/^\d{4}-W\d{2}$/.test(key) || loaded[key]) continue;
+      const record={...payload,weekKey:key};
+      const ok=await saveSystemEntry("Writing",weekDate(key),record);
+      if(ok){loaded[key]=record;migrated=true;}
+    }
+    entries=loaded;
+    entriesLoadedForUser=currentUser.id;
+    return true;
+  })().finally(()=>{loadPromise=null;});
+  return loadPromise;
+}
 function readForm(){
   const developmental={}, refinement={};
   document.querySelectorAll("#writingDomainPage [data-day-dev]").forEach(i=>developmental[i.dataset.dayDev]=Math.max(0,Number(i.value)||0));
@@ -5035,8 +5074,9 @@ function readForm(){
     articlesCompleted:Math.max(0,Number($("articlesCompletedInput").value)||0)
   };
 }
-function loadForm(key){
+async function loadForm(key){
   selectedWeek=key;
+  if(currentUser) await loadWritingEntries();
   $("writingWeekLabel").textContent=formatWeek(key);
   const e=entries[key]||{developmental:{},refinement:{}};
   document.querySelectorAll("#writingDomainPage [data-day-dev]").forEach(i=>i.value=e.developmental?.[i.dataset.dayDev]??"");
@@ -5052,12 +5092,19 @@ function updateEntryTotals(){
   $("developmentalTotal").textContent=dev.toLocaleString();
   $("refinementTotal").textContent=ref.toLocaleString();
 }
-function save(){
-  entries[selectedWeek]=readForm();
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(entries));
+async function save(){
+  if(!currentUser){alert("Please log in first.");return;}
+  const payload=readForm();
+  $("saveBtn").disabled=true;
+  const oldLabel=$("saveBtn").textContent;
+  $("saveBtn").textContent="Saving…";
+  const ok=await saveSystemEntry("Writing",weekDate(selectedWeek),payload);
+  $("saveBtn").disabled=false;
+  if(!ok){$("saveBtn").textContent=oldLabel;return;}
+  entries[selectedWeek]=payload;
   $("saveBtn").textContent="Saved";
   setTimeout(()=>$("saveBtn").textContent="Save",900);
-  renderDashboard();
+  await renderDashboard();
 }
 function renderCalendar(){
   const y=calMonth.getFullYear(),m=calMonth.getMonth();
@@ -5076,8 +5123,8 @@ function renderCalendar(){
     }
   }
   $("writingCalendarGrid").innerHTML=html;
-  $("writingCalendarGrid").querySelectorAll("[data-date]").forEach(b=>b.onclick=()=>{
-    const d=new Date(b.dataset.date+"T12:00:00");loadForm(weekKey(d));
+  $("writingCalendarGrid").querySelectorAll("[data-date]").forEach(b=>b.onclick=async()=>{
+    const d=new Date(b.dataset.date+"T12:00:00");await loadForm(weekKey(d));
     $("writingCalendarPop").classList.remove("open");$("writingCalendarTrigger").setAttribute("aria-expanded","false");
   });
 }
@@ -5097,10 +5144,10 @@ function getPeriodEntries(){
   }
   return {items,label:d.toLocaleDateString("en-US",{month:"long",year:"numeric"})};
 }
-function entryDayTotal(entry, type, day){
-  return Number(entry[type]?.[day])||0;
-}
-function renderDashboard(){
+function entryDayTotal(entry, type, day){return Number(entry[type]?.[day])||0;}
+async function renderDashboard(){
+  if(!currentUser) return;
+  await loadWritingEntries();
   const {items,label}=getPeriodEntries(),arr=items.map(x=>x.data),keys=items.map(x=>x.key);
   $("writingPeriodLabel").textContent=label;
   $("writingTrendTitle").textContent=dashboardPeriod==="weekly"?"Weekly Writing Activity":"Monthly Writing Activity";
@@ -5145,12 +5192,12 @@ function drawWritingChart(arr,keys){
   }else{s+='<text x="310" y="100" text-anchor="middle">Save a weekly entry to see your writing activity</text>';}
   $("writingActivityChart").innerHTML=s;
 }
-function showSection(section){
+async function showSection(section){
   $("writingEntryView").classList.toggle("active",section==="entry");
   $("writingDashboardView").classList.toggle("active",section==="dashboard");
   $("writingDomainPage").style.display=section==="definition"?"none":"block";
-  if(section==="entry")loadForm(selectedWeek||currentWeek());
-  if(section==="dashboard")renderDashboard();
+  if(section==="entry")await loadForm(selectedWeek||currentWeek());
+  if(section==="dashboard")await renderDashboard();
 }
 window.showWritingWorkspaceSection = showSection;
 document.querySelectorAll("#writingDomainPage [data-day-dev],#writingDomainPage [data-day-ref]").forEach(i=>i.addEventListener("input",updateEntryTotals));
@@ -5173,10 +5220,13 @@ document.querySelectorAll("#writingDomainPage [data-writing-period]").forEach(b=
 });
 $("writingPrevPeriod").onclick=()=>{periodOffset--;renderDashboard();};
 $("writingNextPeriod").onclick=()=>{periodOffset++;renderDashboard();};
-loadForm(selectedWeek);renderDashboard();
 
-window.initWritingWorkspace = function(){ loadForm(selectedWeek); renderDashboard(); };
-window.initWritingWorkspace();
+window.initWritingWorkspace = async function(){
+  if(!currentUser) return;
+  await loadWritingEntries();
+  await loadForm(selectedWeek);
+  await renderDashboard();
+};
 })();
 
 // Writing Domain Workspace integration — preserves the existing Personal OS navigation and shell.
