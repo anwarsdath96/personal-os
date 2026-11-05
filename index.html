@@ -1675,6 +1675,139 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   #domainWorkspaceShell.is-domain-active #systemDefinitionPage .card{min-height:420px}
 }
 
+
+
+/* Writing Domain Workspace — integrated from the standalone workspace */
+#writingDomainPage{display:none}
+#writingDomainPage .game-shell{max-width:100%}
+#writingDomainPage .game-window{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(13,20,28,.94),rgba(9,15,21,.94));
+  padding:20px 22px 18px;
+  min-height:calc(100vh - 280px);
+  box-sizing:border-box;
+}
+#writingDomainPage .game-tabs,#writingDomainPage .game-segment{display:flex;gap:8px;margin-bottom:16px}
+#writingDomainPage .game-tab,#writingDomainPage .game-subtab,#writingDomainPage .game-btn{
+  border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text-2);
+  border-radius:9px;padding:9px 16px;font-weight:650;cursor:pointer;font-size:12px
+}
+#writingDomainPage .game-tab.active,#writingDomainPage .game-subtab.active{background:#1c3b63;border-color:#528bd0;color:#fff}
+#writingDomainPage .game-view{display:none}
+#writingDomainPage .game-view.active{display:block}
+#writingDomainPage .game-card{background:linear-gradient(145deg,#111d2c,#0e1825);border:1px solid #20334a;border-radius:12px;padding:16px}
+#writingDomainPage .game-entry-head,#writingDomainPage .game-toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+#writingDomainPage h2.game-h2{font-size:17px;margin:0 0 3px;color:var(--text)}
+#writingDomainPage h3.game-h3{font-size:14px;margin:0 0 12px;color:var(--text)}
+#writingDomainPage .game-sub{color:var(--muted);font-size:12px}
+#writingDomainPage .game-date{position:relative;display:flex;align-items:center;gap:9px;border:1px solid #2b405a;border-radius:10px;padding:7px 10px;background:#101b2a}
+#writingDomainPage .game-date-trigger{display:flex;align-items:center;gap:8px;border:0;background:transparent;color:var(--text);font:inherit;cursor:pointer;padding:4px 8px;min-width:145px;justify-content:center}
+#writingDomainPage .game-date-trigger .caret{font-size:10px;color:var(--muted)}
+#writingDomainPage .game-date .game-btn{padding:7px 12px;min-width:38px}
+#writingDomainPage .game-calendar-pop{display:none;position:absolute;z-index:40;right:0;top:calc(100% + 8px);width:330px;padding:13px;background:#0c1420;border:1px solid #30445d;border-radius:12px;box-shadow:0 18px 45px #0009}
+#writingDomainPage .game-calendar-pop.open{display:block}
+#writingDomainPage .game-cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+#writingDomainPage .game-cal-month{font-weight:700}
+#writingDomainPage .game-cal-nav{display:flex;gap:6px}
+#writingDomainPage .game-cal-nav button,#writingDomainPage .game-cal-footer button{background:#111e2d;border:1px solid #30445d;color:var(--text);border-radius:7px;padding:5px 10px;cursor:pointer}
+#writingDomainPage .game-cal-grid{display:grid;grid-template-columns:34px repeat(7,1fr);gap:3px;text-align:center}
+#writingDomainPage .game-cal-label{font-size:11px;color:#9db0c7;padding:5px 0}
+#writingDomainPage .game-week-no{font-size:11px;color:#b9c8dc;display:grid;place-items:center}
+#writingDomainPage .game-cal-day{height:31px;border:1px solid transparent;border-radius:5px;background:#111d2b;color:#e6effc;cursor:pointer;font:12px inherit}
+#writingDomainPage .game-cal-day.outside{opacity:.42}
+#writingDomainPage .game-cal-day.past{background:#47232d;border-color:#743848}
+#writingDomainPage .game-cal-day.current{background:#164b3e;border-color:#2c9b7a}
+#writingDomainPage .game-cal-day.future{background:#193d6c;border-color:#326bb4}
+#writingDomainPage .game-cal-day.selected{outline:2px solid #f1f6ff;outline-offset:-2px;font-weight:800}
+#writingDomainPage .game-cal-day:hover{filter:brightness(1.25)}
+#writingDomainPage .game-cal-footer{display:flex;justify-content:space-between;margin-top:11px}
+#writingDomainPage .game-cal-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;color:#9eb0c5;font-size:10px}
+#writingDomainPage .game-cal-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}
+#writingDomainPage .game-grid{display:grid;grid-template-columns:1.25fr .72fr 1.5fr;gap:14px;margin-bottom:14px}
+#writingDomainPage .game-grid.bottom{grid-template-columns:1.25fr 1fr 1fr}
+#writingDomainPage .game-field{margin-top:12px}
+#writingDomainPage .game-field label{display:block;color:#b6c7dc;font-size:12px;margin-bottom:6px}
+#writingDomainPage .game-field input,#writingDomainPage .game-field select{width:100%;background:#0a1421;border:1px solid #2b4058;border-radius:7px;padding:10px;color:var(--text);font:inherit;outline:0}
+#writingDomainPage .game-field input:focus,#writingDomainPage .game-field select:focus{border-color:#5795fa}
+#writingDomainPage .game-rating{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+#writingDomainPage .game-rating button{background:#0b1625;border:1px solid #2b4058;border-radius:6px;color:#cbd8e8;padding:8px 0;cursor:pointer}
+#writingDomainPage .game-rating button.selected{background:var(--blue);color:white}
+#writingDomainPage .game-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+#writingDomainPage .game-primary{background:#e8f0fc;color:#08111d;border-color:#e8f0fc}
+#writingDomainPage .game-ghost{background:transparent}
+#writingDomainPage .game-activity-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+#writingDomainPage .game-activity-item{display:flex;flex-direction:column;gap:12px;justify-content:space-between;min-height:105px}
+#writingDomainPage .game-activity-item strong{font-size:13px}
+#writingDomainPage .game-yn{display:flex;gap:7px}
+#writingDomainPage .game-yn button{flex:1;border:1px solid #34465c;background:#0b1625;color:#cbd8e8;border-radius:7px;padding:7px 8px;cursor:pointer;font-weight:650}
+#writingDomainPage .game-yn button.yes.selected{background:#15513f;border-color:#2d9d79;color:#eafff7}
+#writingDomainPage .game-yn button.no.selected{background:#542632;border-color:#a74b61;color:#fff0f3}
+#writingDomainPage .game-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+#writingDomainPage .game-kpi{background:linear-gradient(145deg,#122234,#0d1927);border:1px solid #20344a;border-radius:11px;padding:14px}
+#writingDomainPage .game-kpi span{display:block;color:#a9bfd8;font-size:11px;margin-bottom:8px}
+#writingDomainPage .game-kpi strong{font-size:23px}
+#writingDomainPage .game-kpi small{display:block;color:var(--green);font-size:11px}
+#writingDomainPage .game-analytics{display:grid;grid-template-columns:1.35fr .9fr;gap:14px}
+#writingDomainPage .game-chart{width:100%;height:210px}
+#writingDomainPage .game-chart text{fill:#91a4bd;font-size:10px}
+#writingDomainPage .game-legend{display:flex;gap:16px;color:#b9c9dc;font-size:11px;flex-wrap:wrap}
+#writingDomainPage .game-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+#writingDomainPage .game-rates{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+#writingDomainPage .game-rate{border-radius:10px;padding:16px;text-align:center;background:#102b2a;border:1px solid #1c4b42}
+#writingDomainPage .game-rate.red{background:#2a1b25;border-color:#55303b}
+#writingDomainPage .game-rate strong{display:block;font-size:25px}
+#writingDomainPage .game-rate span{font-size:11px;color:#c1d0de}
+#writingDomainPage .game-muted{color:var(--muted);font-size:12px;margin-top:18px}
+#writingDomainPage .game-activity-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:12px}
+#writingDomainPage .game-summary-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;background:#0c1724;border:1px solid #22364c;border-radius:8px;font-size:12px;min-width:0}
+#writingDomainPage .game-summary-item span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#writingDomainPage .game-pie-wrap{display:flex;align-items:center;gap:18px;margin-top:12px;flex-wrap:wrap}
+#writingDomainPage .game-pie{width:140px;height:140px;flex:0 0 140px}
+#writingDomainPage .game-pie-legend{display:flex;flex-direction:column;gap:10px}
+#writingDomainPage .game-pie-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#c1d0de}
+#writingDomainPage .game-pie-item strong{margin-left:auto;font-size:14px;color:var(--txt)}
+@media(max-width:850px){
+  #writingDomainPage .game-activity-summary{grid-template-columns:repeat(2,1fr)}
+}
+#writingDomainPage .game-status{font-weight:700}
+#writingDomainPage .game-status.yes{color:var(--green)}
+#writingDomainPage .game-status.no{color:var(--red)}
+@media(max-width:850px){
+  #writingDomainPage .game-grid,#writingDomainPage .game-grid.bottom,#writingDomainPage .game-analytics{grid-template-columns:1fr}
+  #writingDomainPage .game-kpis{grid-template-columns:repeat(2,1fr)}
+  #writingDomainPage .game-activity-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+  #writingDomainPage .game-activity-grid{grid-template-columns:1fr}
+  #writingDomainPage .game-calendar-pop{right:-12px;width:min(330px,calc(100vw - 32px))}
+  #writingDomainPage .game-cal-day{height:29px}
+  #writingDomainPage .game-rating{gap:2px}
+  #writingDomainPage .game-rating button{font-size:11px}
+}
+
+
+
+
+#writingDomainPage .writing-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+#writingDomainPage .writing-day input{width:100%;box-sizing:border-box;background:#0a1421;border:1px solid #2b4058;border-radius:7px;padding:8px;color:var(--text);font:inherit;font-size:12px}
+#writingDomainPage .writing-day small{color:var(--muted);font-size:10px}
+
+#writingDomainPage .writing-day .day-session{display:flex;flex-direction:column;gap:4px;margin-top:7px}
+#writingDomainPage .writing-day .day-session label{font-size:9px;line-height:1.2;color:#9eb0c5}
+#writingDomainPage .writing-day .day-session input{padding:6px 5px;font-size:11px}
+#writingDomainPage .session-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+#writingDomainPage .session-summary-card{background:linear-gradient(145deg,#111d2c,#0e1825);border:1px solid #20334a;border-radius:12px;padding:14px;min-width:0}
+#writingDomainPage .session-summary-card h3{font-size:14px;margin:0 0 4px;color:var(--text)}
+#writingDomainPage .session-total{font-size:12px;color:var(--muted);margin-bottom:12px}
+#writingDomainPage .session-total strong{color:var(--text);font-size:15px;margin-left:4px}
+#writingDomainPage .session-summary-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#writingDomainPage .session-summary-fields .writing-field label{font-size:11px}
+@media(max-width:650px){#writingDomainPage .session-summary-grid{grid-template-columns:1fr}#writingDomainPage .session-summary-fields{grid-template-columns:1fr}}
+#writingDomainPage .writing-breakdown{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+@media(max-width:850px){#writingDomainPage .writing-days{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:480px){#writingDomainPage .writing-days{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -2046,6 +2179,116 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
             <div id="placeholderBody">This system workspace is ready to be configured. Open System Definition to describe what this system is.</div>
           </div>
         </div>
+
+<section id="writingDomainPage" style="display:block">
+          <div class="game-shell">
+            <div class="game-window">
+              <section class="game-view active" id="writingEntryView">
+                <div class="game-card">
+                  <div class="game-entry-head">
+                    <div><h2 class="game-h2">Weekly Writing Entry</h2></div>
+                    <div class="game-date">
+                      <button aria-label="Previous week" class="game-btn game-ghost" id="writingPrevWeek">‹</button>
+                      <button aria-expanded="false" class="game-date-trigger" id="writingCalendarTrigger">
+                        <span id="writingWeekLabel">Week</span><span class="caret">▼</span>
+                      </button>
+                      <button aria-label="Next week" class="game-btn game-ghost" id="writingNextWeek">›</button>
+                      <div class="game-calendar-pop" id="writingCalendarPop">
+                        <div class="game-cal-head">
+                          <span class="game-cal-month" id="writingCalMonth">Month 2026</span>
+                          <div class="game-cal-nav">
+                            <button aria-label="Previous month" id="writingPrevMonth">‹</button>
+                            <button aria-label="Next month" id="writingNextMonth">›</button>
+                          </div>
+                        </div>
+                        <div class="game-cal-grid" id="writingCalendarGrid"></div>
+                        <div class="game-cal-footer">
+                          <button id="writingCalToday">This week</button>
+                          <button id="writingCalClose">Close</button>
+                        </div>
+                        <div class="game-cal-legend">
+                          <span><i style="background:#743848"></i>Past weeks</span>
+                          <span><i style="background:#2c9b7a"></i>Current week</span>
+                          <span><i style="background:#326bb4"></i>Upcoming weeks</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="game-card" style="margin-bottom:14px">
+                    <h3 class="game-h3">Daily Activity</h3>
+                    <div class="writing-days" style="margin-top:12px">
+                      <div class="writing-day"><strong>Monday</strong><div class="day-session"><label>Developmental Writing</label><input type="number" min="0" data-day-dev="Monday" placeholder="0"></div><div class="day-session"><label>Refinement Work</label><input type="number" min="0" data-day-ref="Monday" placeholder="0"></div></div>
+                      <div class="writing-day"><strong>Tuesday</strong><div class="day-session"><label>Developmental Writing</label><input type="number" min="0" data-day-dev="Tuesday" placeholder="0"></div><div class="day-session"><label>Refinement Work</label><input type="number" min="0" data-day-ref="Tuesday" placeholder="0"></div></div>
+                      <div class="writing-day"><strong>Wednesday</strong><div class="day-session"><label>Developmental Writing</label><input type="number" min="0" data-day-dev="Wednesday" placeholder="0"></div><div class="day-session"><label>Refinement Work</label><input type="number" min="0" data-day-ref="Wednesday" placeholder="0"></div></div>
+                      <div class="writing-day"><strong>Thursday</strong><div class="day-session"><label>Developmental Writing</label><input type="number" min="0" data-day-dev="Thursday" placeholder="0"></div><div class="day-session"><label>Refinement Work</label><input type="number" min="0" data-day-ref="Thursday" placeholder="0"></div></div>
+                      <div class="writing-day"><strong>Friday</strong><div class="day-session"><label>Developmental Writing</label><input type="number" min="0" data-day-dev="Friday" placeholder="0"></div><div class="day-session"><label>Refinement Work</label><input type="number" min="0" data-day-ref="Friday" placeholder="0"></div></div>
+                      <div class="writing-day"><strong>Saturday</strong><div class="day-session"><label>Developmental Writing</label><input type="number" min="0" data-day-dev="Saturday" placeholder="0"></div><div class="day-session"><label>Refinement Work</label><input type="number" min="0" data-day-ref="Saturday" placeholder="0"></div></div>
+                      <div class="writing-day"><strong>Sunday</strong><div class="day-session"><label>Developmental Writing</label><input type="number" min="0" data-day-dev="Sunday" placeholder="0"></div><div class="day-session"><label>Refinement Work</label><input type="number" min="0" data-day-ref="Sunday" placeholder="0"></div></div>
+                    </div>
+                  </div>
+                  <div class="session-summary-grid">
+                    <div class="session-summary-card">
+                      <h3>Developmental Writing</h3>
+                      <div class="session-total">(Total Sessions) <strong id="developmentalTotal">0</strong></div>
+                    </div>
+                    <div class="session-summary-card">
+                      <h3>Refinement Work</h3>
+                      <div class="session-total">(Total Sessions) <strong id="refinementTotal">0</strong></div>
+                      <div class="session-summary-fields">
+                        <div class="writing-field"><label for="threadsExpanded">Threads Expanded</label><input id="threadsExpanded" type="number" min="0" placeholder="0"></div>
+                        <div class="writing-field"><label for="articlesCompletedInput">Articles Completed</label><input id="articlesCompletedInput" type="number" min="0" placeholder="0"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="game-actions">
+                    <button class="game-btn game-primary" id="saveBtn">Save</button>
+                  </div>
+                </div>
+              </section>
+              <section class="game-view" id="writingDashboardView">
+                <div class="game-toolbar">
+                  <div class="game-segment">
+                    <button class="game-subtab active" data-writing-period="weekly">Weekly</button>
+                    <button class="game-subtab" data-writing-period="monthly">Monthly</button>
+                  </div>
+                  <div class="game-date">
+                    <button class="game-btn game-ghost" id="writingPrevPeriod">‹</button>
+                    <strong id="writingPeriodLabel">Current week</strong>
+                    <button class="game-btn game-ghost" id="writingNextPeriod">›</button>
+                  </div>
+                </div>
+                <div class="game-kpis">
+                  <div class="game-kpi"><span>DEVELOPMENTAL SESSIONS</span><strong id="developmentalSessions">0</strong><small>Sessions this period</small></div>
+                  <div class="game-kpi"><span>REFINEMENT SESSIONS</span><strong id="refinementSessions">0</strong><small>Sessions this period</small></div>
+                  <div class="game-kpi"><span>THREADS EXPANDED</span><strong id="threadsExpandedTotal">0</strong><small>Total threads</small></div>
+                  <div class="game-kpi"><span>ARTICLES COMPLETED</span><strong id="articlesCompleted">0</strong><small>Total articles</small></div>
+                </div>
+                <div class="game-analytics">
+                  <div class="game-card">
+                    <h3 class="game-h3" id="writingTrendTitle">Weekly Writing Activity</h3>
+                    <svg class="game-chart" id="writingActivityChart" preserveAspectRatio="none" viewBox="0 0 620 210"></svg>
+                    <div class="game-legend">
+                      <span><i class="game-dot" style="background:#f3c969"></i>Developmental Writing</span>
+                      <span><i class="game-dot" style="background:#3986ff"></i>Refinement Work</span>
+                    </div>
+                  </div>
+                  <div class="game-card">
+                    <h3 class="game-h3">Session Overview</h3>
+                    <div class="writing-breakdown" id="typeBreakdown"></div>
+                    <div class="game-rates">
+                      <div class="game-rate"><strong id="writingSessions">0</strong><span>Total sessions</span></div>
+                      <div class="game-rate red"><strong id="publishedCount">0</strong><span>Articles completed</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="game-card" style="margin-top:14px">
+                  <h3 class="game-h3">Daily Session Summary</h3>
+                  <div class="game-activity-summary" id="writingActivitySummary"></div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
 
         <!-- GAME DOMAIN PAGE (integrated weekly tracker) -->
         <section id="gameDomainPage" style="display:none">
@@ -4749,6 +4992,262 @@ renderWorkspace = async function(){
     if(child !== mobileHome && child !== shell) shell.appendChild(child);
   });
 })();
+
+
+(function(){
+const STORAGE_KEY = "personalOS_writingEntries_v1";
+const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+const $ = id => document.getElementById(id);
+function getDateString(d){
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,"0"), day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function weekKey(d){
+  let x = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  x.setUTCDate(x.getUTCDate() + 4 - (x.getUTCDay() || 7));
+  let y = new Date(Date.UTC(x.getUTCFullYear(), 0, 1));
+  return `${x.getUTCFullYear()}-W${String(Math.ceil((((x - y) / 86400000) + 1) / 7)).padStart(2, "0")}`;
+}
+function weekStart(k){
+  let [y, w] = k.split("-W").map(Number);
+  let d = new Date(y, 0, 4);
+  let day = d.getDay() || 7;
+  d.setDate(d.getDate() - day + 1 + (w - 1) * 7);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+function addWeek(k,n){let d=weekStart(k);d.setDate(d.getDate()+7*n);return weekKey(d);}
+function formatWeek(k){return `Week ${k.slice(-2)}, ${k.slice(0,4)}`;}
+function currentWeek(){return weekKey(new Date());}
+function currentMonthKey(offset=0){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+offset);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;}
+let selectedWeek=currentWeek(), calMonth=new Date(), dashboardPeriod="weekly", periodOffset=0;
+
+function readForm(){
+  const developmental={}, refinement={};
+  document.querySelectorAll("#writingDomainPage [data-day-dev]").forEach(i=>developmental[i.dataset.dayDev]=Math.max(0,Number(i.value)||0));
+  document.querySelectorAll("#writingDomainPage [data-day-ref]").forEach(i=>refinement[i.dataset.dayRef]=Math.max(0,Number(i.value)||0));
+  return {
+    weekKey:selectedWeek,
+    developmental,
+    refinement,
+    threadsExpanded:Math.max(0,Number($("threadsExpanded").value)||0),
+    articlesCompleted:Math.max(0,Number($("articlesCompletedInput").value)||0)
+  };
+}
+function loadForm(key){
+  selectedWeek=key;
+  $("writingWeekLabel").textContent=formatWeek(key);
+  const e=entries[key]||{developmental:{},refinement:{}};
+  document.querySelectorAll("#writingDomainPage [data-day-dev]").forEach(i=>i.value=e.developmental?.[i.dataset.dayDev]??"");
+  document.querySelectorAll("#writingDomainPage [data-day-ref]").forEach(i=>i.value=e.refinement?.[i.dataset.dayRef]??"");
+  $("threadsExpanded").value=e.threadsExpanded??"";
+  $("articlesCompletedInput").value=e.articlesCompleted??"";
+  updateEntryTotals();
+  renderCalendar();
+}
+function updateEntryTotals(){
+  const dev=[...document.querySelectorAll("#writingDomainPage [data-day-dev]")].reduce((s,i)=>s+(Number(i.value)||0),0);
+  const ref=[...document.querySelectorAll("#writingDomainPage [data-day-ref]")].reduce((s,i)=>s+(Number(i.value)||0),0);
+  $("developmentalTotal").textContent=dev.toLocaleString();
+  $("refinementTotal").textContent=ref.toLocaleString();
+}
+function save(){
+  entries[selectedWeek]=readForm();
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(entries));
+  $("saveBtn").textContent="Saved";
+  setTimeout(()=>$("saveBtn").textContent="Save",900);
+  renderDashboard();
+}
+function renderCalendar(){
+  const y=calMonth.getFullYear(),m=calMonth.getMonth();
+  $("writingCalMonth").textContent=calMonth.toLocaleDateString("en-US",{month:"long",year:"numeric"});
+  const first=new Date(y,m,1),offsetMon=(first.getDay()+6)%7,start=new Date(y,m,1-offsetMon);
+  let html='<div class="game-cal-label">Wk</div>'+["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(x=>`<div class="game-cal-label">${x}</div>`).join("");
+  const todayKey=currentWeek();
+  for(let row=0;row<6;row++){
+    const rowStart=new Date(start);rowStart.setDate(start.getDate()+row*7);
+    const rowKey=weekKey(rowStart),cls=rowKey<todayKey?"past":rowKey>todayKey?"future":"current";
+    html+=`<div class="game-week-no">${Number(rowKey.slice(-2))}</div>`;
+    for(let col=0;col<7;col++){
+      const d=new Date(rowStart);d.setDate(rowStart.getDate()+col);
+      const outside=d.getMonth()!==m,selected=weekKey(d)===selectedWeek;
+      html+=`<button class="game-cal-day ${cls}${outside?" outside":""}${selected?" selected":""}" data-date="${getDateString(d)}">${d.getDate()}</button>`;
+    }
+  }
+  $("writingCalendarGrid").innerHTML=html;
+  $("writingCalendarGrid").querySelectorAll("[data-date]").forEach(b=>b.onclick=()=>{
+    const d=new Date(b.dataset.date+"T12:00:00");loadForm(weekKey(d));
+    $("writingCalendarPop").classList.remove("open");$("writingCalendarTrigger").setAttribute("aria-expanded","false");
+  });
+}
+function getPeriodEntries(){
+  if(dashboardPeriod==="weekly"){
+    const key=addWeek(currentWeek(),periodOffset),e=entries[key];
+    return {items:e?[{key,data:e}]:[],label:formatWeek(key)};
+  }
+  const [yy,mm]=currentMonthKey(periodOffset).split("-").map(Number);
+  const d=new Date(yy,mm-1,1),end=new Date(yy,mm,0);
+  const startKey=weekKey(d),endKey=weekKey(end),items=[];
+  let k=startKey;
+  while(true){
+    if(entries[k])items.push({key:k,data:entries[k]});
+    if(k===endKey)break;
+    k=addWeek(k,1);
+  }
+  return {items,label:d.toLocaleDateString("en-US",{month:"long",year:"numeric"})};
+}
+function entryDayTotal(entry, type, day){
+  return Number(entry[type]?.[day])||0;
+}
+function renderDashboard(){
+  const {items,label}=getPeriodEntries(),arr=items.map(x=>x.data),keys=items.map(x=>x.key);
+  $("writingPeriodLabel").textContent=label;
+  $("writingTrendTitle").textContent=dashboardPeriod==="weekly"?"Weekly Writing Activity":"Monthly Writing Activity";
+  const dev=arr.reduce((s,e)=>s+DAYS.reduce((n,d)=>n+entryDayTotal(e,"developmental",d),0),0);
+  const ref=arr.reduce((s,e)=>s+DAYS.reduce((n,d)=>n+entryDayTotal(e,"refinement",d),0),0);
+  const threads=arr.reduce((s,e)=>s+(Number(e.threadsExpanded)||0),0);
+  const articles=arr.reduce((s,e)=>s+(Number(e.articlesCompleted)||0),0);
+  const sessions=dev+ref;
+  $("developmentalSessions").textContent=dev.toLocaleString();
+  $("refinementSessions").textContent=ref.toLocaleString();
+  $("threadsExpandedTotal").textContent=threads.toLocaleString();
+  $("articlesCompleted").textContent=articles.toLocaleString();
+  $("writingSessions").textContent=sessions.toLocaleString();
+  $("publishedCount").textContent=articles.toLocaleString();
+  $("typeBreakdown").innerHTML=[
+    `<div class="writing-breakdown-item"><span>Developmental Writing</span><strong>${dev.toLocaleString()}</strong></div>`,
+    `<div class="writing-breakdown-item"><span>Refinement Work</span><strong>${ref.toLocaleString()}</strong></div>`,
+    `<div class="writing-breakdown-item"><span>Threads Expanded</span><strong>${threads.toLocaleString()}</strong></div>`,
+    `<div class="writing-breakdown-item"><span>Articles Completed</span><strong>${articles.toLocaleString()}</strong></div>`
+  ].join("");
+  $("writingActivitySummary").innerHTML=DAYS.map(day=>{
+    const d=arr.reduce((s,e)=>s+entryDayTotal(e,"developmental",day),0);
+    const r=arr.reduce((s,e)=>s+entryDayTotal(e,"refinement",day),0);
+    return `<div class="game-summary-item"><span>${day}</span><strong>${d} / ${r}</strong></div>`;
+  }).join("");
+  drawWritingChart(arr,keys);
+}
+function drawWritingChart(arr,keys){
+  let s="",base=174,top=15;
+  const dev=arr.map(e=>DAYS.reduce((n,d)=>n+entryDayTotal(e,"developmental",d),0));
+  const ref=arr.map(e=>DAYS.reduce((n,d)=>n+entryDayTotal(e,"refinement",d),0));
+  const max=Math.max(10,...dev,...ref);
+  for(let i=0;i<5;i++){const y=base-(base-top)*i/4;s+=`<line x1="38" y1="${y}" x2="605" y2="${y}" stroke="#23364b"/><text x="28" y="${y+4}" text-anchor="end">${Math.round(max*i/4)}</text>`;}
+  if(arr.length){
+    const group=550/arr.length;
+    arr.forEach((e,i)=>{
+      const vals=[dev[i],ref[i]];
+      vals.forEach((v,j)=>{const h=(base-top)*v/max,x=48+i*group+group*.25+j*group*.22;s+=`<rect x="${x}" y="${base-h}" width="${Math.max(8,group*.18)}" height="${h}" rx="3" fill="${j===0?"#f3c969":"#3986ff"}"/>`;});
+      const label=dashboardPeriod==="weekly"?"Week":keys[i].slice(-2);
+      s+=`<text x="${48+i*group+group*.48}" y="197" text-anchor="middle">${label}</text>`;
+    });
+  }else{s+='<text x="310" y="100" text-anchor="middle">Save a weekly entry to see your writing activity</text>';}
+  $("writingActivityChart").innerHTML=s;
+}
+function showSection(section){
+  $("writingEntryView").classList.toggle("active",section==="entry");
+  $("writingDashboardView").classList.toggle("active",section==="dashboard");
+  $("writingDomainPage").style.display=section==="definition"?"none":"block";
+  if(section==="entry")loadForm(selectedWeek||currentWeek());
+  if(section==="dashboard")renderDashboard();
+}
+window.showWritingWorkspaceSection = showSection;
+document.querySelectorAll("#writingDomainPage [data-day-dev],#writingDomainPage [data-day-ref]").forEach(i=>i.addEventListener("input",updateEntryTotals));
+$("writingPrevWeek").onclick=()=>loadForm(addWeek(selectedWeek,-1));
+$("writingNextWeek").onclick=()=>loadForm(addWeek(selectedWeek,1));
+$("writingCalendarTrigger").onclick=()=>{
+  const p=$("writingCalendarPop");p.classList.toggle("open");
+  $("writingCalendarTrigger").setAttribute("aria-expanded",p.classList.contains("open"));
+  if(p.classList.contains("open")){const d=weekStart(selectedWeek);calMonth=new Date(d.getFullYear(),d.getMonth(),1);renderCalendar();}
+};
+$("writingPrevMonth").onclick=()=>{calMonth.setMonth(calMonth.getMonth()-1);renderCalendar();};
+$("writingNextMonth").onclick=()=>{calMonth.setMonth(calMonth.getMonth()+1);renderCalendar();};
+$("writingCalClose").onclick=()=>{$("writingCalendarPop").classList.remove("open");$("writingCalendarTrigger").setAttribute("aria-expanded","false");};
+$("writingCalToday").onclick=()=>{loadForm(currentWeek());calMonth=new Date();$("writingCalendarPop").classList.remove("open");$("writingCalendarTrigger").setAttribute("aria-expanded","false");};
+$("saveBtn").onclick=save;
+document.querySelectorAll("#writingDomainPage [data-writing-period]").forEach(b=>b.onclick=()=>{
+  dashboardPeriod=b.dataset.writingPeriod;periodOffset=0;
+  document.querySelectorAll("#writingDomainPage [data-writing-period]").forEach(x=>x.classList.toggle("active",x===b));
+  renderDashboard();
+});
+$("writingPrevPeriod").onclick=()=>{periodOffset--;renderDashboard();};
+$("writingNextPeriod").onclick=()=>{periodOffset++;renderDashboard();};
+loadForm(selectedWeek);renderDashboard();
+
+window.initWritingWorkspace = function(){ loadForm(selectedWeek); renderDashboard(); };
+window.initWritingWorkspace();
+})();
+
+// Writing Domain Workspace integration — preserves the existing Personal OS navigation and shell.
+function resetWritingPlaceholderStyles(){
+  const ph=document.getElementById("placeholderPage");
+  if(!ph) return;
+  ph.style.textAlign=""; ph.style.padding=""; ph.style.background="";
+  ph.style.border=""; ph.style.boxShadow=""; ph.style.minHeight="";
+}
+async function showWritingDomain(section){
+  const shell=document.getElementById("domainWorkspaceShell");
+  if(shell) shell.classList.add("is-domain-active");
+  hideWorkspacePages();
+  const ph=document.getElementById("placeholderPage");
+  ph.style.display="block"; ph.style.textAlign="left"; ph.style.padding="0";
+  ph.style.background="transparent"; ph.style.border="0"; ph.style.boxShadow="none"; ph.style.minHeight="0";
+  document.getElementById("domainSectionNav").style.display="flex";
+  document.getElementById("domainSectionPanel").style.display="none";
+  document.getElementById("genericPlaceholderContent").style.display="none";
+  document.getElementById("gameDomainPage").style.display="none";
+  document.getElementById("writingDomainPage").style.display=section==="definition"?"none":"block";
+  document.getElementById("workspaceTitle").textContent="Writing";
+  document.getElementById("workspaceSub").textContent="";
+  document.querySelectorAll("#domainSectionNav .domain-section-btn").forEach(btn=>{
+    btn.classList.toggle("active",btn.dataset.domainSection===section);
+  });
+  if(window.showWritingWorkspaceSection) window.showWritingWorkspaceSection(section);
+  if(section==="definition"){
+    document.getElementById("writingDomainPage").style.display="none";
+  }
+}
+const selectDomainSectionWithWriting = selectDomainSection;
+selectDomainSection = async function(section){
+  const isWriting=currentLayer===3 && ((layerItems[3]||[])[currentItem-1]||"")==="Writing";
+  if(isWriting && section==="definition"){
+    domainSection=section;
+    workspaceMode="system";
+    currentPage="definition";
+    document.getElementById("writingDomainPage").style.display="none";
+    // Reuse the original Personal OS Definition editor and its Supabase-backed
+    // system_entries record for the Writing system.
+    return selectDomainSectionWithWriting("definition");
+  }
+  if(isWriting && ["entry","dashboard"].includes(section)){
+    domainSection=section; workspaceMode="system"; currentPage=section;
+    document.getElementById("dashboardTab").classList.toggle("active",section==="dashboard");
+    document.getElementById("analyticsTab").classList.remove("active");
+    await showWritingDomain(section);
+    return;
+  }
+  const writing=document.getElementById("writingDomainPage");
+  if(writing) writing.style.display="none";
+  resetWritingPlaceholderStyles();
+  return selectDomainSectionWithWriting(section);
+};
+const renderWorkspaceWithWriting = renderWorkspace;
+renderWorkspace = async function(){
+  const isWriting=!osMode && currentUser && currentLayer===3 &&
+    (((layerItems[3]||[])[currentItem-1]||"")==="Writing") && workspaceMode==="system";
+  if(isWriting){
+    let section=domainSection;
+    if(currentPage==="dashboard" || currentPage==="analytics") section="dashboard";
+    if(currentPage==="entry") section="entry";
+    await showWritingDomain(section);
+    return;
+  }
+  const writing=document.getElementById("writingDomainPage");
+  if(writing) writing.style.display="none";
+  resetWritingPlaceholderStyles();
+  return renderWorkspaceWithWriting();
+};
 
 initializeApp();
 </script>
