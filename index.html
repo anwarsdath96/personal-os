@@ -1143,8 +1143,9 @@ input:focus,select:focus{border-color:#687382}
 }
 
 *{box-sizing:border-box}
-html{background:var(--bg)}
+html{background:var(--bg);overflow-x:hidden}
 body{
+  overflow-x:hidden;
   margin:0;
   font-family:"Inter","SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:
@@ -1451,13 +1452,8 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 }
 .domain-section-panel p{color:var(--muted);margin:10px 0 0;line-height:1.55}
 
-/* Hide title/description chrome when definition editor is open */
-#domainSectionPanel #domainSectionTitle,
-#domainSectionPanel #domainSectionDescription{display:none!important}
-
-/* Definition editor fills the full panel */
+/* Definition editor fills the full panel — only when JS sets display:flex */
 #domainSectionPanel #domainDefinitionEditor{
-  display:flex;
   flex:1 1 auto;
   flex-direction:column;
   min-height:0;
@@ -1471,7 +1467,7 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   justify-content:flex-end;
 }
 
-/* Textarea fills all remaining space under Save — not user-resizable */
+/* Textarea fills remaining space under Save — only this element scrolls */
 #domainSectionPanel #domainDefinitionText,
 #domainSectionPanel .definition-note{
   display:block;
@@ -1597,7 +1593,7 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 }
 
 
-/* Domain Engine: same layout boundaries as Personal / Productivity engines */
+/* Domain Engine: natural layout boundaries — same as Personal / Productivity */
 #domainWorkspaceShell.domain-workspace-shell.is-domain-active{
   min-width:0;
   min-height:0;
@@ -1656,21 +1652,33 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   background:transparent;
   overflow:visible;
 }
-/* Domain Definition — same full-height boundary as Personal / Productivity Sleep Definition */
-#domainWorkspaceShell.is-domain-active #domainSectionPanel.domain-section-panel:has(#domainDefinitionEditor[style*="flex"]),
-#domainWorkspaceShell.is-domain-active #domainSectionPanel.domain-section-panel:has(#domainDefinitionEditor[style*="block"]){
-  min-height:calc(100vh - 240px);
-  height:calc(100vh - 240px);
-  max-height:calc(100vh - 240px);
+/* Entry / Dashboard / Definition share the same panel boundary */
+#domainWorkspaceShell.is-domain-active #domainSectionPanel.domain-section-panel:not(.is-definition){
+  height:calc(100vh - 280px);
+  max-height:calc(100vh - 280px);
+  min-height:360px;
+  overflow:hidden;
+  padding:16px 18px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(15,23,32,.98),rgba(10,16,23,.98));
+  box-sizing:border-box;
+}
+/* Definition — same boundary; ONLY the textarea scrolls */
+#domainWorkspaceShell.is-domain-active #domainSectionPanel.domain-section-panel.is-definition{
   display:flex;
   flex-direction:column;
+  height:calc(100vh - 280px);
+  max-height:calc(100vh - 280px);
+  min-height:360px;
   padding:0;
   border:1px solid var(--line);
   border-radius:14px;
   background:linear-gradient(145deg,rgba(15,23,32,.98),rgba(10,16,23,.98));
   overflow:hidden;
+  box-sizing:border-box;
 }
-#domainWorkspaceShell.is-domain-active #domainDefinitionEditor{
+#domainWorkspaceShell.is-domain-active #domainDefinitionEditor[style*="flex"]{
   flex:1 1 auto;
   min-height:0;
   height:100%;
@@ -1679,6 +1687,7 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   margin:0!important;
   padding:18px 18px 14px;
   box-sizing:border-box;
+  overflow:hidden;
 }
 #domainWorkspaceShell.is-domain-active #domainDefinitionText,
 #domainWorkspaceShell.is-domain-active #domainDefinitionEditor .definition-note{
@@ -1688,12 +1697,18 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   max-height:none!important;
   resize:none!important;
   margin:0;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
 }
 #domainWorkspaceShell.is-domain-active #domainDefinitionEditor .save-row{
   margin-top:12px;
   flex:0 0 auto;
 }
-/* No second forced min-height inside domain — prevents page scroll */
+/* Writing / Game content share the same vertical boundary as Definition */
+#domainWorkspaceShell.is-domain-active #gameDomainPage,
+#domainWorkspaceShell.is-domain-active #writingDomainPage{
+  min-height:calc(100vh - 280px);
+}
 #domainWorkspaceShell.is-domain-active #gameDomainPage .game-window,
 #domainWorkspaceShell.is-domain-active #writingDomainPage .game-window{
   min-height:0;
@@ -3698,7 +3713,9 @@ async function selectDomainSection(section){
     document.getElementById("placeholderPage").style.display="block";
     document.getElementById("genericPlaceholderContent").style.display="none";
     document.getElementById("domainSectionNav").style.display="flex";
-    document.getElementById("domainSectionPanel").style.display="block";
+    const panel=document.getElementById("domainSectionPanel");
+    panel.style.display="block";
+    panel.classList.add("is-definition");
     document.getElementById("domainSectionTitle").style.display="none";
     document.getElementById("domainSectionDescription").style.display="none";
     document.getElementById("domainDefinitionEditor").style.display="flex";
@@ -3713,10 +3730,13 @@ async function selectDomainSection(section){
   }
   const editor=document.getElementById("domainDefinitionEditor");
   if(editor) editor.style.display="none";
+  const panel=document.getElementById("domainSectionPanel");
+  if(panel) panel.classList.remove("is-definition");
   const generic=document.getElementById("genericPlaceholderContent");
   if(generic) generic.style.display="block";
-  document.getElementById("domainSectionTitle").style.display="block";
-  document.getElementById("domainSectionDescription").style.display="block";
+  // Undeveloped Entry/Dashboard stay empty
+  document.getElementById("domainSectionTitle").style.display="none";
+  document.getElementById("domainSectionDescription").style.display="none";
   workspaceMode="system";
   currentPage=section;
   document.getElementById("dashboardTab").classList.toggle("active",section==="dashboard");
@@ -3803,15 +3823,30 @@ async function renderWorkspace(){
       const nav=document.getElementById("domainSectionNav");
       const panel=document.getElementById("domainSectionPanel");
       const generic=document.getElementById("genericPlaceholderContent");
-      nav.style.display="flex"; panel.style.display="block"; generic.style.display="none";
-      document.querySelectorAll("[data-domain-section]").forEach(btn=>btn.classList.toggle("active",btn.dataset.domainSection===domainSection));
+      const editor=document.getElementById("domainDefinitionEditor");
       const title=document.getElementById("domainSectionTitle");
       const description=document.getElementById("domainSectionDescription");
-      title.textContent=name+(domainSection==="definition"?" Definition":"");
-      if(domainSection==="entry") description.textContent="Entry section for "+name+". Tracking fields can be configured here.";
-      else description.textContent="Dashboard for "+name+". Tracking analytics will appear here once this domain system is configured.";
+      nav.style.display="flex";
+      document.querySelectorAll("[data-domain-section]").forEach(btn=>btn.classList.toggle("active",btn.dataset.domainSection===domainSection));
       document.getElementById("workspaceTitle").textContent=name;
       document.getElementById("workspaceSub").textContent="";
+      // Definition only — full editor. Entry/Dashboard stay empty placeholders.
+      if(domainSection==="definition"){
+        panel.style.display="block";
+        panel.classList.add("is-definition");
+        generic.style.display="none";
+        if(editor) editor.style.display="flex";
+        if(title) title.style.display="none";
+        if(description) description.style.display="none";
+        return;
+      }
+      if(editor) editor.style.display="none";
+      panel.style.display="block";
+      panel.classList.remove("is-definition");
+      generic.style.display="none";
+      // Undeveloped Entry/Dashboard stay empty — no placeholder copy
+      if(title) title.style.display="none";
+      if(description) description.style.display="none";
       return;
     }
     document.getElementById("domainSectionNav").style.display="none";
