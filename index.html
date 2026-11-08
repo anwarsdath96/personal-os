@@ -2580,6 +2580,27 @@ body.light-mode #outcomeRangeToggle .range-btn:not(.active) {
   color: #40536a !important;
 }
 
+
+
+/* Final light-theme contrast fix for Personal Engine overview controls.
+   These controls are generated dynamically, so target their shared classes
+   rather than only the static range-toggle container. */
+body.light-mode .focus-btn,
+body.light-mode .range-btn {
+  color: #34465b !important;
+}
+body.light-mode .focus-btn.active,
+body.light-mode .range-btn.active {
+  background: #cbd4df !important;
+  border-color: #8da2bb !important;
+  color: #26394f !important;
+  box-shadow: none !important;
+}
+body.light-mode .focus-btn:hover,
+body.light-mode .range-btn:hover {
+  color: #26394f !important;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
