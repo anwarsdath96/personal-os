@@ -1434,20 +1434,20 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   min-height:0;
 }
 
-/* Domain panel — fills workspace height for Entry/Dashboard/Definition */
+/* Domain panel — content-sized like Personal / Productivity system cards */
 .domain-section-panel,
 #domainSectionPanel.domain-section-panel{
   border:1px solid var(--line);
   background:linear-gradient(180deg,rgba(13,20,28,.94),rgba(9,15,21,.94));
   border-radius:14px;
   padding:20px 22px 18px;
-  height:calc(100vh - 260px);
-  min-height:calc(100vh - 260px);
-  max-height:calc(100vh - 260px);
+  height:auto;
+  min-height:0;
+  max-height:none;
   box-sizing:border-box;
   display:flex;
   flex-direction:column;
-  overflow:hidden;
+  overflow:visible;
 }
 .domain-section-panel p{color:var(--muted);margin:10px 0 0;line-height:1.55}
 
@@ -1495,7 +1495,7 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   border-radius:14px;
   background:linear-gradient(180deg,rgba(13,20,28,.94),rgba(9,15,21,.94));
   padding:20px 22px 18px;
-  min-height:calc(100vh - 280px);
+  min-height:0;
   box-sizing:border-box;
 }
 #gameDomainPage .game-tabs,#gameDomainPage .game-segment{display:flex;gap:8px;margin-bottom:16px}
@@ -1597,44 +1597,45 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 }
 
 
-/* Domain Engine: one continuous workspace containing title, tabs and content */
+/* Domain Engine: same layout boundaries as Personal / Productivity engines */
 #domainWorkspaceShell.domain-workspace-shell.is-domain-active{
   min-width:0;
-  min-height:calc(100vh - 150px);
-  padding:12px 12px 14px;
+  min-height:0;
+  padding:10px 12px 12px;
   border:1px solid var(--line);
   border-radius:15px;
   background:linear-gradient(180deg,rgba(10,16,23,.82),rgba(8,14,20,.92));
   box-shadow:0 16px 42px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.025);
 }
 #domainWorkspaceShell.is-domain-active .workspace-head{
-  margin:0 2px 14px;
-  min-height:34px;
+  margin:0 2px 8px;
+  min-height:30px;
 }
 #domainWorkspaceShell.is-domain-active .workspace-head:before{display:none}
-#domainWorkspaceShell.is-domain-active .workspace-title{font-size:27px}
+#domainWorkspaceShell.is-domain-active .workspace-title{font-size:24px}
 #domainWorkspaceShell.is-domain-active .domain-sections{
   display:flex;
   align-items:center;
-  gap:8px;
-  margin:0 0 14px;
-  padding:0 0 0 0;
+  gap:6px;
+  margin:0 0 8px;
+  padding:0;
 }
 #domainWorkspaceShell.is-domain-active .domain-section-btn{
-  border:1px solid var(--line-strong);
-  background:#111a24;
-  color:#c7d0db;
+  border:1px solid #243547;
+  background:#0e1722;
+  color:#a8b9cc;
   border-radius:9px;
-  padding:9px 16px;
+  padding:7px 14px;
   font-size:12px;
   font-weight:650;
   cursor:pointer;
 }
-#domainWorkspaceShell.is-domain-active .domain-section-btn:hover{border-color:rgba(101,169,255,.55);color:#fff}
+#domainWorkspaceShell.is-domain-active .domain-section-btn:hover{border-color:rgba(101,169,255,.55);color:#fff;background:#121c28}
 #domainWorkspaceShell.is-domain-active .domain-section-btn.active{
   background:#1c3b63;
   border-color:#528bd0;
   color:#fff;
+  box-shadow:none;
 }
 #domainWorkspaceShell.is-domain-active #placeholderPage{
   padding:0!important;
@@ -1646,8 +1647,8 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   text-align:left;
 }
 #domainWorkspaceShell.is-domain-active #domainSectionPanel.domain-section-panel{
-  height:calc(100vh - 260px);
-  min-height:440px;
+  height:auto;
+  min-height:0;
   max-height:none;
   padding:0;
   border:0;
@@ -1655,7 +1656,9 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   background:transparent;
   overflow:visible;
 }
-#domainWorkspaceShell.is-domain-active #gameDomainPage .game-window{
+/* No second forced min-height inside domain — prevents page scroll */
+#domainWorkspaceShell.is-domain-active #gameDomainPage .game-window,
+#domainWorkspaceShell.is-domain-active #writingDomainPage .game-window{
   min-height:0;
   padding:0;
   border:0;
@@ -1681,11 +1684,11 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 #writingDomainPage{display:none}
 #writingDomainPage .game-shell{max-width:100%}
 #writingDomainPage .game-window{
-  border:1px solid var(--line);
+  border:1px solid #1a2a3c;
   border-radius:14px;
-  background:linear-gradient(180deg,rgba(13,20,28,.94),rgba(9,15,21,.94));
+  background:linear-gradient(180deg,#0c1520 0%,#0a121c 100%);
   padding:20px 22px 18px;
-  min-height:calc(100vh - 280px);
+  min-height:0;
   box-sizing:border-box;
 }
 #writingDomainPage .game-tabs,#writingDomainPage .game-segment{display:flex;gap:8px;margin-bottom:16px}
@@ -1762,6 +1765,158 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
 #writingDomainPage .game-activity-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:12px}
 #writingDomainPage .game-summary-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;background:#0c1724;border:1px solid #22364c;border-radius:8px;font-size:12px;min-width:0}
 #writingDomainPage .game-summary-item span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ===== Writing Dashboard — compact fit within shared Domain shell ===== */
+#writingDomainPage .wd-toolbar{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px
+}
+#writingDomainPage .wd-segment{display:flex;gap:0;background:#0c1520;border:1px solid #1e2f42;border-radius:9px;padding:2px}
+#writingDomainPage .wd-subtab{
+  border:0;background:transparent;color:#8fa3bb;padding:6px 14px;border-radius:7px;
+  font-weight:650;font-size:12px;cursor:pointer
+}
+#writingDomainPage .wd-subtab.active{background:#1c3b63;border-color:#528bd0;color:#fff}
+#writingDomainPage .wd-period-nav{
+  display:flex;align-items:center;gap:8px;background:#0c1520;border:1px solid #1e2f42;
+  border-radius:9px;padding:4px 8px
+}
+#writingDomainPage .wd-nav-btn{
+  width:26px;height:24px;border:1px solid #2a3d54;background:#101c2b;color:#c5d4e6;
+  border-radius:6px;cursor:pointer;font-size:14px;line-height:1;display:grid;place-items:center
+}
+#writingDomainPage .wd-nav-btn:hover{border-color:#4a6f98;color:#fff}
+#writingDomainPage .wd-period-nav strong{font-size:12px;font-weight:650;color:#e8eef6;min-width:110px;text-align:center}
+
+#writingDomainPage .wd-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+#writingDomainPage .wd-kpi{
+  background:linear-gradient(160deg,#0f1c2b 0%,#0b1521 100%);
+  border:1px solid #1c2e42;border-radius:10px;padding:10px 12px;
+  box-shadow:0 6px 16px rgba(0,0,0,.14)
+}
+#writingDomainPage .wd-kpi-label{
+  display:block;color:#8fa3bb;font-size:9px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;margin-bottom:5px
+}
+#writingDomainPage .wd-kpi-value{display:block;font-size:22px;font-weight:700;letter-spacing:-.03em;color:#f2f6fb;line-height:1}
+#writingDomainPage .wd-kpi-sub{display:block;color:#3dd68c;font-size:10px;margin-top:4px;font-weight:500}
+
+#writingDomainPage .wd-analytics{display:grid;grid-template-columns:1.35fr 1fr;gap:8px;margin-bottom:8px;align-items:stretch}
+#writingDomainPage .wd-card{
+  background:linear-gradient(160deg,#0f1c2b 0%,#0b1521 100%);
+  border:1px solid #1c2e42;border-radius:12px;padding:10px 12px 10px;
+  box-shadow:0 6px 16px rgba(0,0,0,.12);
+  display:flex;flex-direction:column
+}
+#writingDomainPage .wd-card-title{font-size:13px;font-weight:650;margin:0 0 8px;color:#eef3f9;letter-spacing:-.01em;flex:0 0 auto}
+
+/* Activity chart — uses card height, wider bars */
+#writingDomainPage .wd-activity-card{min-height:0}
+#writingDomainPage .wd-activity-chart{
+  display:flex;flex-direction:column;flex:1 1 auto;min-height:0;justify-content:flex-end
+}
+#writingDomainPage .wd-activity-bars{
+  display:flex;align-items:flex-end;justify-content:center;gap:0;
+  min-height:120px;height:120px;padding:6px 16px 0;position:relative;
+  border-bottom:1px solid #243547
+}
+#writingDomainPage .wd-bar-group{display:flex;align-items:flex-end;gap:30px;flex:1;justify-content:center}
+#writingDomainPage .wd-bar-col{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:44px}
+#writingDomainPage .wd-bar-val{font-size:12px;font-weight:650;color:#c5d4e6}
+#writingDomainPage .wd-bar{
+  width:42px;min-height:0;border-radius:6px 6px 3px 3px;transition:height .25s ease
+}
+#writingDomainPage .wd-bar.is-zero{
+  height:0!important;min-height:0!important;background:transparent!important;box-shadow:none!important
+}
+#writingDomainPage .wd-bar-yellow{background:linear-gradient(180deg,#f5d56a,#e0b83a)}
+#writingDomainPage .wd-bar-blue{background:linear-gradient(180deg,#5cadff,#3a7fd4)}
+#writingDomainPage .wd-bar-purple{background:linear-gradient(180deg,#a88cff,#7b5fd4)}
+#writingDomainPage .wd-bar-green{background:linear-gradient(180deg,#4ae09a,#2bb86e)}
+#writingDomainPage .wd-activity-divider{
+  width:1px;align-self:stretch;margin:0 16px 6px;
+  background:repeating-linear-gradient(to bottom,#4a5f78 0 4px,transparent 4px 8px);
+  opacity:.7;flex:0 0 1px
+}
+#writingDomainPage .wd-activity-axis{
+  display:flex;justify-content:space-around;padding:6px 16px 0;color:#7a8fa6;font-size:10px
+}
+#writingDomainPage .wd-axis-label{flex:1;text-align:center}
+#writingDomainPage .wd-activity-legend{
+  display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:8px;
+  color:#a8b9cc;font-size:10px
+}
+#writingDomainPage .wd-dot{
+  display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle
+}
+
+/* Session Overview — compact rows, stretch with sibling card */
+#writingDomainPage .wd-overview-card{justify-content:space-between}
+#writingDomainPage .wd-breakdown{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;flex:1 1 auto}
+#writingDomainPage .wd-breakdown-item{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  background:#0a1420;border:1px solid #1a2b3e;border-radius:7px;padding:7px 10px;
+  font-size:11px;color:#b7c6d8
+}
+#writingDomainPage .wd-breakdown-item strong{font-size:12px;font-weight:700;color:#eef3f9}
+#writingDomainPage .wd-overview-totals{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:0 0 auto}
+#writingDomainPage .wd-total-card{
+  border-radius:9px;padding:10px 8px;text-align:center
+}
+#writingDomainPage .wd-total-card.green{background:#0d2a22;border:1px solid #1a4a3a}
+#writingDomainPage .wd-total-card.red{background:#2a1520;border:1px solid #4a2432}
+#writingDomainPage .wd-total-card strong{display:block;font-size:18px;font-weight:700;color:#f2f6fb;line-height:1}
+#writingDomainPage .wd-total-card span{display:block;font-size:10px;color:#9aafc2;margin-top:3px}
+
+/* Daily Session Activity — values sit on top of each bar and move with height */
+#writingDomainPage .wd-daily-card{margin-top:0}
+#writingDomainPage .wd-daily-chart{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:8px;
+  align-items:end;min-height:0;padding:6px 4px 0;
+  border-bottom:1px solid #243547
+}
+#writingDomainPage .wd-daily-col{
+  display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0
+}
+#writingDomainPage .wd-daily-bars{
+  display:flex;align-items:flex-end;justify-content:center;gap:6px;height:66px
+}
+#writingDomainPage .wd-daily-stack{
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  height:100%;width:26px;flex:0 0 26px
+}
+#writingDomainPage .wd-daily-val{
+  font-size:11px;font-weight:650;color:#c5d4e6;line-height:1;
+  text-align:center;width:100%;margin-bottom:3px;flex:0 0 auto
+}
+#writingDomainPage .wd-daily-bar{
+  width:26px;min-height:0;border-radius:5px 5px 2px 2px;transition:height .25s ease;flex:0 0 auto
+}
+#writingDomainPage .wd-daily-bar.is-zero{
+  height:0!important;min-height:0!important;background:transparent!important;box-shadow:none!important
+}
+#writingDomainPage .wd-daily-bar.yellow{background:linear-gradient(180deg,#f5d56a,#e0b83a)}
+#writingDomainPage .wd-daily-bar.blue{background:linear-gradient(180deg,#5cadff,#3a7fd4)}
+#writingDomainPage .wd-daily-label{
+  font-size:11px;color:#7a8fa6;margin-top:3px;text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%
+}
+#writingDomainPage .wd-daily-legend{
+  display:flex;gap:14px;margin-top:8px;color:#a8b9cc;font-size:10px
+}
+
+@media(max-width:900px){
+  #writingDomainPage .wd-kpis{grid-template-columns:repeat(2,1fr)}
+  #writingDomainPage .wd-analytics{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  #writingDomainPage .wd-kpis{grid-template-columns:1fr}
+  #writingDomainPage .wd-daily-chart{gap:3px}
+  #writingDomainPage .wd-daily-bar{width:18px}
+  #writingDomainPage .wd-daily-vals b{width:18px;flex-basis:18px}
+  #writingDomainPage .wd-daily-label{font-size:9px}
+  #writingDomainPage .wd-bar{width:30px}
+  #writingDomainPage .wd-bar-group{gap:14px}
+}
 #writingDomainPage .game-pie-wrap{display:flex;align-items:center;gap:18px;margin-top:12px;flex-wrap:wrap}
 #writingDomainPage .game-pie{width:140px;height:140px;flex:0 0 140px}
 #writingDomainPage .game-pie-legend{display:flex;flex-direction:column;gap:10px}
@@ -2246,44 +2401,117 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
                 </div>
               </section>
               <section class="game-view" id="writingDashboardView">
-                <div class="game-toolbar">
-                  <div class="game-segment">
-                    <button class="game-subtab active" data-writing-period="weekly">Weekly</button>
-                    <button class="game-subtab" data-writing-period="monthly">Monthly</button>
+                <div class="wd-toolbar">
+                  <div class="wd-segment">
+                    <button class="wd-subtab active" data-writing-period="weekly">Weekly</button>
+                    <button class="wd-subtab" data-writing-period="monthly">Monthly</button>
                   </div>
-                  <div class="game-date">
-                    <button class="game-btn game-ghost" id="writingPrevPeriod">‹</button>
-                    <strong id="writingPeriodLabel">Current week</strong>
-                    <button class="game-btn game-ghost" id="writingNextPeriod">›</button>
+                  <div class="wd-period-nav">
+                    <button class="wd-nav-btn" id="writingPrevPeriod" aria-label="Previous period">‹</button>
+                    <strong id="writingPeriodLabel">Week 45, 2026</strong>
+                    <button class="wd-nav-btn" id="writingNextPeriod" aria-label="Next period">›</button>
                   </div>
                 </div>
-                <div class="game-kpis">
-                  <div class="game-kpi"><span>DEVELOPMENTAL SESSIONS</span><strong id="developmentalSessions">0</strong><small>Sessions this period</small></div>
-                  <div class="game-kpi"><span>REFINEMENT SESSIONS</span><strong id="refinementSessions">0</strong><small>Sessions this period</small></div>
-                  <div class="game-kpi"><span>THREADS EXPANDED</span><strong id="threadsExpandedTotal">0</strong><small>Total threads</small></div>
-                  <div class="game-kpi"><span>ARTICLES COMPLETED</span><strong id="articlesCompleted">0</strong><small>Total articles</small></div>
+
+                <div class="wd-kpis">
+                  <div class="wd-kpi">
+                    <span class="wd-kpi-label">DEVELOPMENTAL SESSIONS</span>
+                    <strong class="wd-kpi-value" id="developmentalSessions">0</strong>
+                    <small class="wd-kpi-sub">Sessions this period</small>
+                  </div>
+                  <div class="wd-kpi">
+                    <span class="wd-kpi-label">REFINEMENT SESSIONS</span>
+                    <strong class="wd-kpi-value" id="refinementSessions">0</strong>
+                    <small class="wd-kpi-sub">Sessions this period</small>
+                  </div>
+                  <div class="wd-kpi">
+                    <span class="wd-kpi-label">THREADS EXPANDED</span>
+                    <strong class="wd-kpi-value" id="threadsExpandedTotal">0</strong>
+                    <small class="wd-kpi-sub">Total threads</small>
+                  </div>
+                  <div class="wd-kpi">
+                    <span class="wd-kpi-label">ARTICLES COMPLETED</span>
+                    <strong class="wd-kpi-value" id="articlesCompleted">0</strong>
+                    <small class="wd-kpi-sub">Total articles</small>
+                  </div>
                 </div>
-                <div class="game-analytics">
-                  <div class="game-card">
-                    <h3 class="game-h3" id="writingTrendTitle">Weekly Writing Activity</h3>
-                    <svg class="game-chart" id="writingActivityChart" preserveAspectRatio="none" viewBox="0 0 620 210"></svg>
-                    <div class="game-legend">
-                      <span><i class="game-dot" style="background:#f3c969"></i>Developmental Writing</span>
-                      <span><i class="game-dot" style="background:#3986ff"></i>Refinement Work</span>
+
+                <div class="wd-analytics">
+                  <div class="wd-card wd-activity-card">
+                    <h3 class="wd-card-title" id="writingTrendTitle">Weekly Writing Activity</h3>
+                    <div class="wd-activity-chart" id="writingActivityChart">
+                      <div class="wd-activity-bars">
+                        <div class="wd-bar-group inputs">
+                          <div class="wd-bar-col">
+                            <span class="wd-bar-val" id="actDevVal">0</span>
+                            <div class="wd-bar wd-bar-yellow" id="actDevBar" style="height:8px"></div>
+                          </div>
+                          <div class="wd-bar-col">
+                            <span class="wd-bar-val" id="actRefVal">0</span>
+                            <div class="wd-bar wd-bar-blue" id="actRefBar" style="height:8px"></div>
+                          </div>
+                        </div>
+                        <div class="wd-activity-divider"></div>
+                        <div class="wd-bar-group outputs">
+                          <div class="wd-bar-col">
+                            <span class="wd-bar-val" id="actThreadsVal">0</span>
+                            <div class="wd-bar wd-bar-purple" id="actThreadsBar" style="height:8px"></div>
+                          </div>
+                          <div class="wd-bar-col">
+                            <span class="wd-bar-val" id="actArticlesVal">0</span>
+                            <div class="wd-bar wd-bar-green" id="actArticlesBar" style="height:8px"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="wd-activity-axis">
+                        <span class="wd-axis-label">Inputs</span>
+                        <span class="wd-axis-label">Outputs</span>
+                      </div>
+                      <div class="wd-activity-legend">
+                        <span><i class="wd-dot" style="background:#f3c969"></i>Developmental Writing</span>
+                        <span><i class="wd-dot" style="background:#4d9fff"></i>Refinement Work</span>
+                        <span><i class="wd-dot" style="background:#9b7cff"></i>Threads Expanded</span>
+                        <span><i class="wd-dot" style="background:#3dd68c"></i>Articles Completed</span>
+                      </div>
                     </div>
                   </div>
-                  <div class="game-card">
-                    <h3 class="game-h3">Session Overview</h3>
-                    <div class="writing-breakdown" id="typeBreakdown"></div>
-                    <div class="game-rates">
-                      <div class="game-rate"><strong id="writingSessions">0</strong><span>Total sessions</span></div>
-                      <div class="game-rate red"><strong id="publishedCount">0</strong><span>Articles completed</span></div>
+
+                  <div class="wd-card wd-overview-card">
+                    <h3 class="wd-card-title">Session Overview</h3>
+                    <div class="wd-breakdown" id="typeBreakdown">
+                      <div class="wd-breakdown-item"><span>Developmental Writing</span><strong>0</strong></div>
+                      <div class="wd-breakdown-item"><span>Refinement Work</span><strong>0</strong></div>
+                      <div class="wd-breakdown-item"><span>Threads Expanded</span><strong>0</strong></div>
+                      <div class="wd-breakdown-item"><span>Articles Completed</span><strong>0</strong></div>
+                    </div>
+                    <div class="wd-overview-totals">
+                      <div class="wd-total-card green">
+                        <strong id="writingSessions">0</strong>
+                        <span>Total sessions</span>
+                      </div>
+                      <div class="wd-total-card red">
+                        <strong id="publishedCount">0</strong>
+                        <span>Articles completed</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div class="game-card" style="margin-top:14px">
-                  <h3 class="game-h3">Daily Session Summary</h3>
-                  <div class="game-activity-summary" id="writingActivitySummary"></div>
+
+                <div class="wd-card wd-daily-card">
+                  <h3 class="wd-card-title">Daily Session Activity</h3>
+                  <div class="wd-daily-chart" id="writingActivitySummary">
+                    <div class="wd-daily-col" data-day="Monday"><div class="wd-daily-bars"><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar yellow is-zero" style="height:0"></div></div><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar blue is-zero" style="height:0"></div></div></div><span class="wd-daily-label">Monday</span></div>
+                    <div class="wd-daily-col" data-day="Tuesday"><div class="wd-daily-bars"><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar yellow is-zero" style="height:0"></div></div><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar blue is-zero" style="height:0"></div></div></div><span class="wd-daily-label">Tuesday</span></div>
+                    <div class="wd-daily-col" data-day="Wednesday"><div class="wd-daily-bars"><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar yellow is-zero" style="height:0"></div></div><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar blue is-zero" style="height:0"></div></div></div><span class="wd-daily-label">Wednesday</span></div>
+                    <div class="wd-daily-col" data-day="Thursday"><div class="wd-daily-bars"><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar yellow is-zero" style="height:0"></div></div><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar blue is-zero" style="height:0"></div></div></div><span class="wd-daily-label">Thursday</span></div>
+                    <div class="wd-daily-col" data-day="Friday"><div class="wd-daily-bars"><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar yellow is-zero" style="height:0"></div></div><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar blue is-zero" style="height:0"></div></div></div><span class="wd-daily-label">Friday</span></div>
+                    <div class="wd-daily-col" data-day="Saturday"><div class="wd-daily-bars"><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar yellow is-zero" style="height:0"></div></div><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar blue is-zero" style="height:0"></div></div></div><span class="wd-daily-label">Saturday</span></div>
+                    <div class="wd-daily-col" data-day="Sunday"><div class="wd-daily-bars"><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar yellow is-zero" style="height:0"></div></div><div class="wd-daily-stack"><span class="wd-daily-val">0</span><div class="wd-daily-bar blue is-zero" style="height:0"></div></div></div><span class="wd-daily-label">Sunday</span></div>
+                  </div>
+                  <div class="wd-daily-legend">
+                    <span><i class="wd-dot" style="background:#f3c969"></i>Developmental Writing</span>
+                    <span><i class="wd-dot" style="background:#4d9fff"></i>Refinement Work</span>
+                  </div>
                 </div>
               </section>
             </div>
@@ -5145,6 +5373,10 @@ function getPeriodEntries(){
   return {items,label:d.toLocaleDateString("en-US",{month:"long",year:"numeric"})};
 }
 function entryDayTotal(entry, type, day){return Number(entry[type]?.[day])||0;}
+function barHeight(val, max, minPx, maxPx){
+  if(!val || val <= 0 || max <= 0) return 0;
+  return Math.max(minPx, Math.round((val / max) * maxPx));
+}
 async function renderDashboard(){
   if(!currentUser) return;
   await loadWritingEntries();
@@ -5163,35 +5395,55 @@ async function renderDashboard(){
   $("writingSessions").textContent=sessions.toLocaleString();
   $("publishedCount").textContent=articles.toLocaleString();
   $("typeBreakdown").innerHTML=[
-    `<div class="writing-breakdown-item"><span>Developmental Writing</span><strong>${dev.toLocaleString()}</strong></div>`,
-    `<div class="writing-breakdown-item"><span>Refinement Work</span><strong>${ref.toLocaleString()}</strong></div>`,
-    `<div class="writing-breakdown-item"><span>Threads Expanded</span><strong>${threads.toLocaleString()}</strong></div>`,
-    `<div class="writing-breakdown-item"><span>Articles Completed</span><strong>${articles.toLocaleString()}</strong></div>`
+    `<div class="wd-breakdown-item"><span>Developmental Writing</span><strong>${dev.toLocaleString()}</strong></div>`,
+    `<div class="wd-breakdown-item"><span>Refinement Work</span><strong>${ref.toLocaleString()}</strong></div>`,
+    `<div class="wd-breakdown-item"><span>Threads Expanded</span><strong>${threads.toLocaleString()}</strong></div>`,
+    `<div class="wd-breakdown-item"><span>Articles Completed</span><strong>${articles.toLocaleString()}</strong></div>`
   ].join("");
-  $("writingActivitySummary").innerHTML=DAYS.map(day=>{
-    const d=arr.reduce((s,e)=>s+entryDayTotal(e,"developmental",day),0);
-    const r=arr.reduce((s,e)=>s+entryDayTotal(e,"refinement",day),0);
-    return `<div class="game-summary-item"><span>${day}</span><strong>${d} / ${r}</strong></div>`;
+
+  // Inputs / Outputs activity bars
+  const actMax = Math.max(1, dev, ref, threads, articles);
+  const setAct = (valId, barId, val) => {
+    const el = $(valId); if(el) el.textContent = String(val);
+    const bar = $(barId);
+    if(bar){
+      const h = barHeight(val, actMax, 6, 96);
+      bar.style.height = h + "px";
+      bar.classList.toggle("is-zero", !val || val <= 0);
+    }
+  };
+  setAct("actDevVal", "actDevBar", dev);
+  setAct("actRefVal", "actRefBar", ref);
+  setAct("actThreadsVal", "actThreadsBar", threads);
+  setAct("actArticlesVal", "actArticlesBar", articles);
+
+  // Daily dual-bar chart (Monday–Sunday) — value sits on each bar and moves with height
+  const dayTotals = DAYS.map(day => ({
+    dev: arr.reduce((s,e)=>s+entryDayTotal(e,"developmental",day),0),
+    ref: arr.reduce((s,e)=>s+entryDayTotal(e,"refinement",day),0)
+  }));
+  const dayMax = Math.max(1, ...dayTotals.flatMap(x => [x.dev, x.ref]));
+  $("writingActivitySummary").innerHTML = dayTotals.map((t,i) => {
+    const dh = barHeight(t.dev, dayMax, 4, 48);
+    const rh = barHeight(t.ref, dayMax, 4, 48);
+    const dZero = !t.dev ? " is-zero" : "";
+    const rZero = !t.ref ? " is-zero" : "";
+    return `<div class="wd-daily-col" data-day="${DAYS[i]}">
+      <div class="wd-daily-bars">
+        <div class="wd-daily-stack">
+          <span class="wd-daily-val">${t.dev}</span>
+          <div class="wd-daily-bar yellow${dZero}" style="height:${dh}px"></div>
+        </div>
+        <div class="wd-daily-stack">
+          <span class="wd-daily-val">${t.ref}</span>
+          <div class="wd-daily-bar blue${rZero}" style="height:${rh}px"></div>
+        </div>
+      </div>
+      <span class="wd-daily-label">${DAYS[i]}</span>
+    </div>`;
   }).join("");
-  drawWritingChart(arr,keys);
 }
-function drawWritingChart(arr,keys){
-  let s="",base=174,top=15;
-  const dev=arr.map(e=>DAYS.reduce((n,d)=>n+entryDayTotal(e,"developmental",d),0));
-  const ref=arr.map(e=>DAYS.reduce((n,d)=>n+entryDayTotal(e,"refinement",d),0));
-  const max=Math.max(10,...dev,...ref);
-  for(let i=0;i<5;i++){const y=base-(base-top)*i/4;s+=`<line x1="38" y1="${y}" x2="605" y2="${y}" stroke="#23364b"/><text x="28" y="${y+4}" text-anchor="end">${Math.round(max*i/4)}</text>`;}
-  if(arr.length){
-    const group=550/arr.length;
-    arr.forEach((e,i)=>{
-      const vals=[dev[i],ref[i]];
-      vals.forEach((v,j)=>{const h=(base-top)*v/max,x=48+i*group+group*.25+j*group*.22;s+=`<rect x="${x}" y="${base-h}" width="${Math.max(8,group*.18)}" height="${h}" rx="3" fill="${j===0?"#f3c969":"#3986ff"}"/>`;});
-      const label=dashboardPeriod==="weekly"?"Week":keys[i].slice(-2);
-      s+=`<text x="${48+i*group+group*.48}" y="197" text-anchor="middle">${label}</text>`;
-    });
-  }else{s+='<text x="310" y="100" text-anchor="middle">Save a weekly entry to see your writing activity</text>';}
-  $("writingActivityChart").innerHTML=s;
-}
+function drawWritingChart(arr,keys){ /* replaced by DOM bar rendering in renderDashboard */ }
 async function showSection(section){
   $("writingEntryView").classList.toggle("active",section==="entry");
   $("writingDashboardView").classList.toggle("active",section==="dashboard");
@@ -5218,6 +5470,7 @@ document.querySelectorAll("#writingDomainPage [data-writing-period]").forEach(b=
   document.querySelectorAll("#writingDomainPage [data-writing-period]").forEach(x=>x.classList.toggle("active",x===b));
   renderDashboard();
 });
+/* wd-subtab active styling is handled by the same data-writing-period selector above */
 $("writingPrevPeriod").onclick=()=>{periodOffset--;renderDashboard();};
 $("writingNextPeriod").onclick=()=>{periodOffset++;renderDashboard();};
 
