@@ -1656,6 +1656,43 @@ input:focus,select:focus{border-color:rgba(96,164,239,.65);box-shadow:0 0 0 3px 
   background:transparent;
   overflow:visible;
 }
+/* Domain Definition — same full-height boundary as Personal / Productivity Sleep Definition */
+#domainWorkspaceShell.is-domain-active #domainSectionPanel.domain-section-panel:has(#domainDefinitionEditor[style*="flex"]),
+#domainWorkspaceShell.is-domain-active #domainSectionPanel.domain-section-panel:has(#domainDefinitionEditor[style*="block"]){
+  min-height:calc(100vh - 240px);
+  height:calc(100vh - 240px);
+  max-height:calc(100vh - 240px);
+  display:flex;
+  flex-direction:column;
+  padding:0;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(15,23,32,.98),rgba(10,16,23,.98));
+  overflow:hidden;
+}
+#domainWorkspaceShell.is-domain-active #domainDefinitionEditor{
+  flex:1 1 auto;
+  min-height:0;
+  height:100%;
+  display:flex!important;
+  flex-direction:column;
+  margin:0!important;
+  padding:18px 18px 14px;
+  box-sizing:border-box;
+}
+#domainWorkspaceShell.is-domain-active #domainDefinitionText,
+#domainWorkspaceShell.is-domain-active #domainDefinitionEditor .definition-note{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  height:100%!important;
+  max-height:none!important;
+  resize:none!important;
+  margin:0;
+}
+#domainWorkspaceShell.is-domain-active #domainDefinitionEditor .save-row{
+  margin-top:12px;
+  flex:0 0 auto;
+}
 /* No second forced min-height inside domain — prevents page scroll */
 #domainWorkspaceShell.is-domain-active #gameDomainPage .game-window,
 #domainWorkspaceShell.is-domain-active #writingDomainPage .game-window{
