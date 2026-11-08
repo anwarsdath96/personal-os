@@ -2755,10 +2755,15 @@ const productivityGroups = [
   {blocks:[["Quarter","Bi-quarter"]]},
   {blocks:[["Year"]]}
 ];
+const domainGroups = [
+  {blocks:[["Writing","Projects"]]},
+  {blocks:[["Money","Fitness","Game"]]},
+  {blocks:[["Speaking","Upskilling"]]}
+];
 const layerItems = {
   1: [...personalGroups[0].blocks.flat(),"Errands"],
   2: ["Day","Week","Bi-week","Month","Quarter","Bi-quarter","Year"],
-  3: ["Money","Fitness","Game","Writing","Speaking","Upskilling","Projects"],
+  3: domainGroups.flatMap(group=>group.blocks.flat()),
   4: []
 };
 const errandsChildren = ["Wardrobe","Laundry","Groceries","Room Cleaning"];
@@ -3222,6 +3227,26 @@ function renderSidebar(){
   if(currentLayer===2){
     let offset=1;
     productivityGroups.forEach((group,groupIndex)=>{
+      if(groupIndex){
+        const line=document.createElement("div");
+        line.className="divider";
+        container.appendChild(line);
+      }
+      group.blocks.forEach(block=>{
+        block.forEach(name=>{
+          const index=offset++;
+          addSidebarItem(container,name,workspaceMode==="system"&&index===currentItem,()=>selectItem(index));
+        });
+      });
+    });
+    return;
+  }
+  if(currentLayer===3){
+    let offset=1;
+    const overviewDivider=document.createElement("div");
+    overviewDivider.className="divider";
+    container.appendChild(overviewDivider);
+    domainGroups.forEach((group,groupIndex)=>{
       if(groupIndex){
         const line=document.createElement("div");
         line.className="divider";
